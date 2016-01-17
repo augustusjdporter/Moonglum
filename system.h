@@ -19,11 +19,11 @@ public:
 
 	~System(){};
 
-	void addBody(const Body* newBody);
+	void addBody(const Body newBody);
 
-	void update();
+	void update(const double& timestep);
 
-	void printCoordinates(string fileName);
+	void printCoordinates(const string& fileName);
 
 private:
 

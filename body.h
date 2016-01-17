@@ -65,6 +65,8 @@ class Body
 
 	virtual vector<double> accelerationCalc(vector<Body>* Body_Vector);
 
+	virtual vector<double> accelerationCalc(vector<Body*>* Body_Vector);
+
 	const bool isValid() const;
 
 	void set_isValid(const bool& new_isValid);
