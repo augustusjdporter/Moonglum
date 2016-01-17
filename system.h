@@ -21,6 +21,8 @@ public:
 
 	void addBody(const Body newBody);
 
+	void addBody(Body* newBody);
+
 	void update(const double& timestep);
 
 	void printCoordinates(const string& fileName);
