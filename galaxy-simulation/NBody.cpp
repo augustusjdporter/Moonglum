@@ -11,22 +11,39 @@
 #include <utility>
 #include <fstream>
 
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
+
 #include "body.h"
 
 using namespace std;
 
 int main()
 {
+	string simulationName;
+	cout << "Name the simulation: ";
+	cin >> simulationName;
+	cout << endl;
+	const char* directory = ("Coords/" + simulationName).c_str();
+	mkdir(directory, 0700);
+
 	cout << "Enter number of bodies: ";
 	int bodies_number;
 	cin >> bodies_number;
 	cout << endl;
+
 	cout << "Enter number of iterations to take: ";
 	int iteration_number;
 	cin >> iteration_number;
+	cout << endl;
+
+
 	cout << "Enter timestep (years): ";
 	double years_number;
 	cin >> years_number;
+	cout << endl;
+
 
 	const time_t ctt = time(0);
 	cout << asctime(localtime(&ctt)) << endl;//output time 
@@ -103,9 +120,10 @@ for (int j = 0; j < iteration_number; j++)
 
 	ofstream file;
 	stringstream combiner;
-	combiner << "Coords/It_" << j << ".txt";
+	combiner << "Coords/"<< simulationName << "/It_" << j << ".txt";
 	string file_name;
 	combiner >> file_name;
+	cout << file_name << endl;
 	file.open (file_name);
 	for (int i=0; i<Body_Vector.size(); i++)
 	{
