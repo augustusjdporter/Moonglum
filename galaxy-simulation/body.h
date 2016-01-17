@@ -13,13 +13,6 @@ using namespace std;
 class Body
 {
  public:
-	string name;
-	double mass;
-	double xPosition, yPosition, zPosition;
-	double xVelocity, yVelocity, zVelocity;
-	//double xTrack[100000], yTrack[100000];
-
-
 
 	Body();
 
@@ -34,7 +27,44 @@ class Body
 		 double tempyVelocity, 
 		 double tempzVelocity);
 
-	vector<double> accelerationCalc(vector <Body> Body_Vector);
+	const double xPosition() const;
+
+	const double yPosition() const;
+
+	const double zPosition() const;
+
+	const double xVelocity() const;
+
+	const double yVelocity() const;
+
+	const double zVelocity() const;
+
+	void set_xPosition(const double new_xPosition);
+
+	void set_yPosition(const double new_yPosition);
+
+	void set_zPosition(const double new_zPosition);
+
+	void set_xVelocity(const double new_xVelocity);
+
+	void set_yVelocity(const double new_yVelocity);
+
+	void set_zVelocity(const double new_zVelocity);
+
+	const string name() const;
+
+	const double mass() const;
+
+	virtual vector<double> accelerationCalc(vector<Body>& Body_Vector);
+
+private:
+
+	string m_name;
+	double m_mass;
+	double m_xPosition, m_yPosition, m_zPosition;
+	double m_xVelocity, m_yVelocity, m_zVelocity;
+
+	
 };
 
 #endif

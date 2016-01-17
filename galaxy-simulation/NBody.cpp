@@ -85,65 +85,43 @@ int main()
 		//cout << numberx << " " << numbery << " " << numberz << " " << numberxvel << " " << numberyvel << endl;
 	}
 
-	ofstream start_file;
-	start_file.open ("StartCoords.txt");
 
-	for (int i=0; i<Body_Vector.size(); i++)
+	for (int j = 0; j < iteration_number; j++)
 	{
-		start_file << Body_Vector.at(i).name << "\t" << Body_Vector.at(i).xPosition << "\t" << Body_Vector.at(i).yPosition << "\t" << Body_Vector.at(i).zPosition << endl;//prints shape data with overloaded <<
+		beginninguni = time(0);
+		vector <Body>::iterator it;
+		for (it = Body_Vector.begin(); it != Body_Vector.end(); ++it)
+	  	{
+			vector<double> acceleration = it->accelerationCalc(Body_Vector);	
+
+			it->set_xPosition(it->xPosition() + it->xVelocity()*timestep);
+			it->set_yPosition(it->yPosition() + it->yVelocity()*timestep);
+			it->set_zPosition(it->zPosition() + it->zVelocity()*timestep);
+		
+			it->set_xVelocity(it->xVelocity() + acceleration.at(0)*timestep);
+			it->set_yVelocity(it->yVelocity() + acceleration.at(1)*timestep);
+			it->set_zVelocity(it->zVelocity() + acceleration.at(2)*timestep);
+			//cout << acceleration.at(0)*timestep << endl;
+			//cout << acceleration.at(1)*timestep << endl;
+			//cout << acceleration.at(2)*timestep << endl;
+		}	
+
+		ofstream file;
+		stringstream combiner;
+		combiner << "Coords/"<< simulationName << "/It_" << j << ".txt";
+		string file_name;
+		combiner >> file_name;
+		cout << file_name << endl;
+		file.open (file_name);
+		for (int i=0; i<Body_Vector.size(); i++)
+		{
+			file << Body_Vector.at(i).name() << "\t" << Body_Vector.at(i).xPosition() << "\t" << Body_Vector.at(i).yPosition() << "\t" << Body_Vector.at(i).zPosition() << endl;//prints shape data with overloaded <<
+		}
+		
+		file.close();
+		enduni = time(0);
+		cout << "Time taken for this universe (seconds): " << enduni - beginninguni << endl;
 	}
-	start_file.close();
-	//Body_Vector.push_back(Planet("Sun", 1.9891*pow(10, 30), 0, 0, 0, 0, 0, 0));
-
-
-for (int j = 0; j < iteration_number; j++)
-{
-	beginninguni = time(0);
-	vector <Body>::iterator it;
-	for (it = Body_Vector.begin(); it != Body_Vector.end(); ++it)
-  	{
-  		//cout << "Enter loop" << endl;
-	vector<double> acceleration = it->accelerationCalc(Body_Vector);
-
-	it->xPosition = it->xPosition + it->xVelocity*timestep;
-	it->yPosition = it->yPosition + it->yVelocity*timestep;
-	it->zPosition = it->zPosition + it->zVelocity*timestep;
-	
-	it->xVelocity = it->xVelocity + acceleration.at(0)*timestep;
-	it->yVelocity = it->yVelocity + acceleration.at(1)*timestep;
-	it->zVelocity = it->zVelocity + acceleration.at(2)*timestep;
-	//cout << acceleration.at(0)*timestep << endl;
-	//cout << acceleration.at(1)*timestep << endl;
-	//cout << acceleration.at(2)*timestep << endl;
-	}
-	cout << j << endl;
-
-	ofstream file;
-	stringstream combiner;
-	combiner << "Coords/"<< simulationName << "/It_" << j << ".txt";
-	string file_name;
-	combiner >> file_name;
-	cout << file_name << endl;
-	file.open (file_name);
-	for (int i=0; i<Body_Vector.size(); i++)
-	{
-		file << Body_Vector.at(i).name << "\t" << Body_Vector.at(i).xPosition << "\t" << Body_Vector.at(i).yPosition << "\t" << Body_Vector.at(i).zPosition << endl;//prints shape data with overloaded <<
-	}
-	
-	file.close();
-	enduni = time(0);
-	cout << "Time taken for this universe (seconds): " << enduni - beginninguni << endl;
-}
-
-	ofstream file_end;
-
-	file_end.open ("EndCoords.txt");
-
-	for (int i=0; i<Body_Vector.size(); i++)
-	{
-		file_end << Body_Vector.at(i).name << "\t" << Body_Vector.at(i).xPosition << "\t" << Body_Vector.at(i).yPosition << "\t" << Body_Vector.at(i).zPosition << endl;//prints shape data with overloaded <<
-	}
-	file_end.close();
 
 	return 0;
 }

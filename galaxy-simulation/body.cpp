@@ -11,9 +11,9 @@ using namespace std;
 
 Body::Body()
 {
-	name = "Ghost";
-	mass = 0;
-	xPosition = yPosition = xVelocity = yVelocity = 0;
+	m_name = "Ghost";
+	m_mass = 0;
+	m_xPosition = m_yPosition = m_xVelocity = m_yVelocity = 0;
 }
 
 Body::~Body(){}
@@ -27,21 +27,21 @@ Body::Body(string tempName,
 	 double tempyVelocity, 
 	 double tempzVelocity)
 {
-	name = tempName;
-	mass = tempMass;
+	m_name = tempName;
+	m_mass = tempMass;
 
-	xPosition = tempxPosition;
-	yPosition = tempyPosition;
-	zPosition = tempzPosition;
+	m_xPosition = tempxPosition;
+	m_yPosition = tempyPosition;
+	m_zPosition = tempzPosition;
 
-	xVelocity = tempxVelocity;
-	yVelocity = tempyVelocity;
-	zVelocity = tempzVelocity;
+	m_xVelocity = tempxVelocity;
+	m_yVelocity = tempyVelocity;
+	m_zVelocity = tempzVelocity;
 
-	cout << name << " created." << endl;
+	cout << m_name << " created." << endl;
 }
 
-vector<double> Body::accelerationCalc(vector <Body> Body_Vector)
+vector<double> Body::accelerationCalc(vector<Body>& Body_Vector)
 {
 	const double G(6.67384*pow(10,-11));
 	const double Solar_Radius(6.955*pow(10,8));
@@ -52,15 +52,15 @@ vector<double> Body::accelerationCalc(vector <Body> Body_Vector)
 	vector <Body>::iterator it;
 	for (it = Body_Vector.begin(); it != Body_Vector.end(); ++it)
 	{
-		if (name == it->name) continue;
+		if (this->name() == it->name()) continue;
 		//F = G*M*m*r_vector/r^3
 		//a = G*M*r_vector/r^3
-		double rx = xPosition - it->xPosition;
-		double ry = yPosition - it->yPosition;
-		double rz = zPosition - it->zPosition;
+		double rx = xPosition() - it->xPosition();
+		double ry = yPosition() - it->yPosition();
+		double rz = zPosition() - it->zPosition();
 		double rCubed = pow(rx*rx + ry*ry + rz*rz + 3*pow(10,8)*pow(10,7), 1.5);
 
-		double magAcc = -G*it->mass/rCubed;
+		double magAcc = -G*it->mass()/rCubed;
 
 		accX = accX + magAcc*rx;
 		accY = accY + magAcc*ry;
@@ -72,4 +72,80 @@ vector<double> Body::accelerationCalc(vector <Body> Body_Vector)
 	acceleration.push_back(accZ);
 
 	return acceleration;
-}
+};
+
+const double Body::xPosition() const
+{
+	return m_xPosition;
+};
+
+const double Body::yPosition() const
+{
+	return m_yPosition;
+};
+
+const double Body::zPosition() const
+{
+	return m_zPosition;
+};
+
+const double Body::xVelocity() const
+{
+	return m_xVelocity;
+};
+
+const double Body::yVelocity() const
+{
+	return m_yVelocity;
+};
+
+const double Body::zVelocity() const
+{
+	return m_zVelocity;
+};
+
+const string Body::name() const
+{
+	return m_name;
+};
+
+const double Body::mass() const
+{
+	return m_mass;
+};
+
+void Body::set_xPosition(const double new_xPosition)
+{
+	m_xPosition = new_xPosition;
+	return;
+};
+
+void Body::set_yPosition(const double new_yPosition)
+{
+	m_yPosition = new_yPosition;
+	return;
+};
+
+void Body::set_zPosition(const double new_zPosition)
+{
+	m_zPosition = new_zPosition;
+	return;
+};
+
+void Body::set_xVelocity(const double new_xVelocity)
+{
+	m_xVelocity = new_xVelocity;
+	return;
+};
+
+void Body::set_yVelocity(const double new_yVelocity)
+{
+	m_yVelocity = new_yVelocity;
+	return;
+};
+
+void Body::set_zVelocity(const double new_zVelocity)
+{
+	m_zVelocity = new_zVelocity;
+	return;
+};
