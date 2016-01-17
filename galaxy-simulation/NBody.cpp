@@ -17,6 +17,8 @@
 
 #include "body.h"
 
+//typedef
+
 using namespace std;
 
 int main()

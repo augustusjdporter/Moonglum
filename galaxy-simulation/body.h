@@ -39,23 +39,33 @@ class Body
 
 	const double zVelocity() const;
 
-	void set_xPosition(const double new_xPosition);
+	void set_xPosition(const double& new_xPosition);
 
-	void set_yPosition(const double new_yPosition);
+	void set_yPosition(const double& new_yPosition);
 
-	void set_zPosition(const double new_zPosition);
+	void set_zPosition(const double& new_zPosition);
 
-	void set_xVelocity(const double new_xVelocity);
+	void set_xVelocity(const double& new_xVelocity);
 
-	void set_yVelocity(const double new_yVelocity);
+	void set_yVelocity(const double& new_yVelocity);
 
-	void set_zVelocity(const double new_zVelocity);
+	void set_zVelocity(const double& new_zVelocity);
 
 	const string name() const;
 
 	const double mass() const;
 
+	void set_mass(const double& new_mass);
+
+	void set_Radius(const double& new_Radius);
+
+	const double radius() const;
+
 	virtual vector<double> accelerationCalc(vector<Body>& Body_Vector);
+
+	const bool isValid() const;
+
+	void set_isValid(const bool& new_isValid);
 
 private:
 
@@ -63,6 +73,8 @@ private:
 	double m_mass;
 	double m_xPosition, m_yPosition, m_zPosition;
 	double m_xVelocity, m_yVelocity, m_zVelocity;
+	double m_radius;
+	bool   m_isValid;	//false if we do not want to use body in acceleration calcs
 
 	
 };
