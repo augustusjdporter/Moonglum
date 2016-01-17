@@ -15,7 +15,7 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
-#include "body.h"
+#include "../body.h"
 
 //typedef
 
@@ -51,7 +51,7 @@ int main()
 	cout << asctime(localtime(&ctt)) << endl;//output time 
 	time_t beginninguni, enduni;
 
-	const double kPc(3.0857*pow(10, 19));
+	const double kPc(3.0857*pow(10, 15));
 	const double Solar_Mass(1.989*pow(10, 30));
 	const double year(31536000);
 	const double timestep(years_number*year);//year in seconds
