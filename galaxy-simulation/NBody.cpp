@@ -94,7 +94,10 @@ int main()
 		vector <Body>::iterator it;
 		for (it = Body_Vector.begin(); it != Body_Vector.end(); ++it)
 	  	{
-			vector<double> acceleration = it->accelerationCalc(Body_Vector);	
+	  		//cout << "making acc calc" << endl;
+			vector<double> acceleration = it->accelerationCalc(&Body_Vector);
+			//cout << "completed acc calc" << endl;
+
 
 			it->set_xPosition(it->xPosition() + it->xVelocity()*timestep);
 			it->set_yPosition(it->yPosition() + it->yVelocity()*timestep);

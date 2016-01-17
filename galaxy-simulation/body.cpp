@@ -40,10 +40,12 @@ Body::Body(string tempName,
 
 	m_isValid = true;
 
+	m_radius = pow(10, 15);
+
 	cout << m_name << " created." << endl;
 }
 
-vector<double> Body::accelerationCalc(vector<Body>& Body_Vector)
+vector<double> Body::accelerationCalc(vector<Body>* Body_Vector)
 {
 	const double G(6.67384*pow(10,-11));
 	const double Solar_Radius(6.955*pow(10,8));
@@ -52,7 +54,7 @@ vector<double> Body::accelerationCalc(vector<Body>& Body_Vector)
 
 	vector <double> acceleration;
 	vector <Body>::iterator it;
-	for (it = Body_Vector.begin(); it != Body_Vector.end(); ++it)
+	for (it = Body_Vector->begin(); it != Body_Vector->end(); ++it)
 	{
 		if (this->name() == it->name() || it->isValid() == false) continue;
 		//F = G*M*m*r_vector/r^3
@@ -62,23 +64,62 @@ vector<double> Body::accelerationCalc(vector<Body>& Body_Vector)
 		double rz = zPosition() - it->zPosition();
 		double rCubed = pow(rx*rx + ry*ry + rz*rz + 3*pow(10,8)*pow(10,7), 1.5);
 
-		if(rCubed < pow(this->radius() + it->radius(), 3))
+		//when bodies touch, they stick. Conserve linear momentum
+		if(rCubed <= pow(this->radius() + it->radius(), 3))
 		{
+			
 			//combine them
 			it->set_isValid(false);
+			double new_mass = this->mass() + it->mass();
+
+			//place "this" body in the center of mass (COM = (m1x1 +m2x2)/(m1+m2))
+			double xCOM = (this->mass()*this->xPosition() + it->mass()*it->xPosition()) / new_mass;
+			double yCOM = (this->mass()*this->yPosition() + it->mass()*it->yPosition()) / new_mass;
+			double zCOM = (this->mass()*this->zPosition() + it->mass()*it->zPosition()) / new_mass;
+
+			//conserve momentum. NewVel = Mom/new mass
+			double new_xVelocity = (this->mass()*this->xVelocity() + it->mass()*it->xVelocity()) / new_mass;
+			double new_yVelocity = (this->mass()*this->yVelocity() + it->mass()*it->yVelocity()) / new_mass;
+			double new_zVelocity = (this->mass()*this->zVelocity() + it->mass()*it->zVelocity()) / new_mass;
+
+			//Set new velocity, position, and mass to "this" body
+			this->set_xVelocity(new_xVelocity);
+			this->set_yVelocity(new_yVelocity);
+			this->set_zVelocity(new_zVelocity);
+
+			this->set_xPosition(xCOM);
+			this->set_yPosition(yCOM);
+			this->set_zPosition(zCOM);
+
+			this->set_mass(new_mass);
+
+			//What to do about the radius? Keep average density? New density = p1m1 + p2m2/m1+m2
+			double new_density = (this->density()*this->mass() + it->density()*it->mass()) / new_mass;
+
+			//r = (3/4 m/(p pi))^1/3
+			this->set_Radius(pow(3/4 * new_mass/(M_PI * new_density), 1/3));
+
+			//remove the body from the vector
+			Body_Vector->erase(it);
+			--it;
+			cout << "deleted an entry" << endl;
 		}
+		else	//if bodies aren't touching, calculate acceleration
+		{
+			double magAcc = -G*it->mass()/rCubed;
 
-		double magAcc = -G*it->mass()/rCubed;
-
-		accX = accX + magAcc*rx;
-		accY = accY + magAcc*ry;
-		accZ = accZ + magAcc*rz;
+			accX = accX + magAcc*rx;
+			accY = accY + magAcc*ry;
+			accZ = accZ + magAcc*rz;
+			//cout << "did not delete entry" << endl;
+		}	
 	}
 
 	acceleration.push_back(accX);
 	acceleration.push_back(accY);
 	acceleration.push_back(accZ);
 
+//cout << "returning acceleration" << endl;
 	return acceleration;
 };
 
@@ -184,4 +225,9 @@ void Body::set_isValid(const bool& new_isValid)
 {
 	m_isValid = new_isValid;
 	return;
+};
+
+const double Body::density() const
+{
+	return m_mass / ((4/3)*M_PI*pow(m_radius, 3));
 };
