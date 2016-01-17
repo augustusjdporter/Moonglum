@@ -7,6 +7,9 @@
 #include <string>
 #include <vector>
 #include <cmath>
+
+#include "../body.h"
+
 using namespace std;
 
 class Planet
@@ -81,14 +84,10 @@ int main()
 	const double timestep(5400);//day/16 in seconds
 	int j(0), k(0), count(0);
 
-	if(cpgbeg(0, " ", 1, 1) != 1)
-    return EXIT_FAILURE;
 
-	vector <Planet> Planets;
+	vector <Body> Planets;
 	Planets.push_back(Planet("Sun", 1.9891*pow(10, 30), 0.1, 0, 0, 0, 3.3*pow(10,2), 0));
 	Planets.push_back(Planet("Sun", 1.9891*pow(10, 30), -0.1, 0, 0, 0, -3.3*pow(10,2), 0));
-	//Planets.push_back(Planet("Sun", 1.9891*pow(10, 30), 0, 0, 0, 0, 0, 0));
-	//Planets.push_back(Planet("Sun", 1.9891*pow(10, 30), 0, 0, 0, 0, 0, 0));
 	Planets.push_back(Planet("Earth", 5.972*pow(10, 24), 1*AU, 0, 0, 0, 3.3*pow(10,4) , 0));
 	Planets.push_back(Planet("Jupiter", 1.898*pow(10, 24), 5.2*AU, 0, 0, 0, 47.051*pow(10,6)/3600 , 0));
 

@@ -16,6 +16,26 @@ Body::Body()
 	m_xPosition = m_yPosition = m_xVelocity = m_yVelocity = 0;
 }
 
+Body::Body(const Body& bodyToCopy)
+{
+	m_name = bodyToCopy.name();
+	m_mass = bodyToCopy.mass();
+
+	m_xPosition = bodyToCopy.xPosition();
+	m_yPosition = bodyToCopy.yPosition();
+	m_zPosition = bodyToCopy.zPosition();
+
+	m_xVelocity = bodyToCopy.xVelocity();
+	m_yVelocity = bodyToCopy.yVelocity();
+	m_zVelocity = bodyToCopy.zVelocity();
+
+	m_isValid = bodyToCopy.isValid();
+
+	m_radius = bodyToCopy.radius();
+
+	cout << m_name << " copied." << endl;
+}
+
 Body::~Body(){}
 
 Body::Body(string tempName, 

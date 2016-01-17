@@ -27,6 +27,8 @@ class Body
 		 double tempyVelocity, 
 		 double tempzVelocity);
 
+	Body(const Body& bodyToCopy); //copy constructor
+
 	const double xPosition() const;
 
 	const double yPosition() const;
