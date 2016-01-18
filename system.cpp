@@ -15,6 +15,11 @@ System::System()
 	m_name = "Ghost";
 }
 
+System::System(const string& name)
+{
+	m_name = name;
+}
+
 void System::addBody(Body* newBody)
 {
 	m_Bodies.push_back(newBody);
@@ -31,7 +36,17 @@ void System::update(const double& timestep)
 	vector <Body*>::iterator it;
 	for (it = m_Bodies.begin(); it != m_Bodies.end(); ++it)
   	{
-		vector<double> acceleration = (*it)->accelerationCalc(&m_Bodies);
+		vector<double> acceleration = (*it)->accelerationCalc(&m_Bodies);//calculate acceleration from own system
+
+		SystemMap::iterator system_it;
+		for(system_it = m_BoundSystems.begin(); system_it != m_BoundSystems.end(); system_it++) 
+		{
+    		vector<double> temp_acceleration = (*it)->accelerationCalc(system_it->second->Bodies());//calculate acceleration from any additional systems
+
+    		acceleration.at(0) = acceleration.at(0) + temp_acceleration.at(0);
+    		acceleration.at(1) = acceleration.at(1) + temp_acceleration.at(1);
+    		acceleration.at(2) = acceleration.at(2) + temp_acceleration.at(2);
+		}
 
 		(*it)->set_xPosition((*it)->xPosition() + (*it)->xVelocity()*timestep);
 		(*it)->set_yPosition((*it)->yPosition() + (*it)->yVelocity()*timestep);
@@ -55,3 +70,19 @@ void System::printCoordinates(const string& filename)
 	file.close();
 	return;
 }
+
+void System::addBoundSystem(System* newSystem)
+{
+	m_BoundSystems.insert(make_pair(newSystem->name(), newSystem));
+	return;
+};
+
+const string& System::name() const 
+{
+	return m_name;
+};
+
+vector<Body*>* System::Bodies()
+{
+	return &m_Bodies;
+};

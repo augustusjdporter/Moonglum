@@ -60,7 +60,7 @@ Body::Body(string tempName,
 
 	m_isValid = true;
 
-	m_radius = pow(10, 15);
+	m_radius = pow(10, 5);
 
 	cout << m_name << " created." << endl;
 }

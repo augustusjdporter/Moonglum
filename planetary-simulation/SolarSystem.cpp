@@ -19,9 +19,8 @@ int main()
 	int j(0), k(0), count(0);
 	System solarSystem;
 
-	vector <Body> Planets;
-	solarSystem.addBody(new Body("Sun", 1.9891*pow(10, 30), 0.1, 0, 0, 0, 3.3*pow(10,2), 0));
-	solarSystem.addBody(new Body("Sun", 1.9891*pow(10, 30), -0.1, 0, 0, 0, -3.3*pow(10,2), 0));
+	solarSystem.addBody(new Body("Sun", 1.9891*pow(10, 30), 0, 0, 0, 0, 0, 0));
+	//solarSystem.addBody(new Body("Sun", 1.9891*pow(10, 30), -0.1, 0, 0, 0, -3.3*pow(10,2), 0));
 	solarSystem.addBody(new Body("Earth", 5.972*pow(10, 24), 1*AU, 0, 0, 0, 3.3*pow(10,4) , 0));
 	solarSystem.addBody(new Body("Jupiter", 1.898*pow(10, 24), 5.2*AU, 0, 0, 0, 47.051*pow(10,6)/3600 , 0));
 
@@ -31,22 +30,15 @@ int main()
 
 	//const int thisthing(1);
 int thisthing = 1;
-  	while (thisthing == 1)
+  	while (thisthing <= 1000)
   	{
-  		cout << "1";
 		solarSystem.update(timestep);
-
-
-
-  	/*for (int i = 0; i< Planets.size(); i++)
-  	{
-
-  	float xs[] = {Planets.at(i).xPosition/AU};//pgpt needs to be array
-  	float ys[] = {Planets.at(i).yPosition/AU};
-
-		Planets.at(i).xTrack[j] = Planets.at(i).xPosition/AU;
-		Planets.at(i).yTrack[j] = Planets.at(i).yPosition/AU;
-  }*/
+		stringstream combiner;
+		combiner << "Coords/It_" << thisthing << ".txt";
+		string file_name;
+		combiner >> file_name;
+		solarSystem.printCoordinates(file_name);
+		thisthing++;
 	}
 
 
