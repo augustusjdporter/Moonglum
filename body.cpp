@@ -146,7 +146,6 @@ vector<double> Body::accelerationCalc(vector<Body>* Body_Vector)
 vector<double> Body::accelerationCalc(vector<Body*>* Body_Vector)
 {
 	const double G(6.67384*pow(10,-11));
-	const double Solar_Radius(6.955*pow(10,8));
 
 	double accX(0), accY(0), accZ(0);
 
@@ -160,7 +159,7 @@ vector<double> Body::accelerationCalc(vector<Body*>* Body_Vector)
 		double rx = xPosition() - (*it)->xPosition();
 		double ry = yPosition() - (*it)->yPosition();
 		double rz = zPosition() - (*it)->zPosition();
-		double rCubed = pow(rx*rx + ry*ry + rz*rz + 3*pow(10,8)*pow(10,7), 1.5);
+		double rCubed = pow(rx*rx + ry*ry + rz*rz, 1.5);
 
 		//when bodies touch, they stick. Conserve linear momentum
 		if(rCubed <= pow(this->radius() + (*it)->radius(), 3))

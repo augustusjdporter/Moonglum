@@ -15,35 +15,35 @@ using namespace std;
 int main()
 {
 	const double AU(1.4960*pow(10, 11));
-	const double timestep(5400);//day/16 in seconds
+	const double timestep(24*3600/4);//day/16 in seconds
 	int j(0), k(0), count(0);
 	System solarSystem;
 
 	solarSystem.addBody(new Body("Sun", 1.9891*pow(10, 30), 0, 0, 0, 0, 0, 0));
 	//solarSystem.addBody(new Body("Sun", 1.9891*pow(10, 30), -0.1, 0, 0, 0, -3.3*pow(10,2), 0));
 	solarSystem.addBody(new Body("Earth", 5.972*pow(10, 24), 1*AU, 0, 0, 0, 3.3*pow(10,4) , 0));
-	solarSystem.addBody(new Body("Jupiter", 1.898*pow(10, 24), 5.2*AU, 0, 0, 0, 47.051*pow(10,6)/3600 , 0));
+//	solarSystem.addBody(new Body("Jupiter", 1.898*pow(10, 24), 5.2*AU, 0, 0, 0, 47.051*pow(10,6)/3600 , 0));
 
-
-//cpgenv(Planets.at(0).xPosition/AU-10., Planets.at(0).xPosition/AU+10.0, Planets.at(0).yPosition/AU-10., Planets.at(0).yPosition/AU+10.0, 0, 1);
-    	//cpglab("(x)", "(y)", " ");
-
-	//const int thisthing(1);
 int thisthing = 1;
-  	while (thisthing <= 1000)
+int refresh = 1;
+int printCount = 1;
+  	while (thisthing <= 365*4)
   	{
 		solarSystem.update(timestep);
-		stringstream combiner;
-		combiner << "Coords/It_" << thisthing << ".txt";
-		string file_name;
-		combiner >> file_name;
-		solarSystem.printCoordinates(file_name);
+
+		if(refresh == 4)
+		{
+			stringstream combiner;
+			combiner << "Coords/It_" << printCount << ".txt";
+			string file_name;
+			combiner >> file_name;
+			solarSystem.printCoordinates(file_name);
+			refresh = 0;
+			printCount++;
+		}
+		refresh++;
 		thisthing++;
 	}
 
-
-  	// Free memory
-	//delete[] xPositions;
-	//delete[] yPositions;
 	return 0;
 }

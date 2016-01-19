@@ -2,6 +2,7 @@
 #define SYSTEM_H
 
 #include <iostream>
+#include <fstream>
 #include <sstream>
 #include <string>
 #include <vector>
@@ -44,6 +45,7 @@ private:
 	vector<Body*> m_Bodies;
 	SystemMap m_BoundSystems;	//map of other systems, used to enable gravitational interactions between two systems
 	string m_name;
+	ofstream file;
 };
 
 #endif

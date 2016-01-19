@@ -13,6 +13,7 @@ using namespace std;
 System::System()
 {
 	m_name = "Ghost";
+	file.open("EarthAcc.txt");
 }
 
 System::System(const string& name)
@@ -33,6 +34,8 @@ void System::addBody(const Body newBody)
 
 void System::update(const double& timestep)
 {
+	
+	
 	vector <Body*>::iterator it;
 	for (it = m_Bodies.begin(); it != m_Bodies.end(); ++it)
   	{
@@ -41,13 +44,19 @@ void System::update(const double& timestep)
 		SystemMap::iterator system_it;
 		for(system_it = m_BoundSystems.begin(); system_it != m_BoundSystems.end(); system_it++) 
 		{
+			cout << "Should not get in here yet" << endl;
     		vector<double> temp_acceleration = (*it)->accelerationCalc(system_it->second->Bodies());//calculate acceleration from any additional systems
 
     		acceleration.at(0) = acceleration.at(0) + temp_acceleration.at(0);
     		acceleration.at(1) = acceleration.at(1) + temp_acceleration.at(1);
     		acceleration.at(2) = acceleration.at(2) + temp_acceleration.at(2);
 		}
+		if((*it)->name() == "Earth")
+		{
+			cout << acceleration.at(0) << " " << acceleration.at(1) << " " << acceleration.at(2) << endl;
+			file << acceleration.at(0) << " " << acceleration.at(1) << " " << acceleration.at(2) << endl;
 
+		}
 		(*it)->set_xPosition((*it)->xPosition() + (*it)->xVelocity()*timestep);
 		(*it)->set_yPosition((*it)->yPosition() + (*it)->yVelocity()*timestep);
 		(*it)->set_zPosition((*it)->zPosition() + (*it)->zVelocity()*timestep);
@@ -61,11 +70,12 @@ void System::update(const double& timestep)
 
 void System::printCoordinates(const string& filename)
 {
+	const double AU(1.4960*pow(10, 11));
 	ofstream file;
 	file.open (filename);
 	for (int i=0; i<m_Bodies.size(); i++)
 	{
-		file << m_Bodies.at(i)->name() << "\t" << m_Bodies.at(i)->xPosition() << "\t" << m_Bodies.at(i)->yPosition() << "\t" << m_Bodies.at(i)->zPosition() << endl;//prints shape data with overloaded <<
+		file << m_Bodies.at(i)->name() << "\t" << m_Bodies.at(i)->xPosition()/AU << "\t" << m_Bodies.at(i)->yPosition()/AU << "\t" << m_Bodies.at(i)->zPosition()/AU << endl;//prints shape data with overloaded <<
 	}	
 	file.close();
 	return;
