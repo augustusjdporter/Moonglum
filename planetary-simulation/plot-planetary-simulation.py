@@ -1,6 +1,7 @@
 #currently just experimenting with python
 #will extend to plot solar system graphs for each snapshot
 #can then create gif on command line
+#hello
 
 import numpy as np
 import matplotlib.pyplot as plt
