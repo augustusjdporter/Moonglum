@@ -10,6 +10,9 @@ import pylab as p
 
 import scipy
 
+simDirectory = raw_input("Which simulation shall we plot?")
+
+
 workfile_tr = "Coords/Earth_trajectory.txt"
 x_tr = np.loadtxt(workfile_tr, usecols=range(0,1))
 y_tr = np.loadtxt(workfile_tr, usecols=range(1,2))

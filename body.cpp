@@ -42,6 +42,7 @@ Body::Body(const Body& bodyToCopy)
 
 Body::~Body()
 {
+	cout << name() << " destructor called." << endl;
 	if(m_trajectory->is_open() == true && m_trajectory != NULL)
 	{
 		m_trajectory->close();
@@ -363,6 +364,7 @@ void Body::addToTrajectory(const string& path)
 			mkdir(directory, 0700);
 
 			m_trajectory->open(path + "trajectories/" + name() + "_trajectory.txt");
+			//m_trajectory->open("Coords/" + name() + "_trajectory.txt");
 		}
 	}
 
