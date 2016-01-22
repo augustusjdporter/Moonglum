@@ -24,7 +24,7 @@ public:
 
 	System(const string& name);
 
-	~System(){};
+	~System();
 
 	void addBody(const Body newBody);
 
@@ -34,7 +34,7 @@ public:
 
 	void update(const double& timestep);
 
-	void printCoordinates(const string& fileName);
+	void printCoordinates(const string& path, const string& fileName);
 
 	vector<Body*>* Bodies();
 
@@ -45,7 +45,6 @@ private:
 	vector<Body*> m_Bodies;
 	SystemMap m_BoundSystems;	//map of other systems, used to enable gravitational interactions between two systems
 	string m_name;
-	ofstream file;
 };
 
 #endif

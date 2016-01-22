@@ -1,5 +1,3 @@
-g++ -std=c++0x -O3 -o SolarSystem.out -I. SolarSystem.cpp ../body.cpp ../system.cpp
-
 all: SolarSystem
 
 SolarSystem: SolarSystem.o ../body.o ../system.o

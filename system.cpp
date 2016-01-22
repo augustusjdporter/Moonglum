@@ -13,24 +13,36 @@ using namespace std;
 System::System()
 {
 	m_name = "Ghost";
-	file.open("EarthAcc.txt");
-}
+};
 
 System::System(const string& name)
 {
 	m_name = name;
-}
+};
+
+System::~System()
+{
+	cout << m_name << " destructor called." << endl;
+	while (!m_Bodies.empty())
+	{
+		delete m_Bodies.back();
+		m_Bodies.pop_back();
+	}
+
+	m_BoundSystems.clear();
+	m_name = "";
+};
 
 void System::addBody(Body* newBody)
 {
 	m_Bodies.push_back(newBody);
-}
+};
 
 void System::addBody(const Body newBody)
 {
 	Body* newBodyToAdd = new Body(newBody);
 	m_Bodies.push_back(newBodyToAdd);
-}
+};
 
 void System::update(const double& timestep)
 {
@@ -51,12 +63,7 @@ void System::update(const double& timestep)
     		acceleration.at(1) = acceleration.at(1) + temp_acceleration.at(1);
     		acceleration.at(2) = acceleration.at(2) + temp_acceleration.at(2);
 		}
-		if((*it)->name() == "Earth")
-		{
-			cout << acceleration.at(0) << " " << acceleration.at(1) << " " << acceleration.at(2) << endl;
-			file << acceleration.at(0) << " " << acceleration.at(1) << " " << acceleration.at(2) << endl;
 
-		}
 		(*it)->set_xPosition((*it)->xPosition() + (*it)->xVelocity()*timestep);
 		(*it)->set_yPosition((*it)->yPosition() + (*it)->yVelocity()*timestep);
 		(*it)->set_zPosition((*it)->zPosition() + (*it)->zVelocity()*timestep);
@@ -66,20 +73,24 @@ void System::update(const double& timestep)
 		(*it)->set_zVelocity((*it)->zVelocity() + acceleration.at(2)*timestep);
 	}
 	return;
-}
+};
 
-void System::printCoordinates(const string& filename)
+void System::printCoordinates(const string& path, const string& filename)
 {
 	const double AU(1.4960*pow(10, 11));
 	ofstream file;
-	file.open (filename);
+	file.open (path + filename);
 	for (int i=0; i<m_Bodies.size(); i++)
 	{
 		file << m_Bodies.at(i)->name() << "\t" << m_Bodies.at(i)->xPosition()/AU << "\t" << m_Bodies.at(i)->yPosition()/AU << "\t" << m_Bodies.at(i)->zPosition()/AU << endl;//prints shape data with overloaded <<
+		if(m_Bodies.at(i)->isTrackingTrajectory() == true)
+		{
+			m_Bodies.at(i)->addToTrajectory(path);
+		}
 	}	
 	file.close();
 	return;
-}
+};
 
 void System::addBoundSystem(System* newSystem)
 {

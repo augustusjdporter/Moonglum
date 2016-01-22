@@ -2,11 +2,13 @@
 #define Body_H
 
 #include <iostream>
+#include <fstream>
 #include <sstream>
 #include <string>
 #include <vector>
 #include <cmath>
 #include <random>
+
 
 using namespace std;
 
@@ -25,7 +27,8 @@ class Body
 		 double tempzPosition, 
 		 double tempxVelocity, 
 		 double tempyVelocity, 
-		 double tempzVelocity);
+		 double tempzVelocity,
+		 bool	tempLogTrajectory);
 
 	Body(const Body& bodyToCopy); //copy constructor
 
@@ -73,15 +76,25 @@ class Body
 
 	const double density() const;
 
+	const bool isTrackingTrajectory() const;
+
+	void addToTrajectory(const string& path);
+
+
+
 private:
 
-	string m_name;
-	double m_mass;
-	double m_xPosition, m_yPosition, m_zPosition;
-	double m_xVelocity, m_yVelocity, m_zVelocity;
-	double m_radius;
-	bool   m_isValid;	//false if we do not want to use body in acceleration calcs
+	string 		m_name;
+	double 		m_mass;
+	double 		m_xPosition, m_yPosition, m_zPosition;
+	double 		m_xVelocity, m_yVelocity, m_zVelocity;
+	double 		m_radius;
+	double		m_relaxation;
+	bool   		m_isValid;	//false if we do not want to use body in acceleration calcs
 
+	bool		m_logTrajectory;
+	std::ofstream* 	m_trajectory; //pointer as i was getting weird ass compiler issues if it wasn't...
+	
 	
 };
 

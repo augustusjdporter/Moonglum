@@ -10,24 +10,25 @@ import pylab as p
 
 import scipy
 
+workfile_tr = "Coords/Earth_trajectory.txt"
+x_tr = np.loadtxt(workfile_tr, usecols=range(0,1))
+y_tr = np.loadtxt(workfile_tr, usecols=range(1,2))
+z_tr = np.loadtxt(workfile_tr, usecols=range(2,3))
 i = 1
 while i < 1461 :
 	workfile = "Coords/It_" + `i` + ".txt"
 #	print(workfile)
 
 	x = np.loadtxt(workfile, usecols=range(1,2))
-#	print "x"
-#	print x
 	y = np.loadtxt(workfile, usecols=range(2,3))
-#	print "y"
-#	print y
 	z = np.loadtxt(workfile, usecols=range(3,4))
-#	print "z"
-#	print z
 
-	plt.ylim([-2, 2])
-	plt.xlim([-2, 2])
+	
+
+	plt.ylim([-6, 6])
+	plt.xlim([-6, 6])
 	plt.scatter(x, y, alpha=0.5)
+	plt.plot(x_tr, y_tr)
 	
 	name ="Coords/PlotIt_" + str(i).zfill(5) +".pdf"
 

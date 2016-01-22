@@ -5,6 +5,10 @@
 #include <cmath>
 #include <random>
 
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
+
 #include "body.h"
 
 using namespace std;
@@ -14,7 +18,7 @@ Body::Body()
 	m_name = "Ghost";
 	m_mass = 0;
 	m_xPosition = m_yPosition = m_xVelocity = m_yVelocity = 0;
-}
+};
 
 Body::Body(const Body& bodyToCopy)
 {
@@ -34,9 +38,17 @@ Body::Body(const Body& bodyToCopy)
 	m_radius = bodyToCopy.radius();
 
 	cout << m_name << " copied." << endl;
-}
+};
 
-Body::~Body(){}
+Body::~Body()
+{
+	if(m_trajectory->is_open() == true && m_trajectory != NULL)
+	{
+		m_trajectory->close();
+		delete m_trajectory;
+		m_trajectory = NULL;
+	}
+};
 
 Body::Body(string tempName, 
 	 double tempMass,
@@ -45,8 +57,11 @@ Body::Body(string tempName,
 	 double tempzPosition, 
 	 double tempxVelocity, 
 	 double tempyVelocity, 
-	 double tempzVelocity)
+	 double tempzVelocity,
+	 bool	tempLogTrajectory)
 {
+	m_trajectory = NULL;
+
 	m_name = tempName;
 	m_mass = tempMass;
 
@@ -62,8 +77,11 @@ Body::Body(string tempName,
 
 	m_radius = pow(10, 5);
 
+	m_logTrajectory = tempLogTrajectory;
+
 	cout << m_name << " created." << endl;
-}
+
+};
 
 vector<double> Body::accelerationCalc(vector<Body>* Body_Vector)
 {
@@ -327,4 +345,30 @@ void Body::set_isValid(const bool& new_isValid)
 const double Body::density() const
 {
 	return m_mass / ((4/3)*M_PI*pow(m_radius, 3));
+};
+
+const bool Body::isTrackingTrajectory() const
+{
+	return m_logTrajectory;
+};
+
+void Body::addToTrajectory(const string& path)
+{
+	if(m_logTrajectory == true && m_trajectory == NULL)
+	{
+		m_trajectory = new ofstream;
+		if (m_trajectory != NULL)
+		{
+			const char* directory = (path + "trajectories/").c_str();
+			mkdir(directory, 0700);
+
+			m_trajectory->open(path + "trajectories/" + name() + "_trajectory.txt");
+		}
+	}
+
+	const double AU(1.4960*pow(10, 11));
+	if(isTrackingTrajectory() == true && m_trajectory != NULL)
+	{
+		*m_trajectory << xPosition()/AU << "\t" << yPosition()/AU << "\t" << zPosition()/AU << endl;
+	}
 };
