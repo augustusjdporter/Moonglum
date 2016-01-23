@@ -43,11 +43,14 @@ Body::Body(const Body& bodyToCopy)
 Body::~Body()
 {
 	cout << name() << " destructor called." << endl;
-	if(m_trajectory->is_open() == true && m_trajectory != NULL)
+	if (m_trajectory != NULL)
 	{
-		m_trajectory->close();
-		delete m_trajectory;
-		m_trajectory = NULL;
+		if(m_trajectory->is_open() == true)
+		{
+			m_trajectory->close();
+			delete m_trajectory;
+			m_trajectory = NULL;
+		}
 	}
 };
 
@@ -59,6 +62,7 @@ Body::Body(string tempName,
 	 double tempxVelocity, 
 	 double tempyVelocity, 
 	 double tempzVelocity,
+	 double tempRadius,
 	 bool	tempLogTrajectory)
 {
 	m_trajectory = NULL;
@@ -76,7 +80,7 @@ Body::Body(string tempName,
 
 	m_isValid = true;
 
-	m_radius = pow(10, 5);
+	m_radius = tempRadius;
 
 	m_logTrajectory = tempLogTrajectory;
 

@@ -1,7 +1,7 @@
 all: SolarSystem
 
-SolarSystem: SolarSystem.o ../body.o ../system.o
-	g++ -std=c++0x SolarSystem.o body.o system.o -o SolarSystem
+SolarSystem: SolarSystem.o ProtoplanetaryCloud.o ../body.o ../system.o
+	g++ -std=c++0x SolarSystem.o body.o system.o  ProtoplanetaryCloud.o -o SolarSystem
 
 SolarSystem.o: SolarSystem.cpp
 	g++ -std=c++0x -c SolarSystem.cpp
@@ -12,5 +12,8 @@ SolarSystem.o: SolarSystem.cpp
 ../system.o: ../system.cpp
 	g++ -std=c++0x -c ../system.cpp
 
+ProtoplanetaryCloud.o: ProtoplanetaryCloud.cpp
+	g++ -std=c++0x -c ProtoplanetaryCloud.cpp
+
 clean:
-	rm ../*.o *.o SolarSystem
+	rm *.o SolarSystem

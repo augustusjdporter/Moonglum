@@ -24,7 +24,7 @@ ProtoplanetaryCloud::ProtoplanetaryCloud(const int& numberOfBodies,
 	//v^2 = Gm2/R
 	//v = pow(G*m_sun/R, 0.5)
 
-	const double Solar_Mass(1.989*pow(10, 30));
+	const double Solar_Mass(6.99*pow(10, 7));
 	const double G(6.67384*pow(10,-11));
 	
 	const double jupiter_radius(6.96*pow(10, 8)/10);

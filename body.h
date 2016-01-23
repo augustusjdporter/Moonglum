@@ -28,6 +28,7 @@ class Body
 		 double tempxVelocity, 
 		 double tempyVelocity, 
 		 double tempzVelocity,
+		 double tempRadius,
 		 bool	tempLogTrajectory);
 
 	Body(const Body& bodyToCopy); //copy constructor
