@@ -53,10 +53,7 @@ ProtoplanetaryCloud::ProtoplanetaryCloud(const int& numberOfBodies,
 		double yVel = velocity_Direction_y * newVel;
 		double zVel = 0;
 
-		stringstream combiner;
-		combiner << "Planetesimal" << i;
-		string name;
-		combiner >> name;
+		string name = "Planetesimal";
 
 		addBody(new Body(name, mass/numberOfBodies, xPos, yPos, zPos, xVel, yVel, zVel, 0.2*jupiter_radius, false));
 	}
