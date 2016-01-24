@@ -28,7 +28,7 @@ int main()
 {
 	const double Solar_Mass(1.989*pow(10, 30));
 	const double AU(1.4960*pow(10, 11));
-	const double timestep(24*3600/10);//day/100 in seconds
+	const double timestep(24*3600/5);//day/5 in seconds
 
 	const double solar_radius(6.96*pow(10, 8));
 	const double earth_radius(6.37*pow(10, 6));//needs to be updated when have internet
@@ -70,7 +70,7 @@ int main()
 	int thisthing = 1;
 	int refresh = 1;
 	int printCount = 1;
-	cout << "How many iterations (each iteration is 1/100 day)? ";
+	cout << "How many iterations (each iteration is 1/5 day)? ";
 	int iterationNumber = enterInteger();
   	while (thisthing <= iterationNumber)
   	{
