@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<SimulationProfile>
+    <Star name="Sun" mass="1" x="0" y="0" z="0" xVel="0" yVel="0" zVel="0" radius="1" logTrajectory="1">
+        <Planet name="Earth" mass="1" inclination="0" orbitalRadius="1" angularFrequency="0.00000478"></Planet>
+        <ProtoplanetaryCloud name="shouldnt be here" numberOfPlanetesimals="8000" mass="0.05" xScale="4" yScale="4" zScale="0.2"></ProtoplanetaryCloud>
+    </Star>
+</SimulationProfile>

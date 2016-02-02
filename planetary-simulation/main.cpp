@@ -5,10 +5,12 @@
 #include <stdlib.h>
 #include <math.h>
 #include <iostream>
+#include <fstream>
 #include <string>
 #include <vector>
 #include <cmath>
 #include <utility>
+#include <string.h>
 
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -16,6 +18,8 @@
 
 #include "../body.h"
 #include "../system.h"
+
+#include "../rapidxml-1.13/rapidxml.hpp" //defines xml config reader
 #include "ProtoplanetaryCloud.h"
 
 using namespace std;
@@ -24,8 +28,11 @@ int enterInteger();
 
 double enterDouble();
 
+void parseConfig();
+
 int main()
 {
+	parseConfig();
 	const double Solar_Mass(1.989*pow(10, 30));
 	const double AU(1.4960*pow(10, 11));
 	const double timestep(24*3600/6);//day/4 in seconds
@@ -209,4 +216,41 @@ double enterDouble()//used for every user input number to make sure there is goo
 	}
 		
 	return number;
+};
+
+using namespace rapidxml;
+
+void parseConfig()
+{
+	cout << "Parsing my beer journal..." << endl;
+	xml_document<> doc;
+	xml_node<> * root_node;
+	// Read the xml file into a vector
+	ifstream theFile ("Configs/beerJournal.xml");
+	vector<char> buffer((istreambuf_iterator<char>(theFile)), istreambuf_iterator<char>());
+	buffer.push_back('\0');
+	// Parse the buffer using the xml file parsing library into doc 
+	doc.parse<0>(&buffer[0]);
+	// Find our root node
+	root_node = doc.first_node("SimulationProfile");
+	// Iterate over the brewerys
+	for (xml_node<> * brewery_node = root_node->first_node("Star"); brewery_node; brewery_node = brewery_node->next_sibling("Star"))
+	{
+		int a = atoi(brewery_node->first_attribute("mass")->value());
+		double b = atof(brewery_node->first_attribute("mass")->value());
+		cout << "atoi " << a << ", atof " << b << endl;
+		cout << brewery_node->first_attribute("name")->value() << brewery_node->first_attribute("mass")->value() << endl;
+            // Interate over the beers
+	    for(xml_node<> * beer_node = brewery_node->first_node("Planet"); beer_node; beer_node = beer_node->next_sibling("Planet"))
+	    {
+	    	cout << beer_node->first_attribute("name")->value() << beer_node->first_attribute("mass")->value() << endl;
+	    }
+
+	    for(xml_node<> * beer_node = brewery_node->first_node("ProtoplanetaryCloud"); beer_node; beer_node = beer_node->next_sibling("ProtoplanetaryCloud"))
+	    {
+	    	cout << beer_node->first_attribute("numberOfPlanetesimals")->value() << beer_node->first_attribute("mass")->value() << endl;
+	    }
+	    cout << endl;
+	}
+	return;
 }
