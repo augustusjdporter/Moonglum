@@ -34,7 +34,7 @@ public:
 
 	void update(const double& timestep);
 
-	void printCoordinates(const string& path, const string& fileName);
+	void printCoordinates(const string& path, const string& fileName, const double& normalisation);
 
 	vector<Body*>* Bodies();
 

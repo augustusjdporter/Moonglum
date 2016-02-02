@@ -84,6 +84,9 @@ Body::Body(string tempName,
 
 	m_logTrajectory = tempLogTrajectory;
 
+	//m_relaxation = 0.05*3.0857*pow(10, 12);
+	m_relaxation = 0.0;
+
 	cout << m_name << " created." << endl;
 
 };
@@ -99,7 +102,7 @@ vector<double> Body::accelerationCalc(vector<Body>* Body_Vector)
 	vector <Body>::iterator it;
 	for (it = Body_Vector->begin(); it != Body_Vector->end(); ++it)
 	{
-		if (this->name() == it->name() || it->isValid() == false) continue;
+		if (name() == it->name() || it->isValid() == false) continue;
 		//F = G*M*m*r_vector/r^3
 		//a = G*M*r_vector/r^3
 		double rx = xPosition() - it->xPosition();
@@ -108,39 +111,39 @@ vector<double> Body::accelerationCalc(vector<Body>* Body_Vector)
 		double rCubed = pow(rx*rx + ry*ry + rz*rz + 3*pow(10,8)*pow(10,7), 1.5);
 
 		//when bodies touch, they stick. Conserve linear momentum
-		if(rCubed <= pow(this->radius() + it->radius(), 3))
+		if(rCubed <= pow(radius() + it->radius(), 3))
 		{
 			
 			//combine them
 			it->set_isValid(false);
-			double new_mass = this->mass() + it->mass();
+			double new_mass = mass() + it->mass();
 
 			//place "this" body in the center of mass (COM = (m1x1 +m2x2)/(m1+m2))
-			double xCOM = (this->mass()*this->xPosition() + it->mass()*it->xPosition()) / new_mass;
-			double yCOM = (this->mass()*this->yPosition() + it->mass()*it->yPosition()) / new_mass;
-			double zCOM = (this->mass()*this->zPosition() + it->mass()*it->zPosition()) / new_mass;
+			double xCOM = (mass()*xPosition() + it->mass()*it->xPosition()) / new_mass;
+			double yCOM = (mass()*yPosition() + it->mass()*it->yPosition()) / new_mass;
+			double zCOM = (mass()*zPosition() + it->mass()*it->zPosition()) / new_mass;
 
 			//conserve momentum. NewVel = Mom/new mass
-			double new_xVelocity = (this->mass()*this->xVelocity() + it->mass()*it->xVelocity()) / new_mass;
-			double new_yVelocity = (this->mass()*this->yVelocity() + it->mass()*it->yVelocity()) / new_mass;
-			double new_zVelocity = (this->mass()*this->zVelocity() + it->mass()*it->zVelocity()) / new_mass;
+			double new_xVelocity = (mass()*xVelocity() + it->mass()*it->xVelocity()) / new_mass;
+			double new_yVelocity = (mass()*yVelocity() + it->mass()*it->yVelocity()) / new_mass;
+			double new_zVelocity = (mass()*zVelocity() + it->mass()*it->zVelocity()) / new_mass;
 
 			//Set new velocity, position, and mass to "this" body
-			this->set_xVelocity(new_xVelocity);
-			this->set_yVelocity(new_yVelocity);
-			this->set_zVelocity(new_zVelocity);
+			set_xVelocity(new_xVelocity);
+			set_yVelocity(new_yVelocity);
+			set_zVelocity(new_zVelocity);
 
-			this->set_xPosition(xCOM);
-			this->set_yPosition(yCOM);
-			this->set_zPosition(zCOM);
+			set_xPosition(xCOM);
+			set_yPosition(yCOM);
+			set_zPosition(zCOM);
 
-			this->set_mass(new_mass);
+			set_mass(new_mass);
 
 			//What to do about the radius? Keep average density? New density = p1m1 + p2m2/m1+m2
-			double new_density = (this->density()*this->mass() + it->density()*it->mass()) / new_mass;
+			double new_density = (density()*mass() + it->density()*it->mass()) / new_mass;
 
 			//r = (3/4 m/(p pi))^1/3
-			this->set_Radius(pow(3/4 * new_mass/(M_PI * new_density), 1/3));
+			set_Radius(pow(3/4 * new_mass/(M_PI * new_density), 1/3));
 
 			//remove the body from the vector
 			Body_Vector->erase(it);
@@ -158,6 +161,7 @@ vector<double> Body::accelerationCalc(vector<Body>* Body_Vector)
 		}	
 	}
 
+	cout << accX << " " << accY << " " << accZ << endl;
 	acceleration.push_back(accX);
 	acceleration.push_back(accY);
 	acceleration.push_back(accZ);
@@ -176,57 +180,60 @@ vector<double> Body::accelerationCalc(vector<Body*>* Body_Vector)
 	vector <Body*>::iterator it;
 	for (it = Body_Vector->begin(); it != Body_Vector->end(); ++it)
 	{
-		if (this->name() == (*it)->name() || (*it)->isValid() == false) continue;
+		if (name() == (*it)->name() || (*it)->isValid() == false) continue;
 		//F = G*M*m*r_vector/r^3
 		//a = G*M*r_vector/r^3
 		double rx = xPosition() - (*it)->xPosition();
 		double ry = yPosition() - (*it)->yPosition();
 		double rz = zPosition() - (*it)->zPosition();
-		double rCubed = pow(rx*rx + ry*ry + rz*rz, 1.5);
+		double rCubed = pow(rx*rx + ry*ry + rz*rz + relaxation() + (*it)->relaxation(), 1.5);
 
+		//cout << "rcubed "<< rCubed << endl;
 		//when bodies touch, they stick. Conserve linear momentum
-		if(rCubed <= pow(this->radius() + (*it)->radius(), 3))
+		if(rCubed <= pow(radius() + (*it)->radius(), 3))
 		{
 			
 			//combine them
 			(*it)->set_isValid(false);
-			double new_mass = this->mass() + (*it)->mass();
+			double new_mass = mass() + (*it)->mass();
 
 			//place "this" body in the center of mass (COM = (m1x1 +m2x2)/(m1+m2))
-			double xCOM = (this->mass()*this->xPosition() + (*it)->mass()*(*it)->xPosition()) / new_mass;
-			double yCOM = (this->mass()*this->yPosition() + (*it)->mass()*(*it)->yPosition()) / new_mass;
-			double zCOM = (this->mass()*this->zPosition() + (*it)->mass()*(*it)->zPosition()) / new_mass;
+			double xCOM = (mass()*xPosition() + (*it)->mass()*(*it)->xPosition()) / new_mass;
+			double yCOM = (mass()*yPosition() + (*it)->mass()*(*it)->yPosition()) / new_mass;
+			double zCOM = (mass()*zPosition() + (*it)->mass()*(*it)->zPosition()) / new_mass;
 
 			//conserve momentum. NewVel = Mom/new mass
-			double new_xVelocity = (this->mass()*this->xVelocity() + (*it)->mass()*(*it)->xVelocity()) / new_mass;
-			double new_yVelocity = (this->mass()*this->yVelocity() + (*it)->mass()*(*it)->yVelocity()) / new_mass;
-			double new_zVelocity = (this->mass()*this->zVelocity() + (*it)->mass()*(*it)->zVelocity()) / new_mass;
+			double new_xVelocity = (mass()*xVelocity() + (*it)->mass()*(*it)->xVelocity()) / new_mass;
+			double new_yVelocity = (mass()*yVelocity() + (*it)->mass()*(*it)->yVelocity()) / new_mass;
+			double new_zVelocity = (mass()*zVelocity() + (*it)->mass()*(*it)->zVelocity()) / new_mass;
 
 			//Set new velocity, position, and mass to "this" body
-			this->set_xVelocity(new_xVelocity);
-			this->set_yVelocity(new_yVelocity);
-			this->set_zVelocity(new_zVelocity);
+			set_xVelocity(new_xVelocity);
+			set_yVelocity(new_yVelocity);
+			set_zVelocity(new_zVelocity);
 
-			this->set_xPosition(xCOM);
-			this->set_yPosition(yCOM);
-			this->set_zPosition(zCOM);
+			set_xPosition(xCOM);
+			set_yPosition(yCOM);
+			set_zPosition(zCOM);
 
-			this->set_mass(new_mass);
+			set_mass(new_mass);
 
 			//What to do about the radius? Keep average density? New density = p1m1 + p2m2/m1+m2
-			double new_density = (this->density()*this->mass() + (*it)->density()*(*it)->mass()) / new_mass;
+			double new_density = (density()*mass() + (*it)->density()*(*it)->mass()) / new_mass;
 
 			//r = (3/4 m/(p pi))^1/3
-			this->set_Radius(pow(3/4 * new_mass/(M_PI * new_density), 1/3));
+			set_Radius(pow(3/4 * new_mass/(M_PI * new_density), 1/3));
 
 			//remove the body from the vector
 			Body_Vector->erase(it);
 			--it;
-			cout << "deleted an entry" << endl;
+			//cout << "deleted an entry" << endl;
 		}
 		else	//if bodies aren't touching, calculate acceleration
 		{
 			double magAcc = -G*(*it)->mass()/rCubed;
+
+			//cout << "magacc " << magAcc << endl;
 
 			accX = accX + magAcc*rx;
 			accY = accY + magAcc*ry;
@@ -235,6 +242,7 @@ vector<double> Body::accelerationCalc(vector<Body*>* Body_Vector)
 		}	
 	}
 
+	//cout << accX << " " << accY << " " << accZ << endl;
 	acceleration.push_back(accX);
 	acceleration.push_back(accY);
 	acceleration.push_back(accZ);
@@ -378,3 +386,8 @@ void Body::addToTrajectory(const string& path)
 		*m_trajectory << xPosition()/AU << "\t" << yPosition()/AU << "\t" << zPosition()/AU << endl;
 	}
 };
+
+const double Body::relaxation() const
+{
+	return m_relaxation;
+}

@@ -28,11 +28,13 @@ int main()
 {
 	const double Solar_Mass(1.989*pow(10, 30));
 	const double AU(1.4960*pow(10, 11));
-	const double timestep(24*3600/5);//day/5 in seconds
+	const double timestep(24*3600/6);//day/4 in seconds
+	const double G(6.67*pow(10, -11));
 
 	const double solar_radius(6.96*pow(10, 8));
 	const double earth_radius(6.37*pow(10, 6));//needs to be updated when have internet
 	const double jupiter_radius(6.99*pow(10, 7));
+	const double solar_mass(1.9891*pow(10, 30));
 
 	const time_t ctt = time(0);
 	cout << asctime(localtime(&ctt)) << endl;//output time 
@@ -57,39 +59,38 @@ int main()
 
 
 	System solarSystem;
+//gm/r=v^2
+	solarSystem.addBody(new Body("Sun1", 2*solar_mass, 0, 0, 0, 0, 0, 0, solar_radius, true));
+	//solarSystem.addBody(new Body("Sun2", solar_mass, -0.1*AU, 0, 0, 0, -pow(G*solar_mass/(0.4*AU), 0.5), 0, solar_radius, true));
+	//solarSystem.addBody(new Body("Earth", 5.972*pow(10, 24), 1*AU, 0, 0, 0, 3.3*pow(10,4) , 0, earth_radius, true));
+	//solarSystem.addBody(new Body("Jupiter", 1.898*pow(10, 27), 5.2*AU, 0, 0, 0, 47.051*pow(10,6)/3600 , 0, jupiter_radius, true));
 
-	solarSystem.addBody(new Body("Sun", 1.9891*pow(10, 30), 0, 0, 0, 0, 0, 0, solar_radius, true));
-	solarSystem.addBody(new Body("Earth", 5.972*pow(10, 24), 1*AU, 0, 0, 0, 3.3*pow(10,4) , 0, earth_radius, true));
-	solarSystem.addBody(new Body("Jupiter", 1.898*pow(10, 27), 5.2*AU, 0, 0, 0, 47.051*pow(10,6)/3600 , 0, jupiter_radius, true));
-
-	ProtoplanetaryCloud cloud(800, 0.01*Solar_Mass, 4*AU, 4*AU, 0.2*AU, 0.0, 0.0);
+	ProtoplanetaryCloud cloud(8000, 0.05*Solar_Mass, 4*AU, 4*AU, 0.2*AU, 0.0, 0.0);
 
 	cloud.addBoundSystem(&solarSystem);
 	solarSystem.addBoundSystem(&cloud);
 
 	int thisthing = 1;
-	int refresh = 1;
+	int refresh = 3;
 	int printCount = 1;
-	cout << "How many iterations (each iteration is 1/5 day)? ";
+	cout << "How many iterations (each iteration is 1/4 day)? ";
 	int iterationNumber = enterInteger();
   	while (thisthing <= iterationNumber)
   	{
-  		
+  		beginninguni = time(0);
 
 		solarSystem.update(timestep);
 		cloud.update(timestep);
 
-		if(refresh == 90)
+		if(refresh == 3)
 		{
-			beginninguni = time(0);
-
 			stringstream combiner;
 			combiner << "Snapshots/It_" << printCount << ".txt";
 
 			string file_name;
 			combiner >> file_name;
 
-			solarSystem.printCoordinates(path, file_name);
+			solarSystem.printCoordinates(path, file_name, AU);
 			
 			std::string command = "ipython plot-planetary-simulation.py ";
     		command += simulationName;
@@ -103,17 +104,16 @@ int main()
     		cout << command << endl;
     		system(command.c_str());
 
-			enduni = time(0);
-			cout << "Time taken for step " << thisthing << " (seconds): " << enduni - beginninguni << endl;
-
 			refresh = 0;
 			printCount++;
 
 		}
+
+		enduni = time(0);
+		cout << "Time taken for step " << thisthing << " (seconds): " << enduni - beginninguni << endl;
+
 		refresh++;
 		thisthing++;
-
-		
 	}
 
 	return 0;

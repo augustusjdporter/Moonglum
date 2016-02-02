@@ -18,9 +18,17 @@
 #include "../body.h"
 #include "../system.h"
 
+#include "DarkMatterHalo.h"
+#include "Gas.h"
+#include "BlackHole.h"
+#include "Star.h"
+#include "Galaxy.h"
+
 //typedef
 
 using namespace std;
+
+int enterInteger();
 
 int main()
 {
@@ -28,24 +36,32 @@ int main()
 	cout << "Name the simulation: ";
 	cin >> simulationName;
 	cout << endl;
-	const char* directory = ("Coords/" + simulationName).c_str();
+	string path = "Coords/" + simulationName + "/";
+	const char* directory = (path).c_str();
 	mkdir(directory, 0700);
 
-	cout << "Enter number of bodies: ";
-	int bodies_number;
-	cin >> bodies_number;
-	cout << endl;
+	const char* snapshots_directory = (path + "Snapshots/").c_str();
+	mkdir(snapshots_directory, 0700);
+
+	const char* plots_directory = (path + "Plots/").c_str();
+	mkdir(plots_directory, 0700);
+
+
+	cout << "Enter number of star bodies: ";
+	int star_number = enterInteger();
+
+	cout << "Enter number of gas bodies: ";
+	int gas_number = enterInteger();
+
+	cout << "Enter number of dark matter bodies: ";
+	int darkMatter_number = enterInteger();
 
 	cout << "Enter number of iterations to take: ";
-	int iteration_number;
-	cin >> iteration_number;
-	cout << endl;
+	int iteration_number = enterInteger();
 
 
 	cout << "Enter timestep (years): ";
-	double years_number;
-	cin >> years_number;
-	cout << endl;
+	int years_number = enterInteger();
 
 
 	const time_t ctt = time(0);
@@ -54,80 +70,93 @@ int main()
 
 	const double kPc(3.0857*pow(10, 15));
 	const double Solar_Mass(1.989*pow(10, 30));
-	const double year(31536000);
+	const double year(3600*365.25);
 	const double timestep(years_number*year);//year in seconds
 
-	std::default_random_engine generator;
+	Galaxy simGalaxy(star_number, 100*pow(10,9)*Solar_Mass, //stars
+					 gas_number, 3*pow(10, 9)*Solar_Mass, //gas
+					 4.6*pow(10, 6)*Solar_Mass, //mass of BH
+					 8*kPc, 8*kPc, 1*kPc, //x,y,z
+					 180000, 1*pow(10,5));// velocity and dispersion
 
-  	std::normal_distribution<double> distribution(0.,5.0*kPc);
-  	std::normal_distribution<double> distributionz(0.,1.0*kPc);
-  	std::normal_distribution<double> distribution_velocity(460000,1*pow(10,5));
+	DarkMatterHalo simHalo(darkMatter_number, 1*pow(10, 12)*Solar_Mass, 50*kPc, 50*kPc, 50*kPc);
 
-	vector <Body> Body_Vector;
-	//Body_Vector.push_back(Planet("Sun", 1.9891*pow(10, 32), 0, 0, 0, 0, 0, 0));
-	for (int i =0; i<bodies_number; i++)
-	{
-		double numberx = distribution(generator);
-		double numbery = distribution(generator);
-		double numberz = distributionz(generator);
-
-		//Direction of velocity (perpindicular to the displacement)
-		double velocity_Direction_x = pow(pow(numberx,2) + pow(numbery,2),-0.5)*(-numbery);
-		double velocity_Direction_y = pow(pow(numberx,2) + pow(numbery,2),-0.5)*(numberx);
-
-		//Magnitude of velocity (constant) ms^-1
-		double velocity_magnitude = distribution_velocity(generator);
-		double numberxvel = velocity_Direction_x * velocity_magnitude;
-		double numberyvel = velocity_Direction_y * velocity_magnitude;
-
-		stringstream combiner;
-		combiner << "Star" << i;
-		string name;
-		combiner >> name;
-		Body_Vector.push_back(Body(name, pow(10, 12)/bodies_number*Solar_Mass, numberx, numbery, numberz, numberxvel, numberyvel, 0));
-		//cout << numberx << " " << numbery << " " << numberz << " " << numberxvel << " " << numberyvel << endl;
-	}
-
+	simGalaxy.addBoundSystem(&simHalo);
 
 	for (int j = 0; j < iteration_number; j++)
 	{
 		beginninguni = time(0);
-		vector <Body>::iterator it;
-		for (it = Body_Vector.begin(); it != Body_Vector.end(); ++it)
-	  	{
-	  		//cout << "making acc calc" << endl;
-			vector<double> acceleration = it->accelerationCalc(&Body_Vector);
-			//cout << "completed acc calc" << endl;
 
+		simGalaxy.update(timestep);
 
-			it->set_xPosition(it->xPosition() + it->xVelocity()*timestep);
-			it->set_yPosition(it->yPosition() + it->yVelocity()*timestep);
-			it->set_zPosition(it->zPosition() + it->zVelocity()*timestep);
-		
-			it->set_xVelocity(it->xVelocity() + acceleration.at(0)*timestep);
-			it->set_yVelocity(it->yVelocity() + acceleration.at(1)*timestep);
-			it->set_zVelocity(it->zVelocity() + acceleration.at(2)*timestep);
-			//cout << acceleration.at(0)*timestep << endl;
-			//cout << acceleration.at(1)*timestep << endl;
-			//cout << acceleration.at(2)*timestep << endl;
-		}	
-
-		ofstream file;
 		stringstream combiner;
-		combiner << "Coords/"<< simulationName << "/It_" << j << ".txt";
+		combiner << "Snapshots/It_" << j << ".txt";
+
 		string file_name;
 		combiner >> file_name;
-		cout << file_name << endl;
-		file.open (file_name);
-		for (int i=0; i<Body_Vector.size(); i++)
-		{
-			file << Body_Vector.at(i).name() << "\t" << Body_Vector.at(i).xPosition() << "\t" << Body_Vector.at(i).yPosition() << "\t" << Body_Vector.at(i).zPosition() << endl;//prints shape data with overloaded <<
-		}
-		
-		file.close();
-		enduni = time(0);
+
+		simGalaxy.printCoordinates(path, file_name, kPc);
+			
+		std::string command = "ipython plot-galaxy-simulation.py ";
+    	command += simulationName;
+    	command += " ";
+
+    	ostringstream convertIntToString;
+    	convertIntToString << j;
+
+    		
+    	command = command + convertIntToString.str();
+    	cout << command << endl;
+    	system(command.c_str());
+
+    	enduni = time(0);
 		cout << "Time taken for this universe (seconds): " << enduni - beginninguni << endl;
 	}
 
 	return 0;
+}
+
+int enterInteger()//used for every user input number to make sure there is good input. Made a function for convenience.
+{
+	double number;
+	int badCharCount(0);
+	bool goodInput(false);
+	string temp;
+	//cin.clear();
+	//cin.ignore(10000, '\n');
+	getline(cin, temp);
+
+	while(goodInput == false)//if success == 1, a good number has been read and will be returned
+	{
+		if(temp[0] != '0' &&  temp[0] != '1' &&  temp[0] != '2' &&  temp[0] != '3' &&  temp[0] != '4' &&  
+		   temp[0] != '5' &&  temp[0] != '6' &&  temp[0] != '7' &&  temp[0] != '8' &&  temp[0] != '9') 
+		{
+		   	badCharCount++;//first char may be - to denote negative
+		}
+
+		for(std::string::size_type i = 1; i < temp.size(); ++i)//loop through all char and make sure they are digits or .
+		{
+			if(temp[i] != '0' &&  temp[i] != '1' &&  temp[i] != '2' &&  temp[i] != '3' &&  temp[i] != '4' &&  
+			   temp[i] != '5' &&  temp[i] != '6' &&  temp[i] != '7' &&  temp[i] != '8' &&  temp[i] != '9') 
+			{
+				badCharCount++;//this parameter is greater than zero if any bad characters have been input
+			}
+		}
+
+		if(badCharCount > 0)//if bad input
+		{
+			cout << temp << " is not an integer; please enter an integer: ";
+			getline(cin, temp);
+			badCharCount = 0;
+		}
+		else//if good input
+		{
+			stringstream string2num;//convert the string to a double
+			string2num << temp;
+			string2num >> number;
+			goodInput = true;
+		}
+	}
+		
+	return number;
 }

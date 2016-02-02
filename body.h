@@ -65,7 +65,7 @@ class Body
 
 	void set_Radius(const double& new_Radius);
 
-	const double radius() const;
+	virtual const double radius() const;
 
 	virtual vector<double> accelerationCalc(vector<Body>* Body_Vector);
 
@@ -80,6 +80,8 @@ class Body
 	const bool isTrackingTrajectory() const;
 
 	void addToTrajectory(const string& path);
+
+	const double relaxation() const;
 
 
 

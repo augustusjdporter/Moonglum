@@ -55,12 +55,15 @@ void System::addBody(const Body newBody)
 
 void System::update(const double& timestep)
 {
-	
+	const double c(3*pow(10, 8));
 	
 	vector <Body*>::iterator it;
 	for (it = m_Bodies.begin(); it != m_Bodies.end(); ++it)
   	{
+  		if((*it)->name() == "BlackHole") continue; //just for now, black hole does not feel force or move
+  		//cout << (*it)->name() << " acc starting" << endl;
 		vector<double> acceleration = (*it)->accelerationCalc(&m_Bodies);//calculate acceleration from own system
+		//cout << (*it)->name() << " acc done" << endl;
 
 		SystemMap::iterator system_it;
 		for(system_it = m_BoundSystems.begin(); system_it != m_BoundSystems.end(); system_it++) 
@@ -72,6 +75,7 @@ void System::update(const double& timestep)
     		acceleration.at(2) = acceleration.at(2) + temp_acceleration.at(2);
 		}
 
+		//cout << (*it)->name() << " velocity: " << (*it)->xVelocity() << " " << (*it)->yVelocity() << " " << (*it)->zVelocity() << endl;
 		(*it)->set_xPosition((*it)->xPosition() + (*it)->xVelocity()*timestep);
 		(*it)->set_yPosition((*it)->yPosition() + (*it)->yVelocity()*timestep);
 		(*it)->set_zPosition((*it)->zPosition() + (*it)->zVelocity()*timestep);
@@ -79,18 +83,25 @@ void System::update(const double& timestep)
 		(*it)->set_xVelocity((*it)->xVelocity() + acceleration.at(0)*timestep);
 		(*it)->set_yVelocity((*it)->yVelocity() + acceleration.at(1)*timestep);
 		(*it)->set_zVelocity((*it)->zVelocity() + acceleration.at(2)*timestep);
+
+
+		//cout << (*it)->name() << " velocity: " << (*it)->xVelocity() << " " << (*it)->yVelocity() << " " << (*it)->zVelocity() << endl;
+		if (pow((*it)->xVelocity(),2) + pow((*it)->yVelocity(),2) + pow((*it)->zVelocity(),2) > pow(c, 2))
+		{
+			cout << "Error! " << (*it)->name() << " travelling faster than light!" << endl;
+			cout << "Vel: " << pow(pow((*it)->xVelocity(),2) + pow((*it)->yVelocity(),2) + pow((*it)->zVelocity(),2), 0.5) << endl;
+		}
 	}
 	return;
 };
 
-void System::printCoordinates(const string& path, const string& filename)
+void System::printCoordinates(const string& path, const string& filename, const double& normalisation)
 {
-	const double AU(1.4960*pow(10, 11));
 	ofstream file;
 	file.open (path + filename);
 	for (int i=0; i < m_Bodies.size(); i++)
 	{
-		file << m_Bodies.at(i)->name() << "\t" << m_Bodies.at(i)->xPosition()/AU << "\t" << m_Bodies.at(i)->yPosition()/AU << "\t" << m_Bodies.at(i)->zPosition()/AU << endl;//prints shape data with overloaded <<
+		file << m_Bodies.at(i)->name() << "\t" << m_Bodies.at(i)->xPosition()/normalisation << "\t" << m_Bodies.at(i)->yPosition()/normalisation << "\t" << m_Bodies.at(i)->zPosition()/normalisation << endl;//prints shape data with overloaded <<
 		if(m_Bodies.at(i)->isTrackingTrajectory() == true)
 		{
 			m_Bodies.at(i)->addToTrajectory(path);
@@ -108,7 +119,7 @@ void System::printCoordinates(const string& path, const string& filename)
 			{
 				for (int i=0; i < tempBodies->size(); i++)
 				{
-					file << tempBodies->at(i)->name() << "\t" << tempBodies->at(i)->xPosition()/AU << "\t" << tempBodies->at(i)->yPosition()/AU << "\t" << tempBodies->at(i)->zPosition()/AU << endl;//prints shape data with overloaded <<
+					file << tempBodies->at(i)->name() << "\t" << tempBodies->at(i)->xPosition()/normalisation << "\t" << tempBodies->at(i)->yPosition()/normalisation << "\t" << tempBodies->at(i)->zPosition()/normalisation << endl;//prints shape data with overloaded <<
 					if(tempBodies->at(i)->isTrackingTrajectory() == true)
 					{
 						tempBodies->at(i)->addToTrajectory(path);
