@@ -8,7 +8,10 @@ public:
 	~ProtoplanetaryCloud(); //Destructor
 
 	ProtoplanetaryCloud(const int& numberOfBodies,
-						const double& mass, 
+						const double& mass,
+						const double& xCenter, 
+						const double& yCenter, 
+						const double& zCenter,
 						const double& xScaleHeight, 
 						const double& yScaleHeight, 
 						const double& zScaleHeight,

@@ -12,7 +12,10 @@ ProtoplanetaryCloud::~ProtoplanetaryCloud() //Destructor
 };
 
 ProtoplanetaryCloud::ProtoplanetaryCloud(const int& numberOfBodies,
-										 const double& mass, 
+										 const double& mass,
+										 const double& xCenter, 
+										 const double& yCenter, 
+										 const double& zCenter,
 										 const double& xScaleHeight, 
 										 const double& yScaleHeight, 
 										 const double& zScaleHeight,
@@ -31,9 +34,9 @@ ProtoplanetaryCloud::ProtoplanetaryCloud(const int& numberOfBodies,
 
 	std::default_random_engine generator;
 
-  	std::normal_distribution<double> distributionx(0., xScaleHeight);
-  	std::normal_distribution<double> distributiony(0., yScaleHeight);
-  	std::normal_distribution<double> distributionz(0., zScaleHeight);
+  	std::normal_distribution<double> distributionx(xCenter, xScaleHeight);
+  	std::normal_distribution<double> distributiony(yCenter, yScaleHeight);
+  	std::normal_distribution<double> distributionz(zCenter, zScaleHeight);
   	std::normal_distribution<double> distribution_velocity(velocity, velocityDispersion);
 
 	for (int i = 0; i < numberOfBodies; i++)
@@ -43,12 +46,12 @@ ProtoplanetaryCloud::ProtoplanetaryCloud(const int& numberOfBodies,
 		double zPos = distributionz(generator);
 
 		//Direction of velocity (perpindicular to the displacement) assume no z Velocity
-		double velocity_Direction_x = pow(pow(xPos,2) + pow(yPos,2),-0.5)*(-yPos);
-		double velocity_Direction_y = pow(pow(xPos,2) + pow(yPos,2),-0.5)*(xPos);
+		double velocity_Direction_x = pow(pow(xPos-xCenter,2) + pow(yPos-yCenter,2),-0.5)*(-(yPos-yCenter));
+		double velocity_Direction_y = pow(pow(xPos-xCenter,2) + pow(yPos-yCenter,2),-0.5)*(xPos-xCenter);
 
 		//Magnitude of velocity (constant) ms^-1
 		double velocity_magnitude = distribution_velocity(generator);
-		double newVel = pow(G*Solar_Mass/pow(pow(xPos, 2) + pow(yPos, 2), 0.5), 0.5);
+		double newVel = pow(G*Solar_Mass/pow(pow(xPos-xCenter, 2) + pow(yPos-yCenter, 2), 0.5), 0.5);
 		double xVel = velocity_Direction_x * newVel;
 		double yVel = velocity_Direction_y * newVel;
 		double zVel = 0;

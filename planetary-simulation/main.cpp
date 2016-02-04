@@ -19,23 +19,51 @@
 #include "../body.h"
 #include "../system.h"
 
-#include "../rapidxml-1.13/rapidxml.hpp" //defines xml config reader
+
+#include "../Utilities/Utilities.h"
+#include "../Utilities/rapidxml-1.13/rapidxml.hpp" //defines xml config reader
 #include "ProtoplanetaryCloud.h"
 
 using namespace std;
 
-int enterInteger();
 
-double enterDouble();
 
-void parseConfig();
+int parseConfig(char* configFile, int* timestep, int* numberOfSteps, int* samplingRate, System* solarSystem, vector<System>* systems);
 
-int main()
+int main(int argc, char* argv[])
 {
-	parseConfig();
+	if(argc < 3)
+	{
+		cout << "Not enough command line arguments. Command line should read:" << endl;
+		cout << "./SolarSystem [simulation name] [path to config file]" << endl;
+		cout << endl;
+		return 0;
+	}
+	else if(argc > 3)
+	{
+		cout << "Too many command line arguments. Command line should read:" << endl;
+		cout << "./SolarSystem [simulation name] [path to config file]" << endl;
+		cout << endl;
+		return 0;
+	}
+	vector<System> systems;
+	System solarSystemTemp;
+
+	int timestep;
+	int numberOfSteps;
+	int samplingRate;
+	int errorHandle = parseConfig(argv[2], &timestep, &numberOfSteps, &samplingRate, &solarSystemTemp, &systems);
+	systems.push_back(solarSystemTemp);
+	if (errorHandle == -1)
+	{
+		cout << "Unable to open config file \"" << string(argv[2]) << "\". Check the path is correct." << endl;
+		cout << endl;
+		return 0;
+	}
+
+	cout << "systems size " << systems.size() << endl;
 	const double Solar_Mass(1.989*pow(10, 30));
 	const double AU(1.4960*pow(10, 11));
-	const double timestep(24*3600/6);//day/4 in seconds
 	const double G(6.67*pow(10, -11));
 
 	const double solar_radius(6.96*pow(10, 8));
@@ -47,10 +75,7 @@ int main()
 	cout << asctime(localtime(&ctt)) << endl;//output time 
 	time_t beginninguni, enduni;
 
-	string simulationName;
-	cout << "Name the simulation: ";
-	cin >> simulationName;
-	cout << endl;
+	string simulationName(argv[1]);
 	string path = "Coords/" + simulationName + "/";
 	const char* directory = (path).c_str();
 	mkdir(directory, 0700);
@@ -67,52 +92,69 @@ int main()
 
 	System solarSystem;
 //gm/r=v^2
-	solarSystem.addBody(new Body("Sun1", 2*solar_mass, 0, 0, 0, 0, 0, 0, solar_radius, true));
+	solarSystem.addBody(new Body("Sun1", solar_mass, 0, 0, 0, 0, 0, 0, solar_radius, true));
 	//solarSystem.addBody(new Body("Sun2", solar_mass, -0.1*AU, 0, 0, 0, -pow(G*solar_mass/(0.4*AU), 0.5), 0, solar_radius, true));
-	//solarSystem.addBody(new Body("Earth", 5.972*pow(10, 24), 1*AU, 0, 0, 0, 3.3*pow(10,4) , 0, earth_radius, true));
+	solarSystem.addBody(new Body("Earth", 5.972*pow(10, 24), 1*AU, 0, 0, 0, 3.3*pow(10,4) , 0, earth_radius, true));
 	//solarSystem.addBody(new Body("Jupiter", 1.898*pow(10, 27), 5.2*AU, 0, 0, 0, 47.051*pow(10,6)/3600 , 0, jupiter_radius, true));
 
-	ProtoplanetaryCloud cloud(8000, 0.05*Solar_Mass, 4*AU, 4*AU, 0.2*AU, 0.0, 0.0);
+	//ProtoplanetaryCloud cloud(8000, 0.05*Solar_Mass, 0, 0, 0, 4*AU, 4*AU, 0.2*AU, 0.0, 0.0);
 
-	cloud.addBoundSystem(&solarSystem);
-	solarSystem.addBoundSystem(&cloud);
+	//cloud.addBoundSystem(&solarSystem);
+	//solarSystem.addBoundSystem(&cloud);
+
+	for (int i = 0; i < systems.size(); i++)
+	{
+		for (int j = 0; j < systems.size(); j++)
+		{
+			if (i == j) continue;
+			systems.at(i).addBoundSystem(&systems.at(j));
+		}
+	}
 
 	int thisthing = 1;
-	int refresh = 3;
+	int refresh = samplingRate;
 	int printCount = 1;
-	cout << "How many iterations (each iteration is 1/4 day)? ";
-	int iterationNumber = enterInteger();
-  	while (thisthing <= iterationNumber)
+
+  	while (thisthing <= numberOfSteps)
   	{
   		beginninguni = time(0);
 
-		solarSystem.update(timestep);
-		cloud.update(timestep);
-
-		if(refresh == 3)
+		for (int i = 0; i < systems.size(); i++)
 		{
-			stringstream combiner;
-			combiner << "Snapshots/It_" << printCount << ".txt";
+			systems.at(i).update(timestep);
+		}
 
-			string file_name;
-			combiner >> file_name;
+		//solarSystem.update(timestep);
 
-			solarSystem.printCoordinates(path, file_name, AU);
+		if(refresh == samplingRate)
+		{
+			if (systems.size() > 0)
+			{
+				stringstream combiner;
+				combiner << "Snapshots/It_" << printCount << ".txt";
+
+				string file_name;
+				combiner >> file_name;
+
 			
-			std::string command = "ipython plot-planetary-simulation.py ";
-    		command += simulationName;
-    		command += " ";
+				systems.at(0).printCoordinates(path, file_name, AU);
+				//solarSystem.printCoordinates(path, file_name, AU);
+			
+				std::string command = "ipython plot-planetary-simulation.py ";
+    			command += simulationName;
+    			command += " ";
 
-    		ostringstream convertIntToString;
-    		convertIntToString << printCount;
+    			ostringstream convertIntToString;
+    			convertIntToString << printCount;
 
     		
-    		command = command + convertIntToString.str();
-    		cout << command << endl;
-    		system(command.c_str());
+    			command = command + convertIntToString.str();
+    			cout << command << endl;
+    			system(command.c_str());
 
-			refresh = 0;
-			printCount++;
+				refresh = 0;
+				printCount++;
+			}
 
 		}
 
@@ -126,131 +168,96 @@ int main()
 	return 0;
 }
 
-int enterInteger()//used for every user input number to make sure there is good input. Made a function for convenience.
-{
-	double number;
-	int badCharCount(0);
-	bool goodInput(false);
-	string temp;
-	cin.clear();
-	cin.ignore(10000, '\n');
-	getline(cin, temp);
 
-	while(goodInput == false)//if success == 1, a good number has been read and will be returned
-	{
-		if(temp[0] != '0' &&  temp[0] != '1' &&  temp[0] != '2' &&  temp[0] != '3' &&  temp[0] != '4' &&  
-		   temp[0] != '5' &&  temp[0] != '6' &&  temp[0] != '7' &&  temp[0] != '8' &&  temp[0] != '9') 
-		{
-		   	badCharCount++;//first char may be - to denote negative
-		}
-
-		for(std::string::size_type i = 1; i < temp.size(); ++i)//loop through all char and make sure they are digits or .
-		{
-			if(temp[i] != '0' &&  temp[i] != '1' &&  temp[i] != '2' &&  temp[i] != '3' &&  temp[i] != '4' &&  
-			   temp[i] != '5' &&  temp[i] != '6' &&  temp[i] != '7' &&  temp[i] != '8' &&  temp[i] != '9') 
-			{
-				badCharCount++;//this parameter is greater than zero if any bad characters have been input
-			}
-		}
-
-		if(badCharCount > 0)//if bad input
-		{
-			cout << temp << " is not an integer; please enter an integer: ";
-			getline(cin, temp);
-			badCharCount = 0;
-		}
-		else//if good input
-		{
-			stringstream string2num;//convert the string to a double
-			string2num << temp;
-			string2num >> number;
-			goodInput = true;
-		}
-	}
-		
-	return number;
-}
-
-double enterDouble()//used for every user input number to make sure there is good input. Made a function for convenience.
-{
-	double number;
-	int badCharCount(0), pointCount(0);
-	bool success(false);
-	string temp;
-	cin.clear();
-	cin.ignore(10000, '\n');
-	getline(cin, temp);
-
-	while(success == false)//if success == 1, a good number has been read and will be returned
-	{
-		if(temp[0] != '-' && temp[0] != '0' &&  temp[0] != '1' &&  temp[0] != '2' &&  temp[0] != '3' &&  temp[0] != '4' &&  
-		   temp[0] != '5' &&  temp[0] != '6' &&  temp[0] != '7' &&  temp[0] != '8' &&  temp[0] != '9' &&  temp[0] != '.') badCharCount++;//first char may be - to denote negative
-		if(temp[0] == '.')  pointCount++;//used to make sure no more than one . input
-
-		for(std::string::size_type i = 1; i < temp.size(); ++i)//loop through all char and make sure they are digits or .
-		{
-			if(temp[i] != '0' &&  temp[i] != '1' &&  temp[i] != '2' &&  temp[i] != '3' &&  temp[i] != '4' &&  
-			   temp[i] != '5' &&  temp[i] != '6' &&  temp[i] != '7' &&  temp[i] != '8' &&  temp[i] != '9' &&  
-			   temp[i] != '.') 
-			{
-				badCharCount++;//this parameter is greater than zero if any bad characters have been input
-			}
-
-			if(temp[i] == '.') pointCount++;//used to make sure no more than one . input
-
-		}
-		if(badCharCount > 0 || pointCount > 1)//if bad input
-		{
-			cout << "Please enter a number: ";
-			getline(cin, temp);
-			badCharCount = 0;
-			pointCount = 0;
-		}
-		else//if good input
-		{
-			stringstream string2num;//convert the string to a double
-			string2num << temp;
-			string2num >> number;
-			success = true;
-		}
-	}
-		
-	return number;
-};
 
 using namespace rapidxml;
 
-void parseConfig()
+//FOUND THE ERROR. EARTH IS MOVING AT 1/10th OF THE SPEED. CHANGE SO INPUT PARAM IS THE PERIOD OF ORBIT.
+int parseConfig(char* configFile, int* timestep, int* numberOfSteps, int* samplingRate, System* solarSystem, vector<System>* systems)
 {
-	cout << "Parsing my beer journal..." << endl;
+	//Checking file exists
+	FILE *file = fopen(configFile, "r");
+	if (file == NULL) 
+	{
+        
+        return -1;
+    }
+    fclose(file);
+
+    const double Solar_Mass(1.989*pow(10, 30));
+	const double AU(1.4960*pow(10, 11));
+	const double G(6.67*pow(10, -11));
+	const double solar_radius(6.96*pow(10, 8));
+	const double earth_radius(6.37*pow(10, 6));//needs to be updated when have internet
+	const double jupiter_radius(6.99*pow(10, 7));
+	const double solar_mass(1.9891*pow(10, 30));
+	const double earth_mass(5.972*pow(10, 24));
+	
 	xml_document<> doc;
 	xml_node<> * root_node;
 	// Read the xml file into a vector
-	ifstream theFile ("Configs/beerJournal.xml");
+	ifstream theFile (configFile);
+
+	cout << "Parsing " << string(configFile) << "..." << endl;
 	vector<char> buffer((istreambuf_iterator<char>(theFile)), istreambuf_iterator<char>());
 	buffer.push_back('\0');
 	// Parse the buffer using the xml file parsing library into doc 
 	doc.parse<0>(&buffer[0]);
 	// Find our root node
 	root_node = doc.first_node("SimulationProfile");
-	// Iterate over the brewerys
-	for (xml_node<> * brewery_node = root_node->first_node("Star"); brewery_node; brewery_node = brewery_node->next_sibling("Star"))
+
+	*timestep = atoi(root_node->first_node("timestep")->value());
+	*numberOfSteps = atoi(root_node->first_node("numberOfSteps")->value());
+	*samplingRate = atoi(root_node->first_node("samplingRate")->value());
+
+	
+	// Iterate over the stars
+	for (xml_node<> * star_node = root_node->first_node("Star"); star_node; star_node = star_node->next_sibling("Star"))
 	{
-		int a = atoi(brewery_node->first_attribute("mass")->value());
-		double b = atof(brewery_node->first_attribute("mass")->value());
-		cout << "atoi " << a << ", atof " << b << endl;
-		cout << brewery_node->first_attribute("name")->value() << brewery_node->first_attribute("mass")->value() << endl;
-            // Interate over the beers
-	    for(xml_node<> * beer_node = brewery_node->first_node("Planet"); beer_node; beer_node = beer_node->next_sibling("Planet"))
+		solarSystem->addBody(new Body(star_node->first_attribute("name")->value(), 
+									 atof(star_node->first_attribute("mass")->value())*solar_mass, 
+									 atof(star_node->first_attribute("x")->value()), 
+									 atof(star_node->first_attribute("y")->value()), 
+									 atof(star_node->first_attribute("z")->value()), 
+									 atof(star_node->first_attribute("xVel")->value()), 
+									 atof(star_node->first_attribute("yVel")->value()), 
+									 atof(star_node->first_attribute("zVel")->value()), 
+									 atof(star_node->first_attribute("radius")->value())*solar_radius, 
+									 bool(atof(star_node->first_attribute("logTrajectory")->value()))));
+cout << "sun mass" << atof(star_node->first_attribute("mass")->value())*solar_mass << endl;
+	    for(xml_node<> * planet_node = star_node->first_node("Planet"); planet_node; planet_node = planet_node->next_sibling("Planet"))
 	    {
-	    	cout << beer_node->first_attribute("name")->value() << beer_node->first_attribute("mass")->value() << endl;
+	    	//v=wr
+	    	//requires further development if the star is moving
+	    	solarSystem->addBody(new Body(planet_node->first_attribute("name")->value(), 
+									 	 atof(planet_node->first_attribute("mass")->value())*earth_mass, 
+									 	 atof(planet_node->first_attribute("orbitalRadius")->value())*AU, 
+									 	 atof(star_node->first_attribute("y")->value()), //place it at same x and y as star. This can be looked into
+									 	 atof(star_node->first_attribute("z")->value()), 
+									 	 0, 
+									 	 atof(planet_node->first_attribute("angularFrequency")->value())*atof(planet_node->first_attribute("orbitalRadius")->value())*AU/(2*M_PI)*cos(M_PI*atof(planet_node->first_attribute("inclination")->value())/180), 
+									 	 atof(planet_node->first_attribute("angularFrequency")->value())*atof(planet_node->first_attribute("orbitalRadius")->value())*AU/(2*M_PI)*sin(M_PI*atof(planet_node->first_attribute("inclination")->value())/180), 
+									 	 atof(planet_node->first_attribute("radius")->value())*solar_radius, 
+									 	 bool(atof(planet_node->first_attribute("logTrajectory")->value()))));
+cout << atof(planet_node->first_attribute("angularFrequency")->value())*atof(planet_node->first_attribute("orbitalRadius")->value())*AU/(2*M_PI)*cos(M_PI*atof(planet_node->first_attribute("inclination")->value())/180) << endl;
 	    }
 
-	    for(xml_node<> * beer_node = brewery_node->first_node("ProtoplanetaryCloud"); beer_node; beer_node = beer_node->next_sibling("ProtoplanetaryCloud"))
+	    //systems->push_back(System(solarSystem));
+	    for(xml_node<> * cloud_node = star_node->first_node("ProtoplanetaryCloud"); cloud_node; cloud_node = cloud_node->next_sibling("ProtoplanetaryCloud"))
 	    {
-	    	cout << beer_node->first_attribute("numberOfPlanetesimals")->value() << beer_node->first_attribute("mass")->value() << endl;
+	    	systems->push_back(ProtoplanetaryCloud(atoi(cloud_node->first_attribute("numberOfPlanetesimals")->value()), 
+										    		atof(cloud_node->first_attribute("mass")->value())*Solar_Mass, 
+										    		atof(star_node->first_attribute("x")->value()), //place it at same x and y as star. This can be looked into
+										    		atof(star_node->first_attribute("y")->value()), //place it at same x and y as star. This can be looked into
+									 	 			atof(star_node->first_attribute("z")->value()),  
+										    		atof(cloud_node->first_attribute("xScale")->value())*AU, 
+										    		atof(cloud_node->first_attribute("yScale")->value())*AU, 
+										    		atof(cloud_node->first_attribute("zScale")->value())*AU, 
+										    		0.0, 
+										    		0.0));
 	    }
-	    cout << endl;
+
+	    
 	}
-	return;
+	return 0;
 }
