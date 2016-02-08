@@ -60,6 +60,10 @@ int main(int argc, char* argv[])
 		cout << endl;
 		return 0;
 	}
+	else
+	{
+		cout << "Config parsed successfully!" << endl;
+	}
 
 	cout << "systems size " << systems.size() << endl;
 	const double Solar_Mass(1.989*pow(10, 30));
@@ -211,53 +215,83 @@ int parseConfig(char* configFile, int* timestep, int* numberOfSteps, int* sampli
 	*numberOfSteps = atoi(root_node->first_node("numberOfSteps")->value());
 	*samplingRate = atoi(root_node->first_node("samplingRate")->value());
 
-	
 	// Iterate over the stars
 	for (xml_node<> * star_node = root_node->first_node("Star"); star_node; star_node = star_node->next_sibling("Star"))
 	{
-		solarSystem->addBody(new Body(star_node->first_attribute("name")->value(), 
-									 atof(star_node->first_attribute("mass")->value())*solar_mass, 
-									 atof(star_node->first_attribute("x")->value()), 
-									 atof(star_node->first_attribute("y")->value()), 
-									 atof(star_node->first_attribute("z")->value()), 
-									 atof(star_node->first_attribute("xVel")->value()), 
-									 atof(star_node->first_attribute("yVel")->value()), 
-									 atof(star_node->first_attribute("zVel")->value()), 
-									 atof(star_node->first_attribute("radius")->value())*solar_radius, 
-									 bool(atof(star_node->first_attribute("logTrajectory")->value()))));
-cout << "sun mass" << atof(star_node->first_attribute("mass")->value())*solar_mass << endl;
+		string starName = star_node->first_attribute("name")->value();
+		double starMass = atof(star_node->first_attribute("mass")->value())*solar_mass;
+		double starXPos = atof(star_node->first_attribute("x")->value());
+		double starYPos = atof(star_node->first_attribute("y")->value());
+		double starZPos = atof(star_node->first_attribute("z")->value());
+		double starXVel = atof(star_node->first_attribute("xVel")->value());
+		double starYVel = atof(star_node->first_attribute("yVel")->value());
+		double starZVel = atof(star_node->first_attribute("zVel")->value());
+		double starRadius = atof(star_node->first_attribute("radius")->value())*solar_radius;
+		bool logStarTrajectory = bool(atof(star_node->first_attribute("logTrajectory")->value()));
+		solarSystem->addBody(new Body(starName, 
+									  starMass, 
+									  starXPos, 
+									  starYPos, 
+									  starZPos, 
+									  starXVel, 
+									  starYVel, 
+									  starZVel, 
+									  starRadius, 
+									  logStarTrajectory));
+
 	    for(xml_node<> * planet_node = star_node->first_node("Planet"); planet_node; planet_node = planet_node->next_sibling("Planet"))
 	    {
+	    	string planetName = planet_node->first_attribute("name")->value();
+	    	double orbitalPeriod = atof(planet_node->first_attribute("orbitalPeriod")->value())*secondsInYear;
+	    	double orbitalRadius = atof(planet_node->first_attribute("orbitalRadius")->value())*AU;
+	    	double inclination = atof(planet_node->first_attribute("inclination")->value());
+	    	double planetMass = atof(planet_node->first_attribute("mass")->value())*earth_mass;
+			double planetXPos = atof(planet_node->first_attribute("orbitalRadius")->value()) + starXPos;
+			double planetYPos = atof(star_node->first_attribute("y")->value());
+			double planetZPos = atof(star_node->first_attribute("z")->value());
+			double planetXVel = 0;
+			double planetYVel = 1/(orbitalPeriod)*(2*M_PI)*orbitalRadius*cos(M_PI*inclination/180);
+			double planetZVel = 1/(orbitalPeriod)*(2*M_PI)*orbitalRadius*sin(M_PI*inclination/180);
+			double planetRadius = atof(planet_node->first_attribute("radius")->value())*earth_radius;
+			bool logPlanetTrajectory = bool(atof(planet_node->first_attribute("logTrajectory")->value()));
 	    	//v=wr
 	    	//requires further development if the star is moving
-	    	solarSystem->addBody(new Body(planet_node->first_attribute("name")->value(), 
-									 	 atof(planet_node->first_attribute("mass")->value())*earth_mass, 
-									 	 atof(planet_node->first_attribute("orbitalRadius")->value())*AU, 
-									 	 atof(star_node->first_attribute("y")->value()), //place it at same x and y as star. This can be looked into
-									 	 atof(star_node->first_attribute("z")->value()), 
-									 	 0, 
-									 	 1/(atof(planet_node->first_attribute("orbitalPeriod")->value())*secondsInYear)*atof(planet_node->first_attribute("orbitalRadius")->value())*AU*(2*M_PI)*cos(M_PI*atof(planet_node->first_attribute("inclination")->value())/180), 
-									 	 1/(atof(planet_node->first_attribute("orbitalPeriod")->value())*secondsInYear)*atof(planet_node->first_attribute("orbitalRadius")->value())*AU*(2*M_PI)*sin(M_PI*atof(planet_node->first_attribute("inclination")->value())/180), 
-									 	 atof(planet_node->first_attribute("radius")->value())*solar_radius, 
-									 	 bool(atof(planet_node->first_attribute("logTrajectory")->value()))));
+	    	solarSystem->addBody(new Body(planetName, 
+									 	  planetMass, 
+									 	  atof(planet_node->first_attribute("orbitalRadius")->value())*AU, 
+									 	  atof(star_node->first_attribute("y")->value()), //place it at same x and y as star. This can be looked into
+									 	  atof(star_node->first_attribute("z")->value()), 
+									 	  0, 
+									 	  planetYVel, 
+									 	  planetZVel, 
+									 	  planetRadius, 
+									 	  logPlanetTrajectory));
 	    }
 
 	    //systems->push_back(System(solarSystem));
 	    for(xml_node<> * cloud_node = star_node->first_node("ProtoplanetaryCloud"); cloud_node; cloud_node = cloud_node->next_sibling("ProtoplanetaryCloud"))
 	    {
-	    	systems->push_back(ProtoplanetaryCloud(atoi(cloud_node->first_attribute("numberOfPlanetesimals")->value()), 
-										    		atof(cloud_node->first_attribute("mass")->value())*Solar_Mass, 
-										    		atof(star_node->first_attribute("x")->value()), //place it at same x and y as star. This can be looked into
-										    		atof(star_node->first_attribute("y")->value()), //place it at same x and y as star. This can be looked into
-									 	 			atof(star_node->first_attribute("z")->value()),  
-										    		atof(cloud_node->first_attribute("xScale")->value())*AU, 
-										    		atof(cloud_node->first_attribute("yScale")->value())*AU, 
-										    		atof(cloud_node->first_attribute("zScale")->value())*AU, 
-										    		0.0, 
-										    		0.0));
-	    }
-
-	    
+	    	int numberOfPlanetesimals = atoi(cloud_node->first_attribute("numberOfPlanetesimals")->value());
+	    	double cloudMass = atof(cloud_node->first_attribute("mass")->value())*Solar_Mass;
+	    	double cloudXCenter = starXPos;
+	    	double cloudYCenter = starYPos;
+	    	double cloudZCenter = starZPos;
+	    	double cloudXScale = atof(cloud_node->first_attribute("xScale")->value())*AU;
+	    	double cloudYScale = atof(cloud_node->first_attribute("yScale")->value())*AU;
+	    	double cloudZScale = atof(cloud_node->first_attribute("zScale")->value())*AU;
+	    	double cloudVelocity = 0;
+	    	double cloudDispersion = 0;
+	    	systems->push_back(ProtoplanetaryCloud(numberOfPlanetesimals, 
+										    	   cloudMass, 
+										    	   cloudXCenter, //place it at same x and y as star. This can be looked into
+										    	   cloudYCenter, //place it at same x and y as star. This can be looked into
+									 	 		   cloudZCenter,  
+										    	   cloudXScale, 
+										    	   cloudYScale, 
+										    	   cloudZScale, 
+										    	   cloudVelocity, 
+										    	   cloudDispersion));
+	    }    
 	}
 	return 0;
 }
