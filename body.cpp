@@ -13,8 +13,13 @@
 
 using namespace std;
 
+static int bodyCount(0);
+
 Body::Body()
 {
+	m_ID = bodyCount;
+	bodyCount++;
+	cout << "body count" << bodyCount << endl;
 	m_name = "Ghost";
 	m_mass = 0;
 	m_xPosition = m_yPosition = m_xVelocity = m_yVelocity = 0;
@@ -22,6 +27,8 @@ Body::Body()
 
 Body::Body(const Body& bodyToCopy)
 {
+	m_ID = bodyToCopy.ID();
+
 	m_name = bodyToCopy.name();
 	m_mass = bodyToCopy.mass();
 
@@ -65,6 +72,9 @@ Body::Body(string tempName,
 	 double tempRadius,
 	 bool	tempLogTrajectory)
 {
+	m_ID = bodyCount;
+	bodyCount++;
+	cout << "body count" << bodyCount << endl;
 	m_trajectory = NULL;
 
 	m_name = tempName;
@@ -91,6 +101,12 @@ Body::Body(string tempName,
 
 };
 
+const int Body::ID() const
+{
+	return m_ID;
+}
+
+
 vector<double> Body::accelerationCalc(vector<Body>* Body_Vector)
 {
 	const double G(6.67384*pow(10,-11));
@@ -102,7 +118,7 @@ vector<double> Body::accelerationCalc(vector<Body>* Body_Vector)
 	vector <Body>::iterator it;
 	for (it = Body_Vector->begin(); it != Body_Vector->end(); ++it)
 	{
-		if (name() == it->name() || it->isValid() == false) continue;
+		if (ID() == it->ID() || it->isValid() == false) continue;
 		//F = G*M*m*r_vector/r^3
 		//a = G*M*r_vector/r^3
 		double rx = xPosition() - it->xPosition();
@@ -180,15 +196,14 @@ vector<double> Body::accelerationCalc(vector<Body*>* Body_Vector)
 	vector <Body*>::iterator it;
 	for (it = Body_Vector->begin(); it != Body_Vector->end(); ++it)
 	{
-		if (name() == (*it)->name() || (*it)->isValid() == false) continue;
+		if (ID() == (*it)->ID() || (*it)->isValid() == false) continue;
 		//F = G*M*m*r_vector/r^3
 		//a = G*M*r_vector/r^3
 		double rx = xPosition() - (*it)->xPosition();
 		double ry = yPosition() - (*it)->yPosition();
 		double rz = zPosition() - (*it)->zPosition();
-		double rCubed = pow(rx*rx + ry*ry + rz*rz + relaxation() + (*it)->relaxation(), 1.5);
+		double rCubed = pow(rx*rx + ry*ry + rz*rz + relaxation(), 1.5);
 
-		//cout << "rcubed "<< rCubed << endl;
 		//when bodies touch, they stick. Conserve linear momentum
 		if(rCubed <= pow(radius() + (*it)->radius(), 3))
 		{
@@ -227,27 +242,21 @@ vector<double> Body::accelerationCalc(vector<Body*>* Body_Vector)
 			//remove the body from the vector
 			Body_Vector->erase(it);
 			--it;
-			//cout << "deleted an entry" << endl;
+			cout << "deleted an entry" << endl;
 		}
 		else	//if bodies aren't touching, calculate acceleration
 		{
-			double magAcc = -G*(*it)->mass()/rCubed;
-
-			//cout << "magacc " << magAcc << endl;
+			double magAcc = -G*(*it)->mass()/rCubed; 
 
 			accX = accX + magAcc*rx;
 			accY = accY + magAcc*ry;
 			accZ = accZ + magAcc*rz;
-			//cout << "did not delete entry" << endl;
 		}	
 	}
 
-	//cout << accX << " " << accY << " " << accZ << endl;
 	acceleration.push_back(accX);
 	acceleration.push_back(accY);
 	acceleration.push_back(accZ);
-
-//cout << "returning acceleration" << endl;
 	return acceleration;
 };
 

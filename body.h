@@ -83,10 +83,13 @@ class Body
 
 	const double relaxation() const;
 
+	const int ID() const;
+
 
 
 private:
 
+	int 		m_ID;
 	string 		m_name;
 	double 		m_mass;
 	double 		m_xPosition, m_yPosition, m_zPosition;

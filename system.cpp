@@ -53,6 +53,7 @@ void System::addBody(const Body newBody)
 	m_Bodies.push_back(newBodyToAdd);
 };
 
+
 void System::update(const double& timestep)
 {
 	const double c(3*pow(10, 8));
@@ -61,9 +62,7 @@ void System::update(const double& timestep)
 	for (it = m_Bodies.begin(); it != m_Bodies.end(); ++it)
   	{
   		if((*it)->name() == "BlackHole") continue; //just for now, black hole does not feel force or move
-  		//cout << (*it)->name() << " acc starting" << endl;
 		vector<double> acceleration = (*it)->accelerationCalc(&m_Bodies);//calculate acceleration from own system
-		//cout << (*it)->name() << " acc done" << endl;
 
 		SystemMap::iterator system_it;
 		for(system_it = m_BoundSystems.begin(); system_it != m_BoundSystems.end(); system_it++) 

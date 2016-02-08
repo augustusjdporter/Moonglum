@@ -90,11 +90,11 @@ int main(int argc, char* argv[])
 
 
 
-	System solarSystem;
+	//System solarSystem;
 //gm/r=v^2
-	solarSystem.addBody(new Body("Sun1", solar_mass, 0, 0, 0, 0, 0, 0, solar_radius, true));
+	//solarSystem.addBody(new Body("Sun1", solar_mass, 0, 0, 0, 0, 0, 0, solar_radius, true));
 	//solarSystem.addBody(new Body("Sun2", solar_mass, -0.1*AU, 0, 0, 0, -pow(G*solar_mass/(0.4*AU), 0.5), 0, solar_radius, true));
-	solarSystem.addBody(new Body("Earth", 5.972*pow(10, 24), 1*AU, 0, 0, 0, 3.3*pow(10,4) , 0, earth_radius, true));
+	//solarSystem.addBody(new Body("Earth", 5.972*pow(10, 24), 1*AU, 0, 0, 0, 3.3*pow(10,4) , 0, earth_radius, true));
 	//solarSystem.addBody(new Body("Jupiter", 1.898*pow(10, 27), 5.2*AU, 0, 0, 0, 47.051*pow(10,6)/3600 , 0, jupiter_radius, true));
 
 	//ProtoplanetaryCloud cloud(8000, 0.05*Solar_Mass, 0, 0, 0, 4*AU, 4*AU, 0.2*AU, 0.0, 0.0);
@@ -192,6 +192,7 @@ int parseConfig(char* configFile, int* timestep, int* numberOfSteps, int* sampli
 	const double jupiter_radius(6.99*pow(10, 7));
 	const double solar_mass(1.9891*pow(10, 30));
 	const double earth_mass(5.972*pow(10, 24));
+	const double secondsInYear(3600*24*365.25);
 	
 	xml_document<> doc;
 	xml_node<> * root_node;
@@ -235,11 +236,10 @@ cout << "sun mass" << atof(star_node->first_attribute("mass")->value())*solar_ma
 									 	 atof(star_node->first_attribute("y")->value()), //place it at same x and y as star. This can be looked into
 									 	 atof(star_node->first_attribute("z")->value()), 
 									 	 0, 
-									 	 atof(planet_node->first_attribute("angularFrequency")->value())*atof(planet_node->first_attribute("orbitalRadius")->value())*AU/(2*M_PI)*cos(M_PI*atof(planet_node->first_attribute("inclination")->value())/180), 
-									 	 atof(planet_node->first_attribute("angularFrequency")->value())*atof(planet_node->first_attribute("orbitalRadius")->value())*AU/(2*M_PI)*sin(M_PI*atof(planet_node->first_attribute("inclination")->value())/180), 
+									 	 1/(atof(planet_node->first_attribute("orbitalPeriod")->value())*secondsInYear)*atof(planet_node->first_attribute("orbitalRadius")->value())*AU*(2*M_PI)*cos(M_PI*atof(planet_node->first_attribute("inclination")->value())/180), 
+									 	 1/(atof(planet_node->first_attribute("orbitalPeriod")->value())*secondsInYear)*atof(planet_node->first_attribute("orbitalRadius")->value())*AU*(2*M_PI)*sin(M_PI*atof(planet_node->first_attribute("inclination")->value())/180), 
 									 	 atof(planet_node->first_attribute("radius")->value())*solar_radius, 
 									 	 bool(atof(planet_node->first_attribute("logTrajectory")->value()))));
-cout << atof(planet_node->first_attribute("angularFrequency")->value())*atof(planet_node->first_attribute("orbitalRadius")->value())*AU/(2*M_PI)*cos(M_PI*atof(planet_node->first_attribute("inclination")->value())/180) << endl;
 	    }
 
 	    //systems->push_back(System(solarSystem));

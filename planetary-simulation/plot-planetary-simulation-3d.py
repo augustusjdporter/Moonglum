@@ -23,7 +23,7 @@ simDirectory = str(sys.argv[1])
 plotCount = str(sys.argv[2])
 
 
-workfile_tr = "Coords/" + simDirectory + "/trajectories/Sun1_trajectory.txt"
+workfile_tr = "Coords/" + simDirectory + "/trajectories/Sun_trajectory.txt"
 x_Earth = np.loadtxt(workfile_tr, usecols=range(0,1))
 y_Earth = np.loadtxt(workfile_tr, usecols=range(1,2))
 z_Earth = np.loadtxt(workfile_tr, usecols=range(2,3))
@@ -60,7 +60,7 @@ ax.set_xlim3d([-6, 6])
 ax.set_ylim3d([-6, 6])
 ax.set_zlim3d([-6, 6])
 ax.scatter(x, y, z, alpha=0.75, marker=".", s=1)
-ax.scatter(x[names=="Sun1"], y[names=="Sun1"], z[names=="Sun1"], marker="o", color='yellow')
+ax.scatter(x[names=="Sun"], y[names=="Sun"], z[names=="Sun"], marker="o", color='yellow')
 #plt.scatter(x[names=="Sun2"], y[names=="Sun2"], marker="o", color='yellow')
 #plt.scatter(x[names=="Earth"], y[names=="Earth"], marker="o", color='green')
 #plt.scatter(x[names=="Jupiter"], y[names=="Jupiter"], marker="o", color='brown')
