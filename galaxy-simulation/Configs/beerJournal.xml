@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<SimulationProfile>
+    <timestep>14400</timestep> <!--in seconds-->
+    <numberOfSteps>10000</numberOfSteps>
+    <samplingRate>1</samplingRate> <!--if 2 only takes snapshots every second step etc-->
+    <Galaxy numberOfStars="10000" massOfStars="10000000000" numberOfGas="0" massOfGas="3000000000" massBlackHole="4600000" xScale="8" yScale="8" zScale="1" velocity="180000" dispersion="100000"></Galaxy>
+    <DarkMatterHalo numberOfDM="0" massOfDM="1000000000000" xScale="50" yScale="50" zScale="50"></DarkMatterHalo>
+</SimulationProfile>

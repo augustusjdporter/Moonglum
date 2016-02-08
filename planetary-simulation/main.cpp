@@ -26,12 +26,13 @@
 
 using namespace std;
 
-
-
 int parseConfig(char* configFile, int* timestep, int* numberOfSteps, int* samplingRate, System* solarSystem, vector<System>* systems);
 
 int main(int argc, char* argv[])
 {
+	cout << endl;
+	cout << "NBody simulations by Augustus Porter." << endl;
+	cout << endl;
 	if(argc < 3)
 	{
 		cout << "Not enough command line arguments. Command line should read:" << endl;
@@ -91,20 +92,6 @@ int main(int argc, char* argv[])
 	mkdir(plots_directory, 0700);
 	
 	int j(0), k(0), count(0);
-
-
-
-	//System solarSystem;
-//gm/r=v^2
-	//solarSystem.addBody(new Body("Sun1", solar_mass, 0, 0, 0, 0, 0, 0, solar_radius, true));
-	//solarSystem.addBody(new Body("Sun2", solar_mass, -0.1*AU, 0, 0, 0, -pow(G*solar_mass/(0.4*AU), 0.5), 0, solar_radius, true));
-	//solarSystem.addBody(new Body("Earth", 5.972*pow(10, 24), 1*AU, 0, 0, 0, 3.3*pow(10,4) , 0, earth_radius, true));
-	//solarSystem.addBody(new Body("Jupiter", 1.898*pow(10, 27), 5.2*AU, 0, 0, 0, 47.051*pow(10,6)/3600 , 0, jupiter_radius, true));
-
-	//ProtoplanetaryCloud cloud(8000, 0.05*Solar_Mass, 0, 0, 0, 4*AU, 4*AU, 0.2*AU, 0.0, 0.0);
-
-	//cloud.addBoundSystem(&solarSystem);
-	//solarSystem.addBoundSystem(&cloud);
 
 	for (int i = 0; i < systems.size(); i++)
 	{
@@ -172,18 +159,13 @@ int main(int argc, char* argv[])
 	return 0;
 }
 
-
-
 using namespace rapidxml;
-
-//FOUND THE ERROR. EARTH IS MOVING AT 1/10th OF THE SPEED. CHANGE SO INPUT PARAM IS THE PERIOD OF ORBIT.
 int parseConfig(char* configFile, int* timestep, int* numberOfSteps, int* samplingRate, System* solarSystem, vector<System>* systems)
 {
 	//Checking file exists
 	FILE *file = fopen(configFile, "r");
 	if (file == NULL) 
 	{
-        
         return -1;
     }
     fclose(file);
