@@ -1,5 +1,4 @@
-//cc SolarSystem.cpp -o SolarSystem -L/usr/lib/ -lcpgplot -lpgplot -lm
-//g++ -std=c++0x -O3 -o SolarSystem.out -I. SolarSystem.cpp ../body.cpp ../system.cpp
+//Main entry point for a simulation of a planetary system.
 
 #include <stdio.h>
 #include <stdlib.h>

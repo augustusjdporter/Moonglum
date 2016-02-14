@@ -1,4 +1,4 @@
-//g++ -std=c++11 -O3 -o NBody.out -I. NBody.cpp body.cpp
+//main entry point for a galaxy simulation
 
 
 #include <iostream>
