@@ -201,8 +201,6 @@ int parseConfig(char* configFile, int* timestep, int* numberOfSteps, int* sampli
 	// Iterate over the stars
 	for (xml_node<> * star_node = root_node->first_node("Star"); star_node; star_node = star_node->next_sibling("Star"))
 	{
-		System* solarSystem = new System("tempSystem");
-
 		string starName = star_node->first_attribute("name")->value();
 		double starMass = atof(star_node->first_attribute("mass")->value())*solar_mass;
 		double starXPos = atof(star_node->first_attribute("x")->value());
@@ -213,6 +211,8 @@ int parseConfig(char* configFile, int* timestep, int* numberOfSteps, int* sampli
 		double starZVel = atof(star_node->first_attribute("zVel")->value());
 		double starRadius = atof(star_node->first_attribute("radius")->value())*solar_radius;
 		bool logStarTrajectory = bool(atof(star_node->first_attribute("logTrajectory")->value()));
+
+		System* solarSystem = new System(starName +"System");
 		solarSystem->addBody(new Body(starName, 
 									  starMass, 
 									  starXPos, 
