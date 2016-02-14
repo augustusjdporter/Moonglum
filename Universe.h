@@ -4,6 +4,8 @@
 #include "body.h"
 #include "system.h"
 
+typedef std::map<string, System*> SystemMap;
+
 class Universe
 {
 public:
@@ -12,10 +14,16 @@ public:
 
 	~Universe();
 
-	void addSystem();
+	void addSystem(System* systemToAdd);
+
+	void bindSystems();
+
+	void updateUniverse(double timestep);
+
+	void printCoordinatesToFile(const string& path, const string& filename, const double& normalisation);
 
 private:
-
+	SystemMap m_astrophysicalSystems; //The astrophysical systems which constitute this Universe (simulation)
 };
 
 
