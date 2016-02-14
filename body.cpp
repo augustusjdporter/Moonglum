@@ -177,7 +177,7 @@ vector<double> Body::accelerationCalc(vector<Body>* Body_Vector)
 		}	
 	}
 
-	cout << accX << " " << accY << " " << accZ << endl;
+	//cout << accX << " " << accY << " " << accZ << endl;
 	acceleration.push_back(accX);
 	acceleration.push_back(accY);
 	acceleration.push_back(accZ);
@@ -385,14 +385,13 @@ void Body::addToTrajectory(const string& path)
 			mkdir(directory, 0700);
 
 			m_trajectory->open(path + "trajectories/" + name() + "_trajectory.txt");
-			//m_trajectory->open("Coords/" + name() + "_trajectory.txt");
 		}
 	}
 
 	const double AU(1.4960*pow(10, 11));
 	if(isTrackingTrajectory() == true && m_trajectory != NULL)
 	{
-		*m_trajectory << xPosition()/AU << "\t" << yPosition()/AU << "\t" << zPosition()/AU << endl;
+		*m_trajectory << m_ID << "\t" << m_xPosition/AU << "\t" << m_zPosition/AU << "\t" << m_zPosition/AU << endl;
 	}
 };
 

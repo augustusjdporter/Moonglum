@@ -26,7 +26,7 @@
 
 using namespace std;
 
-int parseConfig(char* configFile, int* timestep, int* numberOfSteps, int* samplingRate, System* solarSystem, vector<System>* systems);
+int parseConfig(char* configFile, int* timestep, int* numberOfSteps, int* samplingRate, vector<System>* systems);
 
 int main(int argc, char* argv[])
 {
@@ -47,14 +47,16 @@ int main(int argc, char* argv[])
 		cout << endl;
 		return 0;
 	}
-	vector<System> systems;
-	System solarSystemTemp;
 
 	int timestep;
 	int numberOfSteps;
 	int samplingRate;
-	int errorHandle = parseConfig(argv[2], &timestep, &numberOfSteps, &samplingRate, &solarSystemTemp, &systems);
-	systems.push_back(solarSystemTemp);
+	
+	
+	vector<System> systems;
+	//systems.push_back(*solarSystemTemp);
+	int errorHandle = parseConfig(argv[2], &timestep, &numberOfSteps, &samplingRate, &systems);
+	//solarSystemTemp = NULL;
 	if (errorHandle == -1)
 	{
 		cout << "Unable to open config file \"" << string(argv[2]) << "\". Check the path is correct." << endl;
@@ -160,7 +162,7 @@ int main(int argc, char* argv[])
 }
 
 using namespace rapidxml;
-int parseConfig(char* configFile, int* timestep, int* numberOfSteps, int* samplingRate, System* solarSystem, vector<System>* systems)
+int parseConfig(char* configFile, int* timestep, int* numberOfSteps, int* samplingRate, vector<System>* systems)
 {
 	//Checking file exists
 	FILE *file = fopen(configFile, "r");
@@ -200,6 +202,8 @@ int parseConfig(char* configFile, int* timestep, int* numberOfSteps, int* sampli
 	// Iterate over the stars
 	for (xml_node<> * star_node = root_node->first_node("Star"); star_node; star_node = star_node->next_sibling("Star"))
 	{
+		System* solarSystem = new System("tempSystem");
+
 		string starName = star_node->first_attribute("name")->value();
 		double starMass = atof(star_node->first_attribute("mass")->value())*solar_mass;
 		double starXPos = atof(star_node->first_attribute("x")->value());
@@ -250,7 +254,8 @@ int parseConfig(char* configFile, int* timestep, int* numberOfSteps, int* sampli
 									 	  logPlanetTrajectory));
 	    }
 
-	    //systems->push_back(System(solarSystem));
+	    systems->push_back(*solarSystem);
+	    solarSystem = NULL;
 	    for(xml_node<> * cloud_node = star_node->first_node("ProtoplanetaryCloud"); cloud_node; cloud_node = cloud_node->next_sibling("ProtoplanetaryCloud"))
 	    {
 	    	int numberOfPlanetesimals = atoi(cloud_node->first_attribute("numberOfPlanetesimals")->value());

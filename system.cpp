@@ -85,11 +85,11 @@ void System::update(const double& timestep)
 
 
 		//cout << (*it)->name() << " velocity: " << (*it)->xVelocity() << " " << (*it)->yVelocity() << " " << (*it)->zVelocity() << endl;
-		if (pow((*it)->xVelocity(),2) + pow((*it)->yVelocity(),2) + pow((*it)->zVelocity(),2) > pow(c, 2))
+		/*if (pow((*it)->xVelocity(),2) + pow((*it)->yVelocity(),2) + pow((*it)->zVelocity(),2) > pow(c, 2))
 		{
 			cout << "Error! " << (*it)->name() << " travelling faster than light!" << endl;
 			cout << "Vel: " << pow(pow((*it)->xVelocity(),2) + pow((*it)->yVelocity(),2) + pow((*it)->zVelocity(),2), 0.5) << endl;
-		}
+		}*/
 	}
 	return;
 };

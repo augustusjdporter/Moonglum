@@ -1,4 +1,6 @@
-#ifndef Body_H // Will only be true the once!
+//body.h: Defines the Body class, an abstract body which exerts and feels gravitational force.
+
+#ifndef Body_H
 #define Body_H
 
 #include <iostream>
@@ -16,6 +18,7 @@ class Body
 {
  public:
 
+ 	//Constructors/destructors
 	Body();
 
 	~Body();
@@ -33,6 +36,12 @@ class Body
 
 	Body(const Body& bodyToCopy); //copy constructor
 
+//Functions to calculate the gravitational acceleration due to other bodies.
+	virtual vector<double> accelerationCalc(vector<Body>* Body_Vector);
+
+	virtual vector<double> accelerationCalc(vector<Body*>* Body_Vector);
+
+	//Access functions
 	const double xPosition() const;
 
 	const double yPosition() const;
@@ -45,6 +54,23 @@ class Body
 
 	const double zVelocity() const;
 
+	const string name() const;
+
+	const double mass() const;
+
+	virtual const double radius() const;
+
+	const bool isValid() const;
+
+	const double density() const;
+
+	const bool isTrackingTrajectory() const;
+
+	const double relaxation() const;
+
+	const int ID() const;
+
+	//Setting functions
 	void set_xPosition(const double& new_xPosition);
 
 	void set_yPosition(const double& new_yPosition);
@@ -57,33 +83,16 @@ class Body
 
 	void set_zVelocity(const double& new_zVelocity);
 
-	const string name() const;
-
-	const double mass() const;
-
 	void set_mass(const double& new_mass);
 
 	void set_Radius(const double& new_Radius);
 
-	virtual const double radius() const;
-
-	virtual vector<double> accelerationCalc(vector<Body>* Body_Vector);
-
-	virtual vector<double> accelerationCalc(vector<Body*>* Body_Vector);
-
-	const bool isValid() const;
-
 	void set_isValid(const bool& new_isValid);
-
-	const double density() const;
-
-	const bool isTrackingTrajectory() const;
-
+	
+	//Function to add coordinates to the body's trajectory file
 	void addToTrajectory(const string& path);
 
-	const double relaxation() const;
-
-	const int ID() const;
+	
 
 
 

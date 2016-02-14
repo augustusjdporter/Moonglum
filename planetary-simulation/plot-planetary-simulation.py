@@ -25,9 +25,9 @@ plotCount = str(sys.argv[2])
 
 
 workfile_tr = "Coords/" + simDirectory + "/trajectories/Earth_trajectory.txt"
-x_Sun = np.loadtxt(workfile_tr, usecols=range(0,1))
-y_Sun = np.loadtxt(workfile_tr, usecols=range(1,2))
-z_Sun = np.loadtxt(workfile_tr, usecols=range(2,3))
+x_Sun = np.loadtxt(workfile_tr, usecols=range(1,2))
+y_Sun = np.loadtxt(workfile_tr, usecols=range(2,3))
+z_Sun = np.loadtxt(workfile_tr, usecols=range(3,4))
 
 #workfile_tr = "Coords/" + simDirectory + "/trajectories/Jupiter_trajectory.txt"
 #x_Jupiter = np.loadtxt(workfile_tr, usecols=range(0,1))

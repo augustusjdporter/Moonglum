@@ -1,7 +1,7 @@
 #include "ProtoplanetaryCloud.h"
 #include <random>
 
-ProtoplanetaryCloud::ProtoplanetaryCloud() //Default constructor - should be unused (set as private())
+ProtoplanetaryCloud::ProtoplanetaryCloud() : System("ProtoplanetaryCloud")//Default constructor - should be unused (set as private())
 {
 	//
 };
@@ -20,7 +20,7 @@ ProtoplanetaryCloud::ProtoplanetaryCloud(const int& numberOfBodies,
 										 const double& yScaleHeight, 
 										 const double& zScaleHeight,
 										 const double& velocity,
-										 const double& velocityDispersion)
+										 const double& velocityDispersion) : System("ProtoplanetaryCloud")
 {
 
 	//F = m1v^2/R = Gm1m2/r^2

@@ -87,7 +87,7 @@ int main()
 		combiner << "Star" << i;
 		string name;
 		combiner >> name;
-		Body_Vector.push_back(Body(name, pow(10, 12)/bodies_number*Solar_Mass, numberx, numbery, numberz, numberxvel, numberyvel, 0));
+		Body_Vector.push_back(Body(name, pow(10, 12)/bodies_number*Solar_Mass, numberx, numbery, numberz, numberxvel, numberyvel, 0, 0, false));
 		//cout << numberx << " " << numbery << " " << numberz << " " << numberxvel << " " << numberyvel << endl;
 	}
 
