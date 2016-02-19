@@ -55,9 +55,7 @@ void System::addBody(const Body newBody)
 
 
 void System::update(const double& timestep)
-{
-	const double c(3*pow(10, 8));
-	
+{	
 	vector <Body*>::iterator it;
 	for (it = m_Bodies.begin(); it != m_Bodies.end(); ++it)
   	{
@@ -94,40 +92,19 @@ void System::update(const double& timestep)
 	return;
 };
 
-void System::printCoordinates(const string& path, const string& filename, const double& normalisation)
+void System::printCoordinates(ofstream* coordinate_file, ofstream* trajectory_file, const double& normalisation)
 {
-	ofstream file;
-	file.open (path + filename);
+	//ofstream file;
+	//file.open (path + filename);
 	for (int i=0; i < m_Bodies.size(); i++)
 	{
-		file << m_Bodies.at(i)->name() << "\t" << m_Bodies.at(i)->xPosition()/normalisation << "\t" << m_Bodies.at(i)->yPosition()/normalisation << "\t" << m_Bodies.at(i)->zPosition()/normalisation << endl;//prints shape data with overloaded <<
+		*coordinate_file << m_Bodies.at(i)->name() << "\t" << m_Bodies.at(i)->xPosition()/normalisation << "\t" << m_Bodies.at(i)->yPosition()/normalisation << "\t" << m_Bodies.at(i)->zPosition()/normalisation << endl;//prints shape data with overloaded <<
 		if(m_Bodies.at(i)->isTrackingTrajectory() == true)
 		{
-			m_Bodies.at(i)->addToTrajectory(path);
+			m_Bodies.at(i)->addToTrajectory(trajectory_file);
 		}
 	}
 
-	//we want to write bound systems coordinates to the same file.
-	if (m_BoundSystems.size() > 0)
-	{
-		SystemMap::iterator it;
-		for (it = m_BoundSystems.begin(); it != m_BoundSystems.end(); ++it)
-		{
-			vector<Body*>* tempBodies = it->second->Bodies();
-			if (tempBodies != NULL)
-			{
-				for (int i=0; i < tempBodies->size(); i++)
-				{
-					file << tempBodies->at(i)->name() << "\t" << tempBodies->at(i)->xPosition()/normalisation << "\t" << tempBodies->at(i)->yPosition()/normalisation << "\t" << tempBodies->at(i)->zPosition()/normalisation << endl;//prints shape data with overloaded <<
-					if(tempBodies->at(i)->isTrackingTrajectory() == true)
-					{
-						tempBodies->at(i)->addToTrajectory(path);
-					}
-				}
-			}
-		}
-	}
-	file.close();
 	return;
 };
 

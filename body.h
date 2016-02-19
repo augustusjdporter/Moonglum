@@ -10,7 +10,7 @@
 #include <vector>
 #include <cmath>
 #include <random>
-
+#include "Constants.h"
 
 using namespace std;
 
@@ -90,7 +90,7 @@ class Body
 	void set_isValid(const bool& new_isValid);
 	
 	//Function to add coordinates to the body's trajectory file
-	void addToTrajectory(const string& path);
+	void addToTrajectory(ofstream* trajectory_file);
 
 	
 

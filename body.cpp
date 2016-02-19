@@ -109,9 +109,6 @@ const int Body::ID() const
 
 vector<double> Body::accelerationCalc(vector<Body>* Body_Vector)
 {
-	const double G(6.67384*pow(10,-11));
-	const double Solar_Radius(6.955*pow(10,8));
-
 	double accX(0), accY(0), accZ(0);
 
 	vector <double> acceleration;
@@ -188,8 +185,6 @@ vector<double> Body::accelerationCalc(vector<Body>* Body_Vector)
 
 vector<double> Body::accelerationCalc(vector<Body*>* Body_Vector)
 {
-	const double G(6.67384*pow(10,-11));
-
 	double accX(0), accY(0), accZ(0);
 
 	vector <double> acceleration;
@@ -374,24 +369,11 @@ const bool Body::isTrackingTrajectory() const
 	return m_logTrajectory;
 };
 
-void Body::addToTrajectory(const string& path)
+void Body::addToTrajectory(ofstream* trajectory_file)
 {
-	if(m_logTrajectory == true && m_trajectory == NULL)
+	if(isTrackingTrajectory() == true && trajectory_file != NULL)
 	{
-		m_trajectory = new ofstream;
-		if (m_trajectory != NULL)
-		{
-			const char* directory = (path + "trajectories/").c_str();
-			mkdir(directory, 0700);
-
-			m_trajectory->open(path + "trajectories/" + name() + "_trajectory.txt");
-		}
-	}
-
-	const double AU(1.4960*pow(10, 11));
-	if(isTrackingTrajectory() == true && m_trajectory != NULL)
-	{
-		*m_trajectory << m_ID << "\t" << m_xPosition/AU << "\t" << m_zPosition/AU << "\t" << m_zPosition/AU << endl;
+		*trajectory_file << m_ID << "\t" << m_xPosition/AU << "\t" << m_zPosition/AU << "\t" << m_zPosition/AU << endl;
 	}
 };
 

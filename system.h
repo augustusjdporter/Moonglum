@@ -11,6 +11,7 @@
 #include <cmath>
 #include <random>
 
+#include "Constants.h"
 #include "body.h"
 class System;
 
@@ -42,7 +43,7 @@ public:
 	void update(const double& timestep);
 
 	//Print the coordinates of the bodies in the system to file.
-	void printCoordinates(const string& path, const string& fileName, const double& normalisation);
+	void printCoordinates(ofstream* coordinate_file, ofstream* trajectory_file, const double& normalisation);
 
 	//Access functions
 	vector<Body*>* Bodies();

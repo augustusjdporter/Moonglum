@@ -2,6 +2,13 @@
 
 using namespace std;
 
+Universe::Universe(string simName)
+{
+	cout << "Creating universe" << endl;
+	string trajectoryFilePath = "Coords/" + simName + "/trajectories/" + simName + "_trajectories.txt";
+	m_trajectoriesFile.open(trajectoryFilePath.c_str());
+};
+
 void Universe::addSystem(System* systemToAdd)
 {
 	m_astrophysicalSystems.insert(make_pair(systemToAdd->name(), systemToAdd));
@@ -11,6 +18,15 @@ void Universe::addSystem(System* systemToAdd)
 Universe::~Universe()
 {
 	cout << "Destroying universe" << endl;
+
+	m_trajectoriesFile.close();
+
+	for (SystemMap::iterator iterator = m_astrophysicalSystems.begin(); iterator != m_astrophysicalSystems.end(); iterator++)
+	{
+		delete iterator->second;
+		iterator->second = NULL;
+	}
+	
 	m_astrophysicalSystems.clear();
 };
 
@@ -40,9 +56,31 @@ void Universe::updateUniverse(double timestep)
 
 void Universe::printCoordinatesToFile(const string& path, const string& filename, const double& normalisation)
 {
+	ofstream coordinate_file;
+	coordinate_file.open(path + filename);
+
 	for (SystemMap::iterator iterator = m_astrophysicalSystems.begin(); iterator != m_astrophysicalSystems.end(); iterator++)
 	{
-		iterator->second->printCoordinates(path, filename, normalisation); //Only print coordinates of one system - this takes care of printing all the bound systems of this particular system
-		return;
+		iterator->second->printCoordinates(&coordinate_file, &m_trajectoriesFile, normalisation);
 	}
+	coordinate_file.close();
+
+	return;
+};
+
+void Universe::makeIsTrackingTrajectoryFile(const string& path, const string& filename)
+{
+	ofstream isTrackingTrajectoryFile;
+	isTrackingTrajectoryFile.open(path + filename);
+	for (SystemMap::iterator iterator = m_astrophysicalSystems.begin(); iterator != m_astrophysicalSystems.end(); iterator++)
+	{
+		for (int i = 0; i < iterator->second->Bodies()->size(); i++)
+		{
+			if(iterator->second->Bodies()->at(i)->isTrackingTrajectory() == true)
+			{
+				isTrackingTrajectoryFile << iterator->second->Bodies()->at(i)->ID() << endl;
+			}
+		}
+	}
+	isTrackingTrajectoryFile.close();
 };

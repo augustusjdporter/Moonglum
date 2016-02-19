@@ -17,6 +17,8 @@
 
 #include "../body.h"
 #include "../system.h"
+#include "../Universe.h"
+#include "../Constants.h"
 
 
 #include "../Utilities/Utilities.h"
@@ -25,7 +27,7 @@
 
 using namespace std;
 
-int parseConfig(char* configFile, int* timestep, int* numberOfSteps, int* samplingRate, vector<System>* systems);
+int parseConfig(char* configFile, int* timestep, int* numberOfSteps, int* samplingRate, Universe* simulation_universe);
 
 int main(int argc, char* argv[])
 {
@@ -47,36 +49,6 @@ int main(int argc, char* argv[])
 		return 0;
 	}
 
-	int timestep;
-	int numberOfSteps;
-	int samplingRate;
-	
-	
-	vector<System> systems;
-	//systems.push_back(*solarSystemTemp);
-	int errorHandle = parseConfig(argv[2], &timestep, &numberOfSteps, &samplingRate, &systems);
-	//solarSystemTemp = NULL;
-	if (errorHandle == -1)
-	{
-		cout << "Unable to open config file \"" << string(argv[2]) << "\". Check the path is correct." << endl;
-		cout << endl;
-		return 0;
-	}
-	else
-	{
-		cout << "Config parsed successfully!" << endl;
-	}
-
-	cout << "systems size " << systems.size() << endl;
-	const double Solar_Mass(1.989*pow(10, 30));
-	const double AU(1.4960*pow(10, 11));
-	const double G(6.67*pow(10, -11));
-
-	const double solar_radius(6.96*pow(10, 8));
-	const double earth_radius(6.37*pow(10, 6));//needs to be updated when have internet
-	const double jupiter_radius(6.99*pow(10, 7));
-	const double solar_mass(1.9891*pow(10, 30));
-
 	const time_t ctt = time(0);
 	cout << asctime(localtime(&ctt)) << endl;//output time 
 	time_t beginninguni, enduni;
@@ -91,18 +63,31 @@ int main(int argc, char* argv[])
 
 	const char* plots_directory = (path + "Plots/").c_str();
 	mkdir(plots_directory, 0700);
+
+	const char* traj_directory = (path + "trajectories/").c_str();
+	mkdir(traj_directory, 0700);
+
+	int timestep;
+	int numberOfSteps;
+	int samplingRate;
+	
+	Universe simulation_universe(simulationName); //pass in simulation name
+	int errorHandle = parseConfig(argv[2], &timestep, &numberOfSteps, &samplingRate, &simulation_universe);
+	if (errorHandle == -1)
+	{
+		cout << "Unable to open config file \"" << string(argv[2]) << "\". Check the path is correct." << endl;
+		cout << endl;
+		return 0;
+	}
+	else
+	{
+		cout << "Config parsed successfully!" << endl;
+	}
 	
 	int j(0), k(0), count(0);
 
-	for (int i = 0; i < systems.size(); i++)
-	{
-		for (int j = 0; j < systems.size(); j++)
-		{
-			if (i == j) continue;
-			systems.at(i).addBoundSystem(&systems.at(j));
-		}
-	}
-
+	simulation_universe.bindSystems();
+	simulation_universe.makeIsTrackingTrajectoryFile(path + "trajectories/", simulationName + "_isTrackingTrajectories.txt");
 	int thisthing = 1;
 	int refresh = samplingRate;
 	int printCount = 1;
@@ -111,42 +96,33 @@ int main(int argc, char* argv[])
   	{
   		beginninguni = time(0);
 
-		for (int i = 0; i < systems.size(); i++)
-		{
-			systems.at(i).update(timestep);
-		}
-
-		//solarSystem.update(timestep);
+		simulation_universe.updateUniverse(timestep);
 
 		if(refresh == samplingRate)
 		{
-			if (systems.size() > 0)
-			{
-				stringstream combiner;
-				combiner << "Snapshots/It_" << printCount << ".txt";
+			stringstream combiner;
+			combiner << "Snapshots/It_" << printCount << ".txt";
 
-				string file_name;
-				combiner >> file_name;
+			string file_name;
+			combiner >> file_name;
 
+
+			simulation_universe.printCoordinatesToFile(path, file_name, AU);
 			
-				systems.at(0).printCoordinates(path, file_name, AU);
-				//solarSystem.printCoordinates(path, file_name, AU);
-			
-				std::string command = "ipython plot-planetary-simulation.py ";
-    			command += simulationName;
-    			command += " ";
+			std::string command = "ipython plot-planetary-simulation.py ";
+    		command += simulationName;
+    		command += " ";
 
-    			ostringstream convertIntToString;
-    			convertIntToString << printCount;
+    		ostringstream convertIntToString;
+    		convertIntToString << printCount;
 
     		
-    			command = command + convertIntToString.str();
-    			cout << command << endl;
-    			system(command.c_str());
+    		command = command + convertIntToString.str();
+    		cout << command << endl;
+    		system(command.c_str());
 
-				refresh = 0;
-				printCount++;
-			}
+			refresh = 0;
+			printCount++;
 
 		}
 
@@ -161,7 +137,7 @@ int main(int argc, char* argv[])
 }
 
 using namespace rapidxml;
-int parseConfig(char* configFile, int* timestep, int* numberOfSteps, int* samplingRate, vector<System>* systems)
+int parseConfig(char* configFile, int* timestep, int* numberOfSteps, int* samplingRate, Universe* simulation_universe)
 {
 	//Checking file exists
 	FILE *file = fopen(configFile, "r");
@@ -170,16 +146,6 @@ int parseConfig(char* configFile, int* timestep, int* numberOfSteps, int* sampli
         return -1;
     }
     fclose(file);
-
-    const double Solar_Mass(1.989*pow(10, 30));
-	const double AU(1.4960*pow(10, 11));
-	const double G(6.67*pow(10, -11));
-	const double solar_radius(6.96*pow(10, 8));
-	const double earth_radius(6.37*pow(10, 6));//needs to be updated when have internet
-	const double jupiter_radius(6.99*pow(10, 7));
-	const double solar_mass(1.9891*pow(10, 30));
-	const double earth_mass(5.972*pow(10, 24));
-	const double secondsInYear(3600*24*365.25);
 	
 	xml_document<> doc;
 	xml_node<> * root_node;
@@ -253,12 +219,13 @@ int parseConfig(char* configFile, int* timestep, int* numberOfSteps, int* sampli
 									 	  logPlanetTrajectory));
 	    }
 
-	    systems->push_back(*solarSystem);
+	    //systems->push_back(*solarSystem);
+	    simulation_universe->addSystem(solarSystem);
 	    solarSystem = NULL;
 	    for(xml_node<> * cloud_node = star_node->first_node("ProtoplanetaryCloud"); cloud_node; cloud_node = cloud_node->next_sibling("ProtoplanetaryCloud"))
 	    {
 	    	int numberOfPlanetesimals = atoi(cloud_node->first_attribute("numberOfPlanetesimals")->value());
-	    	double cloudMass = atof(cloud_node->first_attribute("mass")->value())*Solar_Mass;
+	    	double cloudMass = atof(cloud_node->first_attribute("mass")->value())*solar_Mass;
 	    	double cloudXCenter = starXPos;
 	    	double cloudYCenter = starYPos;
 	    	double cloudZCenter = starZPos;
@@ -267,7 +234,18 @@ int parseConfig(char* configFile, int* timestep, int* numberOfSteps, int* sampli
 	    	double cloudZScale = atof(cloud_node->first_attribute("zScale")->value())*AU;
 	    	double cloudVelocity = 0;
 	    	double cloudDispersion = 0;
-	    	systems->push_back(ProtoplanetaryCloud(numberOfPlanetesimals, 
+	    	/*systems->push_back(ProtoplanetaryCloud(numberOfPlanetesimals, 
+										    	   cloudMass, 
+										    	   cloudXCenter, //place it at same x and y as star. This can be looked into
+										    	   cloudYCenter, //place it at same x and y as star. This can be looked into
+									 	 		   cloudZCenter,  
+										    	   cloudXScale, 
+										    	   cloudYScale, 
+										    	   cloudZScale, 
+										    	   cloudVelocity, 
+										    	   cloudDispersion));*/
+
+	    	simulation_universe->addSystem(new ProtoplanetaryCloud(numberOfPlanetesimals, 
 										    	   cloudMass, 
 										    	   cloudXCenter, //place it at same x and y as star. This can be looked into
 										    	   cloudYCenter, //place it at same x and y as star. This can be looked into

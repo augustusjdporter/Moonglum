@@ -27,11 +27,6 @@ ProtoplanetaryCloud::ProtoplanetaryCloud(const int& numberOfBodies,
 	//v^2 = Gm2/R
 	//v = pow(G*m_sun/R, 0.5)
 
-	const double Solar_Mass(1.989*pow(10, 30));
-	const double G(6.67384*pow(10,-11));
-	
-	const double jupiter_radius(6.99*pow(10, 7));
-
 	std::default_random_engine generator;
 
   	std::normal_distribution<double> distributionx(xCenter, xScaleHeight);
@@ -51,7 +46,7 @@ ProtoplanetaryCloud::ProtoplanetaryCloud(const int& numberOfBodies,
 
 		//Magnitude of velocity (constant) ms^-1
 		double velocity_magnitude = distribution_velocity(generator);
-		double newVel = pow(G*Solar_Mass/pow(pow(xPos-xCenter, 2) + pow(yPos-yCenter, 2), 0.5), 0.5);
+		double newVel = pow(G*solar_Mass/pow(pow(xPos-xCenter, 2) + pow(yPos-yCenter, 2), 0.5), 0.5);
 		double xVel = velocity_Direction_x * newVel;
 		double yVel = velocity_Direction_y * newVel;
 		double zVel = 0;
