@@ -18,7 +18,7 @@ const string XmlReader::simulationType() const
 	return m_simulation_type;
 }
 
-int XmlReader::parseConfig(char* configFile, int* timestep, int* numberOfSteps, int* samplingRate, Universe* simulation_universe)
+int XmlReader::parseConfig(char* configFile, int* timestep, int* numberOfSteps, int* samplingRate, double* normalisation, Universe* simulation_universe)
 {
 	int result;
 	FILE *file = fopen(configFile, "r");
@@ -50,10 +50,12 @@ int XmlReader::parseConfig(char* configFile, int* timestep, int* numberOfSteps, 
 		if (m_simulation_type == "planetary")
 		{
 			result = parsePlanetaryConfig();
+			*normalisation = AU;
 		}
 		else if (m_simulation_type == "galaxy")
 		{
 			result = parseGalaxyConfig();
+			*normalisation = kPc;
 		}
 		else
 		{
@@ -61,16 +63,12 @@ int XmlReader::parseConfig(char* configFile, int* timestep, int* numberOfSteps, 
 		}
 	}
 
-	cout << "Setting things to null." << endl;
 	m_timestep = NULL;
 	m_numberOfSteps = NULL;
 	m_samplingRate = NULL;
 	m_simulation_universe = NULL;
-
-	//delete m_root_node;
 	m_root_node = NULL;
 
-	cout << "finished parsing config." << endl;
 	return result;
 }
 

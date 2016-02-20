@@ -63,12 +63,13 @@ int main(int argc, char* argv[])
 	int timestep;
 	int numberOfSteps;
 	int samplingRate;
+	double normalisation;
 	
 	string simulationName(argv[1]);
 
 	Universe simulation_universe(simulationName); //pass in simulation name
 	XmlReader configReader;
-	int errorHandle = configReader.parseConfig(argv[2], &timestep, &numberOfSteps, &samplingRate, &simulation_universe);
+	int errorHandle = configReader.parseConfig(argv[2], &timestep, &numberOfSteps, &samplingRate, &normalisation, &simulation_universe);
 	if (errorHandle == -1)
 	{
 		cout << "Unable to open config file \"" << string(argv[2]) << "\". Check the path is correct." << endl;
@@ -123,7 +124,7 @@ int main(int argc, char* argv[])
 			combiner >> file_name;
 
 
-			simulation_universe.printCoordinatesToFile(path, file_name, AU);
+			simulation_universe.printCoordinatesToFile(path, file_name, normalisation);
 			
 			std::string command = "ipython " + configReader.simulationType() + "-simulation/plot-" + configReader.simulationType() + "-simulation.py ";
     		command += simulationName;

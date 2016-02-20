@@ -29,7 +29,7 @@ public:
 
 	~XmlReader();
 
-	int parseConfig(char* configFile, int* timestep, int* numberOfSteps, int* samplingRate, Universe* simulation_universe);
+	int parseConfig(char* configFile, int* timestep, int* numberOfSteps, int* samplingRate, double* normalisation, Universe* simulation_universe);
 
 	const string simulationType() const;
 
