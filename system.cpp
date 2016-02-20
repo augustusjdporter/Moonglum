@@ -94,8 +94,6 @@ void System::update(const double& timestep)
 
 void System::printCoordinates(ofstream* coordinate_file, ofstream* trajectory_file, const double& normalisation)
 {
-	//ofstream file;
-	//file.open (path + filename);
 	for (int i=0; i < m_Bodies.size(); i++)
 	{
 		*coordinate_file << m_Bodies.at(i)->name() << "\t" << m_Bodies.at(i)->xPosition()/normalisation << "\t" << m_Bodies.at(i)->yPosition()/normalisation << "\t" << m_Bodies.at(i)->zPosition()/normalisation << endl;//prints shape data with overloaded <<

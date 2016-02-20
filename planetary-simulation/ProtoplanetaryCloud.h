@@ -1,3 +1,6 @@
+#ifndef PROTOPLANETARYCLOUD_H
+#define PROTOPLANETARYCLOUD_H
+
 #include "../system.h"
 #include "../Constants.h"
 
@@ -22,3 +25,5 @@ public:
 private:
 	ProtoplanetaryCloud(); //Default constructor - should be unused (set as private())
 };
+
+#endif

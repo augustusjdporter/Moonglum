@@ -1,3 +1,5 @@
+#ifndef GALAXY_H
+#define GALAXY_H
 #include "../system.h"
 
 class Galaxy : public System
@@ -19,3 +21,5 @@ public:
 private:
 	Galaxy();
 };
+
+#endif

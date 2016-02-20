@@ -5,8 +5,7 @@ using namespace std;
 Universe::Universe(string simName)
 {
 	cout << "Creating universe" << endl;
-	string trajectoryFilePath = "Coords/" + simName + "/trajectories/" + simName + "_trajectories.txt";
-	m_trajectoriesFile.open(trajectoryFilePath.c_str());
+	m_name = simName;
 };
 
 void Universe::addSystem(System* systemToAdd)
@@ -68,10 +67,10 @@ void Universe::printCoordinatesToFile(const string& path, const string& filename
 	return;
 };
 
-void Universe::makeIsTrackingTrajectoryFile(const string& path, const string& filename)
+void Universe::makeTrajectoryFiles(const string& path, const string& isTrackingFilename, const string& trajectoriesFilename)
 {
 	ofstream isTrackingTrajectoryFile;
-	isTrackingTrajectoryFile.open(path + filename);
+	isTrackingTrajectoryFile.open(path + isTrackingFilename);
 	for (SystemMap::iterator iterator = m_astrophysicalSystems.begin(); iterator != m_astrophysicalSystems.end(); iterator++)
 	{
 		for (int i = 0; i < iterator->second->Bodies()->size(); i++)
@@ -83,4 +82,6 @@ void Universe::makeIsTrackingTrajectoryFile(const string& path, const string& fi
 		}
 	}
 	isTrackingTrajectoryFile.close();
+
+	m_trajectoriesFile.open(path + trajectoriesFilename);
 };

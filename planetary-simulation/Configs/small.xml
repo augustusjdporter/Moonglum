@@ -1,6 +1,7 @@
 <!-- small sim to debug the seg fault at cleanup time-->
 <?xml version="1.0" encoding="utf-8"?>
 <SimulationProfile>
+	<simulationType>planetary</simulationType>
     <timestep>14400</timestep> <!--in seconds-->
     <numberOfSteps>3</numberOfSteps>
     <samplingRate>1</samplingRate> <!--if 2 only takes snapshots every second step etc-->

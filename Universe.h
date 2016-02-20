@@ -24,11 +24,12 @@ public:
 
 	void printCoordinatesToFile(const string& path, const string& filename, const double& normalisation);
 
-	void makeIsTrackingTrajectoryFile(const string& path, const string& filename);
+	void makeTrajectoryFiles(const string& path, const string& isTrackingFilename, const string& trajectoriesFilename);
 
 private:
 	SystemMap m_astrophysicalSystems; //The astrophysical systems which constitute this Universe (simulation)
 	ofstream  m_trajectoriesFile;
+	string m_name;
 };
 
 

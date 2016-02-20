@@ -11,5 +11,7 @@ const double solar_mass(1.9891*pow(10, 30));
 const double earth_mass(5.972*pow(10, 24));
 const double secondsInYear(3600*24*365.25);
 const double c(3*pow(10, 8));
+const double kPc(3.0857*pow(10, 15));
+const double Solar_Mass(1.989*pow(10, 30));
 
 #endif
