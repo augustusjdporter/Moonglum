@@ -16,4 +16,5 @@ baseClasses/Universe.o
 baseClasses/system.o
 baseClasses/body.o
 planetaryConfig.png
+galaxyConfig.png
 main.o
