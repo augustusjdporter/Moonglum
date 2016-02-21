@@ -1,6 +1,7 @@
 #ifndef GALAXY_H
 #define GALAXY_H
-#include "../system.h"
+#include "../baseClasses/system.h"
+#include "../baseClasses/Constants.h"
 
 class Galaxy : public System
 {

@@ -1,7 +1,8 @@
 #ifndef GAS_H
 #define GAS_H
 
-#include "../body.h"
+#include "../baseClasses/body.h"
+#include "../baseClasses/Constants.h"
 
 class Gas : public Body
 {

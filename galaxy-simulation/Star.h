@@ -1,7 +1,8 @@
 #ifndef STAR_H
 #define STAR_H
 
-#include "../body.h"
+#include "../baseClasses/body.h"
+#include "../baseClasses/Constants.h"
 
 class Star : public Body
 {

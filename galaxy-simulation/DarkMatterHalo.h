@@ -1,7 +1,8 @@
 #ifndef DARKMATTERHALO_H
 #define DARKMATTERHALO_H
 
-#include "../system.h"
+#include "../baseClasses/system.h"
+#include "../baseClasses/Constants.h"
 
 class DarkMatterHalo : public System
 {

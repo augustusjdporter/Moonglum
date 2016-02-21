@@ -15,10 +15,10 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
-#include "body.h"
-#include "system.h"
-#include "Universe.h"
-#include "Constants.h"
+#include "baseClasses/body.h"
+#include "baseClasses/system.h"
+#include "baseClasses/Universe.h"
+#include "baseClasses/Constants.h"
 
 #include "Utilities/XmlReader.h"
 #include "Utilities/Utilities.h"

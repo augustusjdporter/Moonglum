@@ -1,8 +1,8 @@
 #ifndef PROTOPLANETARYCLOUD_H
 #define PROTOPLANETARYCLOUD_H
 
-#include "../system.h"
-#include "../Constants.h"
+#include "../baseClasses/system.h"
+#include "../baseClasses/Constants.h"
 
 class ProtoplanetaryCloud : public System
 {

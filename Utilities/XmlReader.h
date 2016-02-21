@@ -5,10 +5,10 @@
 #include <vector>
 #include <fstream>
 
-#include "../body.h"
-#include "../system.h"
-#include "../Universe.h"
-#include "../Constants.h"
+#include "../baseClasses/body.h"
+#include "../baseClasses/system.h"
+#include "../baseClasses/Universe.h"
+#include "../baseClasses/Constants.h"
 #include "Utilities.h"
 #include "../planetary-simulation/ProtoplanetaryCloud.h"
 #include "../galaxy-simulation/Galaxy.h"

@@ -1,7 +1,8 @@
 #ifndef BLACKHOLE_H
 #define BLACKHOLE_H
 
-#include "../body.h"
+#include "../baseClasses/body.h"
+#include "../baseClasses/Constants.h"
 
 class BlackHole : public Body
 {
