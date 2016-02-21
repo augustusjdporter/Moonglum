@@ -1,7 +1,7 @@
-all: NBodySims
+all: Moonglum
 
-NBodySims: main.o planetary-simulation/ProtoplanetaryCloud.o galaxy-simulation/BlackHole.o galaxy-simulation/Gas.o galaxy-simulation/Star.o galaxy-simulation/Galaxy.o galaxy-simulation/DarkMatterHalo.o baseClasses/body.o baseClasses/system.o Utilities/Utilities.o Utilities/XmlReader.o baseClasses/Universe.o
-	g++ -std=c++0x -O3 main.o baseClasses/body.o baseClasses/system.o Utilities/Utilities.o baseClasses/Universe.o planetary-simulation/ProtoplanetaryCloud.o galaxy-simulation/BlackHole.o galaxy-simulation/Gas.o galaxy-simulation/Star.o galaxy-simulation/Galaxy.o galaxy-simulation/DarkMatterHalo.o Utilities/XmlReader.o -o NBodySims
+Moonglum: main.o planetary-simulation/ProtoplanetaryCloud.o galaxy-simulation/BlackHole.o galaxy-simulation/Gas.o galaxy-simulation/Star.o galaxy-simulation/Galaxy.o galaxy-simulation/DarkMatterHalo.o baseClasses/body.o baseClasses/system.o Utilities/Utilities.o Utilities/XmlReader.o baseClasses/Universe.o
+	g++ -std=c++0x -O3 main.o baseClasses/body.o baseClasses/system.o Utilities/Utilities.o baseClasses/Universe.o planetary-simulation/ProtoplanetaryCloud.o galaxy-simulation/BlackHole.o galaxy-simulation/Gas.o galaxy-simulation/Star.o galaxy-simulation/Galaxy.o galaxy-simulation/DarkMatterHalo.o Utilities/XmlReader.o -o Moonglum
 
 main.o: main.cpp
 	g++ -std=c++0x -O3 -c main.cpp -o main.o
