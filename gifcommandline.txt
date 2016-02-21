@@ -1,1 +1,0 @@
-convert -delay 20 Plot_It_00*.eps movie.gif
