@@ -4,6 +4,7 @@ cosmological-simulation/Coords
 Moonglum-Manual.aux
 Moonglum-Manual.log
 Moonglum-Manual.tex
+Moonglum-Manual.toc
 Utilities/Utilities.o
 Utilities/XmlReader.o
 galaxy-simulation/BlackHole.o
