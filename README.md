@@ -1,7 +1,5 @@
-# NBody codes
+# Moonglum by Augustus Porter
 
-# Code repository of Augustus Porter, aspiring astrophysicist. Contains N-Body simulations of galaxies and planetary systems. Any questions feel free to email me at augustusjdporter@gmail.com.
-
-# I acknowledge there is a lack of documentation and commenting. This is my next task to make the code more readable.
+# A code base to make N-Body simulations, with current functionality extending to galaxy and planetary system simulations. Please refer to the user manual about making your own simulations. Any questions feel free to email me at augustusjdporter@gmail.com.
 
 # Be excellent to each other.
