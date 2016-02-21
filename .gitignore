@@ -12,4 +12,7 @@ galaxy-simulation/Galaxy.o
 galaxy-simulation/Gas.o
 galaxy-simulation/Star.o
 planetary-simulation/ProtoplanetaryCloud.o
+baseClasses/Universe.o
+baseClasses/system.o
+baseClasses/body.o
 main.o
