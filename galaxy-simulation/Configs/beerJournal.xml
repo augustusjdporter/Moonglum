@@ -4,6 +4,6 @@
     <timestep>500</timestep> <!--in years-->
     <numberOfSteps>10000</numberOfSteps>
     <samplingRate>1</samplingRate> <!--if 2 only takes snapshots every second step etc-->
-    <Galaxy numberOfStars="10000" massOfStars="1000000000000" numberOfGas="0" massOfGas="0.01" massBlackHole="0" xScale="5" yScale="5" zScale="1" velocity="920000" dispersion="100000"></Galaxy>
+    <Galaxy numberOfStars="10000" massOfStars="1000000000000" numberOfGas="0" massOfGas="0.01" massBlackHole="0" xCenter="0" yCenter="0" zCenter="0" xScale="5" yScale="5" zScale="1" velocity="920000" dispersion="100000"></Galaxy>
     <DarkMatterHalo numberOfDM="10000" massOfDM="1000000000000" xScale="50" yScale="50" zScale="50"></DarkMatterHalo>
 </SimulationProfile>

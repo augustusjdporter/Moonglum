@@ -34,7 +34,7 @@ plotCount = str(sys.argv[2])
 #y_Jupiter = np.loadtxt(workfile_tr, usecols=range(1,2))
 #z_Jupiter = np.loadtxt(workfile_tr, usecols=range(2,3))
 
-workfile = "Coords/" + simDirectory + "/Snapshots/It_" + plotCount + ".txt"
+workfile = "galaxy-simulation/Coords/" + simDirectory + "/Snapshots/It_" + plotCount + ".txt"
 #	print(workfile)
 names = np.loadtxt(workfile, str, usecols=range(0,1))
 x = np.loadtxt(workfile, usecols=range(1,2))
@@ -62,6 +62,6 @@ z = np.loadtxt(workfile, usecols=range(3,4))
 plt.ylim([-10, 10])
 plt.xlim([-10, 10])
 plt.scatter(x[names=="Star"], y[names=="Star"], alpha=0.75, marker="o", s=1)
-name ="Coords/" + simDirectory + "/Plots/PlotItxy_" + plotCount.zfill(5) +".pdf"
+name ="galaxy-simulation/Coords/" + simDirectory + "/Plots/PlotItxy_" + plotCount.zfill(5) +".pdf"
 plt.savefig(name)
 plt.close()

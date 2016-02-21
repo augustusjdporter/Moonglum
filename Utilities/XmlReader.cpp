@@ -83,6 +83,9 @@ int XmlReader::parseGalaxyConfig()
 		int numberOfGas = atoi(galaxy_node->first_attribute("numberOfGas")->value());
 		double massOfGas = atof(galaxy_node->first_attribute("massOfGas")->value())*solar_mass;
 		double massOfBH = atof(galaxy_node->first_attribute("massBlackHole")->value())*solar_mass;
+		double xCenter = atof(galaxy_node->first_attribute("xCenter")->value())*kPc;
+		double yCenter = atof(galaxy_node->first_attribute("yCenter")->value())*kPc;
+		double zCenter = atof(galaxy_node->first_attribute("zCenter")->value())*kPc;
 		double xScale = atof(galaxy_node->first_attribute("xScale")->value())*kPc;
 		double yScale = atof(galaxy_node->first_attribute("yScale")->value())*kPc;
 		double zScale = atof(galaxy_node->first_attribute("zScale")->value())*kPc;
@@ -94,6 +97,9 @@ int XmlReader::parseGalaxyConfig()
 					 			  numberOfGas, 
 					 			  numberOfGas, //gas
 					 			  massOfBH, //mass of BH
+					 			  xCenter, 
+					 			  yCenter, 
+					 			  zCenter, //x,y,z
 					 			  xScale, 
 					 			  yScale, 
 					 			  zScale, //x,y,z
