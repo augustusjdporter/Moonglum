@@ -15,4 +15,5 @@ planetary-simulation/ProtoplanetaryCloud.o
 baseClasses/Universe.o
 baseClasses/system.o
 baseClasses/body.o
+planetaryConfig.png
 main.o

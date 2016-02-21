@@ -4,7 +4,6 @@ using namespace std;
 
 Universe::Universe(string simName)
 {
-	cout << "Creating universe" << endl;
 	m_name = simName;
 };
 
@@ -16,8 +15,6 @@ void Universe::addSystem(System* systemToAdd)
 
 Universe::~Universe()
 {
-	cout << "Destroying universe" << endl;
-
 	m_trajectoriesFile.close();
 
 	for (SystemMap::iterator iterator = m_astrophysicalSystems.begin(); iterator != m_astrophysicalSystems.end(); iterator++)

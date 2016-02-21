@@ -5,12 +5,10 @@ using namespace rapidxml;
 
 XmlReader::XmlReader()
 {
-	cout << "Constructing Xml Reader." << endl;
 }
 
 XmlReader::~XmlReader()
 {
-	cout << "Destroying Xml Reader." << endl;
 }
 
 const string XmlReader::simulationType() const
@@ -158,9 +156,9 @@ int XmlReader::parsePlanetaryConfig()
 			double planetXPos = atof(planet_node->first_attribute("orbitalRadius")->value()) + starXPos;
 			double planetYPos = atof(star_node->first_attribute("y")->value());
 			double planetZPos = atof(star_node->first_attribute("z")->value());
-			double planetXVel = 0;
-			double planetYVel = 1/(orbitalPeriod)*(2*M_PI)*orbitalRadius*cos(M_PI*inclination/180);
-			double planetZVel = 1/(orbitalPeriod)*(2*M_PI)*orbitalRadius*sin(M_PI*inclination/180);
+			double planetXVel = 0 + starXVel;
+			double planetYVel = 1/(orbitalPeriod)*(2*M_PI)*orbitalRadius*cos(M_PI*inclination/180) + starYVel;
+			double planetZVel = 1/(orbitalPeriod)*(2*M_PI)*orbitalRadius*sin(M_PI*inclination/180) + starZVel;
 			double planetRadius = atof(planet_node->first_attribute("radius")->value())*earth_radius;
 			bool logPlanetTrajectory = bool(atof(planet_node->first_attribute("logTrajectory")->value()));
 	    	//v=wr

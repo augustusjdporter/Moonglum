@@ -39,35 +39,41 @@ int parseGalaxyConfig(char* configFile, int* timestep, int* numberOfSteps, int* 
 int main(int argc, char* argv[])
 {
 	cout << endl;
-	cout << "NBody simulations by Augustus Porter." << endl;
+	cout << "Moonglum by Augustus Porter." << endl;
+	cout << "A project to create N-Body simulations on a home PC." << endl;
+	cout << "Contact: augustusjdporter@gmail.com" << endl;
 	cout << endl;
+
+	const time_t ctt = time(0);
+	cout << asctime(localtime(&ctt)) << endl;//output time 
+	time_t beginninguni, enduni;
+
+	//Start by checking there are enough command line arguments
 	if(argc < 3)
 	{
 		cout << "Not enough command line arguments. Command line should read:" << endl;
-		cout << "./SolarSystem [simulation name] [path to config file]" << endl;
+		cout << "./Moonglum [simulation name] [path to config file]" << endl;
 		cout << endl;
 		return 0;
 	}
 	else if(argc > 3)
 	{
 		cout << "Too many command line arguments. Command line should read:" << endl;
-		cout << "./SolarSystem [simulation name] [path to config file]" << endl;
+		cout << "./Moonglum [simulation name] [path to config file]" << endl;
 		cout << endl;
 		return 0;
 	}
 
-	const time_t ctt = time(0);
-	cout << asctime(localtime(&ctt)) << endl;//output time 
-	time_t beginninguni, enduni;
+	string simulationName(argv[1]);
 
+	//Define parameters to be filled by the config reader	
 	int timestep;
 	int numberOfSteps;
 	int samplingRate;
 	double normalisation;
 	
-	string simulationName(argv[1]);
+	Universe simulation_universe(simulationName);
 
-	Universe simulation_universe(simulationName); //pass in simulation name
 	XmlReader configReader;
 	int errorHandle = configReader.parseConfig(argv[2], &timestep, &numberOfSteps, &samplingRate, &normalisation, &simulation_universe);
 	if (errorHandle == -1)
@@ -87,23 +93,32 @@ int main(int argc, char* argv[])
 		cout << "Config parsed successfully!" << endl;
 	}
 
+	//Make directory structure
+	{
+		string galaxy_directory = "galaxy-simulation";
+		mkdir(galaxy_directory.c_str(), 0700);
+		mkdir((galaxy_directory + "/Coords").c_str(), 0700);
+
+		string planetary_directory = "planetary-simulation";
+		mkdir(planetary_directory.c_str(), 0700);
+		mkdir((planetary_directory + "/Coords").c_str(), 0700);
+	}
+
 	string path = configReader.simulationType() + "-simulation/Coords/" + simulationName + "/";
 
-	const char* directory = (path).c_str();
-	mkdir(directory, 0700);
+	mkdir((path).c_str(), 0700);
 
-	const char* snapshots_directory = (path + "Snapshots/").c_str();
-	mkdir(snapshots_directory, 0700);
+	mkdir((path + "Snapshots/").c_str(), 0700);
 
-	const char* plots_directory = (path + "Plots/").c_str();
-	mkdir(plots_directory, 0700);
+	mkdir((path + "Plots/").c_str(), 0700);
 
-	const char* traj_directory = (path + "trajectories/").c_str();
-	mkdir(traj_directory, 0700);
+	mkdir((path + "trajectories/").c_str(), 0700);
 	
 	int j(0), k(0), count(0);
 
+	//gravitationally bind the systems in the universe
 	simulation_universe.bindSystems();
+	//make the files - one with IDs of bodies which are tracking trajectories, one with the trajectory coordinates
 	simulation_universe.makeTrajectoryFiles(path + "trajectories/", simulationName + "_isTrackingTrajectories.txt", simulationName + "_trajectories.txt");
 	int thisthing = 1;
 	int refresh = samplingRate;
@@ -136,7 +151,9 @@ int main(int argc, char* argv[])
     		
     		command = command + convertIntToString.str();
     		cout << command << endl;
+    		cout << endl;
     		system(command.c_str());
+    		cout << endl;
 
 			refresh = 0;
 			printCount++;
@@ -150,5 +167,6 @@ int main(int argc, char* argv[])
 		thisthing++;
 	}
 
+	cout << "Simulation is finished! Thank you for using Moonglum!" << endl;
 	return 0;
 };

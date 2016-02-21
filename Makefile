@@ -40,4 +40,4 @@ Utilities/XmlReader.o: Utilities/XmlReader.cpp
 	g++ -std=c++0x -O3 -c Utilities/XmlReader.cpp -o Utilities/XmlReader.o
 
 clean:
-	rm *.o baseClasses/*.o planetary-simulation/*.o galaxy-simulation/*.o Utilities/*.o NBodySims
+	rm *.o baseClasses/*.o planetary-simulation/*.o galaxy-simulation/*.o Utilities/*.o Moonglum

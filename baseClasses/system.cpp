@@ -22,14 +22,12 @@ System::System(const string& name)
 
 System::~System()
 {
-	cout << "System destructor" << endl;
 	SystemMap::iterator it;
 	for (it = m_BoundSystems.begin(); it != m_BoundSystems.end(); ++it)
 	{
 		it->second = NULL;
 	}
 
-	cout << m_name << " destructor called." << endl;
 	while (!m_Bodies.empty())
 	{
 		delete m_Bodies.back();

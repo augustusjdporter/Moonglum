@@ -19,7 +19,6 @@ Body::Body()
 {
 	m_ID = bodyCount;
 	bodyCount++;
-	cout << "body count" << bodyCount << endl;
 	m_name = "Ghost";
 	m_mass = 0;
 	m_xPosition = m_yPosition = m_xVelocity = m_yVelocity = 0;
@@ -43,13 +42,10 @@ Body::Body(const Body& bodyToCopy)
 	m_isValid = bodyToCopy.isValid();
 
 	m_radius = bodyToCopy.radius();
-
-	cout << m_name << " copied." << endl;
 };
 
 Body::~Body()
 {
-	cout << name() << " destructor called." << endl;
 	if (m_trajectory != NULL)
 	{
 		if(m_trajectory->is_open() == true)
@@ -74,7 +70,6 @@ Body::Body(string tempName,
 {
 	m_ID = bodyCount;
 	bodyCount++;
-	cout << "body count" << bodyCount << endl;
 	m_trajectory = NULL;
 
 	m_name = tempName;
@@ -96,92 +91,12 @@ Body::Body(string tempName,
 
 	//m_relaxation = 0.05*3.0857*pow(10, 12);
 	m_relaxation = 0.0;
-
-	cout << m_name << " created." << endl;
-
 };
 
 const int Body::ID() const
 {
 	return m_ID;
 }
-
-
-vector<double> Body::accelerationCalc(vector<Body>* Body_Vector)
-{
-	double accX(0), accY(0), accZ(0);
-
-	vector <double> acceleration;
-	vector <Body>::iterator it;
-	for (it = Body_Vector->begin(); it != Body_Vector->end(); ++it)
-	{
-		if (ID() == it->ID() || it->isValid() == false) continue;
-		//F = G*M*m*r_vector/r^3
-		//a = G*M*r_vector/r^3
-		double rx = xPosition() - it->xPosition();
-		double ry = yPosition() - it->yPosition();
-		double rz = zPosition() - it->zPosition();
-		double rCubed = pow(rx*rx + ry*ry + rz*rz + 3*pow(10,8)*pow(10,7), 1.5);
-
-		//when bodies touch, they stick. Conserve linear momentum
-		if(rCubed <= pow(radius() + it->radius(), 3))
-		{
-			
-			//combine them
-			it->set_isValid(false);
-			double new_mass = mass() + it->mass();
-
-			//place "this" body in the center of mass (COM = (m1x1 +m2x2)/(m1+m2))
-			double xCOM = (mass()*xPosition() + it->mass()*it->xPosition()) / new_mass;
-			double yCOM = (mass()*yPosition() + it->mass()*it->yPosition()) / new_mass;
-			double zCOM = (mass()*zPosition() + it->mass()*it->zPosition()) / new_mass;
-
-			//conserve momentum. NewVel = Mom/new mass
-			double new_xVelocity = (mass()*xVelocity() + it->mass()*it->xVelocity()) / new_mass;
-			double new_yVelocity = (mass()*yVelocity() + it->mass()*it->yVelocity()) / new_mass;
-			double new_zVelocity = (mass()*zVelocity() + it->mass()*it->zVelocity()) / new_mass;
-
-			//Set new velocity, position, and mass to "this" body
-			set_xVelocity(new_xVelocity);
-			set_yVelocity(new_yVelocity);
-			set_zVelocity(new_zVelocity);
-
-			set_xPosition(xCOM);
-			set_yPosition(yCOM);
-			set_zPosition(zCOM);
-
-			set_mass(new_mass);
-
-			//What to do about the radius? Keep average density? New density = p1m1 + p2m2/m1+m2
-			double new_density = (density()*mass() + it->density()*it->mass()) / new_mass;
-
-			//r = (3/4 m/(p pi))^1/3
-			set_Radius(pow(3/4 * new_mass/(M_PI * new_density), 1/3));
-
-			//remove the body from the vector
-			Body_Vector->erase(it);
-			--it;
-			cout << "deleted an entry" << endl;
-		}
-		else	//if bodies aren't touching, calculate acceleration
-		{
-			double magAcc = -G*it->mass()/rCubed;
-
-			accX = accX + magAcc*rx;
-			accY = accY + magAcc*ry;
-			accZ = accZ + magAcc*rz;
-			//cout << "did not delete entry" << endl;
-		}	
-	}
-
-	//cout << accX << " " << accY << " " << accZ << endl;
-	acceleration.push_back(accX);
-	acceleration.push_back(accY);
-	acceleration.push_back(accZ);
-
-//cout << "returning acceleration" << endl;
-	return acceleration;
-};
 
 vector<double> Body::accelerationCalc(vector<Body*>* Body_Vector)
 {
@@ -191,7 +106,7 @@ vector<double> Body::accelerationCalc(vector<Body*>* Body_Vector)
 	vector <Body*>::iterator it;
 	for (it = Body_Vector->begin(); it != Body_Vector->end(); ++it)
 	{
-		if (ID() == (*it)->ID() || (*it)->isValid() == false) continue;
+		if (ID() == (*it)->ID() || (*it)->isValid() == false) continue; //check it is same body, and that other body is valid
 		//F = G*M*m*r_vector/r^3
 		//a = G*M*r_vector/r^3
 		double rx = xPosition() - (*it)->xPosition();

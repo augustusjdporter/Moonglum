@@ -37,7 +37,6 @@ class Body
 	Body(const Body& bodyToCopy); //copy constructor
 
 //Functions to calculate the gravitational acceleration due to other bodies.
-	virtual vector<double> accelerationCalc(vector<Body>* Body_Vector);
 
 	virtual vector<double> accelerationCalc(vector<Body*>* Body_Vector);
 
