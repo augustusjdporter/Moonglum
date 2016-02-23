@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<SimulationProfile>
+	<simulationType>planetary</simulationType>
+    <timestep>40000</timestep> <!--in seconds-->
+    <numberOfSteps>10000</numberOfSteps>
+    <samplingRate>4</samplingRate> <!--if 2 only takes snapshots every second step etc-->
+    <Star name="Sun" mass="1" x="0" y="0" z="0" xVel="0" yVel="0" zVel="0" radius="1" logTrajectory="1">
+        <Planet name="Earth" mass="1" inclination="45" orbitalRadius="1" orbitalPeriod="1" radius="1" logTrajectory="1"></Planet>
+        <Planet name="Jupiter" mass="318" inclination="0" orbitalRadius="5.2" orbitalPeriod="11.86" radius="11.2" logTrajectory="1"></Planet>
+    </Star>
+</SimulationProfile>

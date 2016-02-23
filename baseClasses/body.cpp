@@ -46,6 +46,7 @@ Body::Body(const Body& bodyToCopy)
 
 Body::~Body()
 {
+	cout << "Destroying " << m_name << endl;
 	if (m_trajectory != NULL)
 	{
 		if(m_trajectory->is_open() == true)
@@ -91,6 +92,8 @@ Body::Body(string tempName,
 
 	//m_relaxation = 0.05*3.0857*pow(10, 12);
 	m_relaxation = 0.0;
+	if (m_name != "Planetesimal")
+	cout << m_name << " created" << m_ID << endl;
 };
 
 const int Body::ID() const
@@ -117,7 +120,7 @@ vector<double> Body::accelerationCalc(vector<Body*>* Body_Vector)
 		//when bodies touch, they stick. Conserve linear momentum
 		if(rCubed <= pow(radius() + (*it)->radius(), 3))
 		{
-			
+			if((*it)->name() == "Sun" || (*it)->name() == "Jupiter" || (*it)->name() == "Earth") continue;
 			//combine them
 			(*it)->set_isValid(false);
 			double new_mass = mass() + (*it)->mass();
@@ -150,9 +153,10 @@ vector<double> Body::accelerationCalc(vector<Body*>* Body_Vector)
 			set_Radius(pow(3/4 * new_mass/(M_PI * new_density), 1/3));
 
 			//remove the body from the vector
-			Body_Vector->erase(it);
+			cout << (*it)->name() << " deleted an entry" << endl;
 			--it;
-			cout << "deleted an entry" << endl;
+			
+			Body_Vector->erase(it);
 		}
 		else	//if bodies aren't touching, calculate acceleration
 		{
@@ -288,7 +292,7 @@ void Body::addToTrajectory(ofstream* trajectory_file)
 {
 	if(isTrackingTrajectory() == true && trajectory_file != NULL)
 	{
-		*trajectory_file << m_ID << "\t" << m_xPosition/AU << "\t" << m_zPosition/AU << "\t" << m_zPosition/AU << endl;
+		*trajectory_file << m_ID << "\t" << m_xPosition/AU << "\t" << m_yPosition/AU << "\t" << m_zPosition/AU << endl;
 	}
 };
 

@@ -35,9 +35,7 @@ plt.ylim([-6, 6])
 plt.xlim([-6, 6])
 plt.scatter(x, y, alpha=0.75, marker=".", s=0.1)
 plt.scatter(x[names=="Sun"], y[names=="Sun"], marker="o", color='yellow')
-plt.scatter(x[names=="Star"], y[names=="Star"], marker="o", color='yellow')
 plt.scatter(x[names=="Earth"], y[names=="Earth"], marker="o", color='green')
-plt.scatter(x[names=="Jupiter"], y[names=="Jupiter"], marker="o", color='orange')
 for i, elem in enumerate(tracking_list):
 	plt.plot(x_traj[traj_ID==elem], y_traj[traj_ID==elem], alpha=0.5)
 	
