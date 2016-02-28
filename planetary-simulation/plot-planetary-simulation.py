@@ -30,9 +30,9 @@ y = np.loadtxt(workfile, usecols=range(2,3))
 z = np.loadtxt(workfile, usecols=range(3,4))
 
 	
-
-plt.ylim([-6, 6])
-plt.xlim([-6, 6])
+plot_lim = 15
+plt.ylim([-15, 15])
+plt.xlim([-15, 15])
 plt.scatter(x, y, alpha=0.75, marker=".", s=0.1)
 plt.scatter(x[names=="Sun"], y[names=="Sun"], marker="o", color='yellow')
 plt.scatter(x[names=="Star"], y[names=="Star"], marker="o", color='yellow')

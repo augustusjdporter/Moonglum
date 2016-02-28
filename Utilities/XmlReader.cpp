@@ -132,7 +132,6 @@ int XmlReader::parsePlanetaryConfig()
 		string starName = star_node->first_attribute("name")->value();
 		double starMass = atof(star_node->first_attribute("mass")->value())*solar_mass;
 		double starXPos = atof(star_node->first_attribute("x")->value())*AU;
-		cout << "Star x pos " << starXPos << endl;
 		double starYPos = atof(star_node->first_attribute("y")->value())*AU;
 		double starZPos = atof(star_node->first_attribute("z")->value())*AU;
 		double starXVel = atof(star_node->first_attribute("xVel")->value());
@@ -141,7 +140,7 @@ int XmlReader::parsePlanetaryConfig()
 		double starRadius = atof(star_node->first_attribute("radius")->value())*solar_radius;
 		bool logStarTrajectory = bool(atof(star_node->first_attribute("logTrajectory")->value()));
 
-		System* solarSystem = new System(starName +"System");
+		System* solarSystem = new System(starName +" System");
 		solarSystem->addBody(new Body(starName, 
 									  starMass, 
 									  starXPos, 
@@ -160,9 +159,9 @@ int XmlReader::parsePlanetaryConfig()
 	    	double orbitalRadius = atof(planet_node->first_attribute("orbitalRadius")->value())*AU;
 	    	double inclination = atof(planet_node->first_attribute("inclination")->value());
 	    	double planetMass = atof(planet_node->first_attribute("mass")->value())*earth_mass;
-			double planetXPos = atof(planet_node->first_attribute("orbitalRadius")->value()) + starXPos;
-			double planetYPos = atof(star_node->first_attribute("y")->value());
-			double planetZPos = atof(star_node->first_attribute("z")->value());
+			double planetXPos = atof(planet_node->first_attribute("orbitalRadius")->value())*AU + starXPos;
+			double planetYPos = starYPos;
+			double planetZPos = starZPos;
 			double planetXVel = 0;
 			double planetYVel = 1/(orbitalPeriod)*(2*M_PI)*orbitalRadius*cos(M_PI*inclination/180);
 			double planetZVel = 1/(orbitalPeriod)*(2*M_PI)*orbitalRadius*sin(M_PI*inclination/180);
@@ -172,9 +171,9 @@ int XmlReader::parsePlanetaryConfig()
 	    	//requires further development if the star is moving
 	    	solarSystem->addBody(new Body(planetName, 
 									 	  planetMass, 
-									 	  atof(planet_node->first_attribute("orbitalRadius")->value())*AU, 
-									 	  atof(star_node->first_attribute("y")->value()), //place it at same x and y as star. This can be looked into
-									 	  atof(star_node->first_attribute("z")->value()), 
+									 	  planetXPos, 
+									 	  planetYPos, //place it at same x and y as star. This can be looked into
+									 	  planetZPos, 
 									 	  0, 
 									 	  planetYVel, 
 									 	  planetZVel, 
@@ -198,7 +197,8 @@ int XmlReader::parsePlanetaryConfig()
 	    	double cloudVelocity = 0;
 	    	double cloudDispersion = 0;
 
-	    	m_simulation_universe->addSystem(new ProtoplanetaryCloud(numberOfPlanetesimals, 
+	    	m_simulation_universe->addSystem(new ProtoplanetaryCloud(starName + "cloud",
+	    										   numberOfPlanetesimals, 
 										    	   cloudMass, 
 										    	   cloudXCenter, //place it at same x and y as star. This can be looked into
 										    	   cloudYCenter, //place it at same x and y as star. This can be looked into

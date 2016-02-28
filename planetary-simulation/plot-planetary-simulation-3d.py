@@ -38,23 +38,32 @@ x = np.loadtxt(workfile, usecols=range(1,2))
 y = np.loadtxt(workfile, usecols=range(2,3))
 z = np.loadtxt(workfile, usecols=range(3,4))
 
-
+plot_lim=15
 	
-z[z>6]= np.nan
-z[z<-6]= np.nan
+z[z>plot_lim]= np.nan
+z[z<-plot_lim]= np.nan
 
-x[x>6]= np.nan
-x[x<-6]= np.nan
+x[x>plot_lim]= np.nan
+x[x<-plot_lim]= np.nan
 
-y[y>6]= np.nan
-y[y<-6]= np.nan
+y[y>plot_lim]= np.nan
+y[y<-plot_lim]= np.nan
 
-ax.set_xlim3d([-6, 6])
-ax.set_ylim3d([-6, 6])
-ax.set_zlim3d([-6, 6])
-ax.scatter(x, y, z, alpha=0.75, marker=".", s=1)
-ax.scatter(x[names=="Sun"], y[names=="Sun"], z[names=="Sun"], marker="o", color='yellow')
-ax.scatter(x[names=="Star"], y[names=="Star"], z[names=="Star"], marker="o", color='yellow')
+z_traj[z_traj>plot_lim]= np.nan
+z_traj[z_traj<-plot_lim]= np.nan
+
+x_traj[x_traj>plot_lim]= np.nan
+x_traj[x_traj<-plot_lim]= np.nan
+
+y_traj[y_traj>plot_lim]= np.nan
+y_traj[y_traj<-plot_lim]= np.nan
+
+#ax.set_xlim3d([-2, 2])
+#ax.set_ylim3d([-2, 2])
+#ax.set_zlim3d([-2, 2])
+ax.scatter(x, y, z, alpha=0.7, marker=".", s=2)
+ax.scatter(x[names=="Sun"], y[names=="Sun"], z[names=="Sun"],  marker="o", color='yellow', s=50)
+ax.scatter(x[names=="Star"], y[names=="Star"], z[names=="Star"], marker="o", color='yellow', s=50)
 ax.scatter(x[names=="Earth"], y[names=="Earth"], z[names=="Earth"], marker="o", color='green')
 ax.scatter(x[names=="Jupiter"], y[names=="Jupiter"], z[names=="Jupiter"], marker="o", color='orange')
 

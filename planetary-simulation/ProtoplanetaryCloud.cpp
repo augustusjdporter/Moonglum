@@ -11,7 +11,8 @@ ProtoplanetaryCloud::~ProtoplanetaryCloud() //Destructor
 	std::cout << "Protoplanetary cloud destructor" << std::endl;
 };
 
-ProtoplanetaryCloud::ProtoplanetaryCloud(const int& numberOfBodies,
+ProtoplanetaryCloud::ProtoplanetaryCloud(const string& name,
+										 const int& numberOfBodies,
 										 const double& mass,
 										 const double& xCenter, 
 										 const double& yCenter, 
@@ -20,7 +21,7 @@ ProtoplanetaryCloud::ProtoplanetaryCloud(const int& numberOfBodies,
 										 const double& yScaleHeight, 
 										 const double& zScaleHeight,
 										 const double& velocity,
-										 const double& velocityDispersion) : System("ProtoplanetaryCloud")
+										 const double& velocityDispersion) : System(name)
 {
 
 	//F = m1v^2/R = Gm1m2/r^2

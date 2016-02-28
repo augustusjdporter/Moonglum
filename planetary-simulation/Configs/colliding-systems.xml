@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<SimulationProfile>
+	<simulationType>planetary</simulationType>
+    <timestep>40000</timestep> <!--in seconds-->
+    <numberOfSteps>10000</numberOfSteps>
+    <samplingRate>30</samplingRate> <!--if 2 only takes snapshots every second step etc-->
+    <Star name="Sun" mass="1" x="7" y="0.5" z="0" xVel="-1000" yVel="-1000" zVel="0" radius="1" logTrajectory="1">
+        <Planet name="Earth" mass="1" inclination="45" orbitalRadius="1" orbitalPeriod="1" radius="1" logTrajectory="1"></Planet>
+        <ProtoplanetaryCloud name="ProtoplanetaryCloud" numberOfPlanetesimals="4000" mass="0.0008" xScale="4" yScale="4" zScale="0.2"></ProtoplanetaryCloud>
+    </Star>
+
+    <Star name="Star" mass="1" x="-7" y="-0.5" z="0" xVel="1000" yVel="1000" zVel="0" radius="1" logTrajectory="1">
+        <Planet name="Earth" mass="1" inclination="45" orbitalRadius="1" orbitalPeriod="1" radius="1" logTrajectory="1"></Planet>
+        <ProtoplanetaryCloud name="ProtoplanetaryCloud" numberOfPlanetesimals="4000" mass="0.0008" xScale="4" yScale="4" zScale="0.2"></ProtoplanetaryCloud>
+    </Star>
+</SimulationProfile>

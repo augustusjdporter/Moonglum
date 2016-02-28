@@ -120,7 +120,7 @@ vector<double> Body::accelerationCalc(vector<Body*>* Body_Vector)
 		//when bodies touch, they stick. Conserve linear momentum
 		if(rCubed <= pow(radius() + (*it)->radius(), 3))
 		{
-			if((*it)->name() == "Sun" || (*it)->name() == "Jupiter" || (*it)->name() == "Earth") continue;
+			if((*it)->name() == "Sun" || (*it)->name() == "Star" || (*it)->name() == "Jupiter" || (*it)->name() == "Earth") continue;
 			//combine them
 			(*it)->set_isValid(false);
 			double new_mass = mass() + (*it)->mass();
