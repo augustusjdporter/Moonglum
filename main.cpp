@@ -1,5 +1,3 @@
-//Main entry point for a simulation of a planetary system.
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
@@ -23,7 +21,9 @@
 #include "Utilities/XmlReader.h"
 #include "Utilities/Utilities.h"
 #include "Utilities/rapidxml-1.13/rapidxml.hpp" //defines xml config reader
+
 #include "planetary-simulation/ProtoplanetaryCloud.h"
+
 #include "galaxy-simulation/Galaxy.h"
 #include "galaxy-simulation/Gas.h"
 #include "galaxy-simulation/BlackHole.h"
@@ -35,15 +35,17 @@ using namespace std;
 int main(int argc, char* argv[])
 {
 
-cout << " __  __                    ____ _                 " << endl;
-cout << "|  \\/  | ___   ___  _ __  / ___| |_   _ _ __ ___  " << endl;
-cout << "| |\\/| |/ _ \\ / _ \\| '_ \\| |  _| | | | | '_ ` _ \\ " << endl;
-cout << "| |  | | (_) | (_) | | | | |_| | | |_| | | | | | |" << endl;
-cout << "|_|  |_|\\___/ \\___/|_| |_|\\____|_|\\__,_|_| |_| |_|" << endl;
+	cout << " __  __                    ____ _                 " << endl;
+	cout << "|  \\/  | ___   ___  _ __  / ___| |_   _ _ __ ___  " << endl;
+	cout << "| |\\/| |/ _ \\ / _ \\| '_ \\| |  _| | | | | '_ ` _ \\ " << endl;
+	cout << "| |  | | (_) | (_) | | | | |_| | | |_| | | | | | |" << endl;
+	cout << "|_|  |_|\\___/ \\___/|_| |_|\\____|_|\\__,_|_| |_| |_|" << endl;
 	cout << endl;
 	cout << "Moonglum by Augustus Porter." << endl;
 	cout << "A project to create N-Body simulations on a home PC." << endl;
 	cout << "Contact: augustusjdporter@gmail.com" << endl;
+	cout << endl;
+	cout << "Github: https://github.com/augustusjdporter/Moonglum" << endl;
 	cout << endl;
 
 	const time_t ctt = time(0);
@@ -122,11 +124,13 @@ cout << "|_|  |_|\\___/ \\___/|_| |_|\\____|_|\\__,_|_| |_| |_|" << endl;
 	simulation_universe.bindSystems();
 	//make the files - one with IDs of bodies which are tracking trajectories, one with the trajectory coordinates
 	simulation_universe.makeTrajectoryFiles(path + "trajectories/", simulationName + "_isTrackingTrajectories.txt", simulationName + "_trajectories.txt");
-	int thisthing = 1;
-	int refresh = samplingRate;
+	
+
+	int stepCount = 1;
+	int refresh = samplingRate; //when refresh = samplingRate, we take a snapshot
 	int printCount = 1;
 
-  	while (thisthing <= numberOfSteps)
+  	while (stepCount <= numberOfSteps)
   	{
   		beginninguni = time(0);
 
@@ -149,12 +153,11 @@ cout << "|_|  |_|\\___/ \\___/|_| |_|\\____|_|\\__,_|_| |_| |_|" << endl;
 
     		ostringstream convertIntToString;
     		convertIntToString << printCount;
-
-    		
+	
     		command = command + convertIntToString.str();
     		cout << command << endl;
     		cout << endl;
-    		system(command.c_str());
+    		int result = system(command.c_str()); //Call python plotting on command line. result is currently unused
     		cout << endl;
 
 			refresh = 0;
@@ -163,10 +166,10 @@ cout << "|_|  |_|\\___/ \\___/|_| |_|\\____|_|\\__,_|_| |_| |_|" << endl;
 		}
 
 		enduni = time(0);
-		cout << "Time taken for step " << thisthing << " (seconds): " << enduni - beginninguni << endl;
+		cout << "Time taken for step " << stepCount << " (seconds): " << enduni - beginninguni << endl;
 
 		refresh++;
-		thisthing++;
+		stepCount++;
 	}
 
 	cout << "Simulation is finished! Thank you for using Moonglum!" << endl;
