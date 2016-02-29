@@ -38,6 +38,12 @@ int parseGalaxyConfig(char* configFile, int* timestep, int* numberOfSteps, int* 
 
 int main(int argc, char* argv[])
 {
+
+cout << " __  __                    ____ _                 " << endl;
+cout << "|  \\/  | ___   ___  _ __  / ___| |_   _ _ __ ___  " << endl;
+cout << "| |\\/| |/ _ \\ / _ \\| '_ \\| |  _| | | | | '_ ` _ \\ " << endl;
+cout << "| |  | | (_) | (_) | | | | |_| | | |_| | | | | | |" << endl;
+cout << "|_|  |_|\\___/ \\___/|_| |_|\\____|_|\\__,_|_| |_| |_|" << endl;
 	cout << endl;
 	cout << "Moonglum by Augustus Porter." << endl;
 	cout << "A project to create N-Body simulations on a home PC." << endl;
