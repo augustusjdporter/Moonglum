@@ -32,10 +32,6 @@
 
 using namespace std;
 
-int parsePlanetaryConfig(char* configFile, int* timestep, int* numberOfSteps, int* samplingRate, Universe* simulation_universe);
-
-int parseGalaxyConfig(char* configFile, int* timestep, int* numberOfSteps, int* samplingRate, Universe* simulation_universe);
-
 int main(int argc, char* argv[])
 {
 
