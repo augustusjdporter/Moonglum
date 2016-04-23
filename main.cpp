@@ -128,7 +128,6 @@ int main(int argc, char* argv[])
 
 	int stepCount = 1;
 	int refresh = samplingRate; //when refresh = samplingRate, we take a snapshot
-	int printCount = 1;
 
   	while (stepCount <= numberOfSteps)
   	{
@@ -136,23 +135,25 @@ int main(int argc, char* argv[])
 
 		simulation_universe.updateUniverse(timestep);
 
+		stringstream combiner;
+		combiner << "Snapshots/It_" << stepCount << ".txt";
+
+		string file_name;
+		combiner >> file_name;
+
+
+		simulation_universe.printCoordinatesToFile(path, file_name, normalisation);
+
 		if(refresh == samplingRate)
 		{
-			stringstream combiner;
-			combiner << "Snapshots/It_" << printCount << ".txt";
-
-			string file_name;
-			combiner >> file_name;
-
-
-			simulation_universe.printCoordinatesToFile(path, file_name, normalisation);
+			
 			
 			std::string command = "ipython " + configReader.simulationType() + "-simulation/plot-" + configReader.simulationType() + "-simulation.py ";
     		command += simulationName;
     		command += " ";
 
     		ostringstream convertIntToString;
-    		convertIntToString << printCount;
+    		convertIntToString << stepCount;
 	
     		command = command + convertIntToString.str();
     		cout << command << endl;
@@ -161,7 +162,6 @@ int main(int argc, char* argv[])
     		cout << endl;
 
 			refresh = 0;
-			printCount++;
 
 		}
 

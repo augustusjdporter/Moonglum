@@ -1,7 +1,7 @@
 #currently just experimenting with python
 #will extend to plot solar system graphs for each snapshot
 #can then create gif on command line
-#hello
+#hello test part 2 heloooo
 
 #!/usr/bin/python
 
