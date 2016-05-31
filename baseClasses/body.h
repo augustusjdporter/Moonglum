@@ -38,7 +38,7 @@ class Body
 
 //Functions to calculate the gravitational acceleration due to other bodies.
 
-	virtual vector<double> accelerationCalc(vector<Body*>* Body_Vector);
+	void accelerationCalc(vector<Body*>* Body_Vector);
 
 	//Access functions
 	const double xPosition() const;
@@ -93,8 +93,6 @@ class Body
 	
 	const vector<double>& acceleration() const;
 	
-	void set_acceleration(const vector<double>& new_acceleration);
-
 private:
 
 	int 		m_ID;

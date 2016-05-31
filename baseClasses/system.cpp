@@ -62,7 +62,7 @@ void System::update(const double& timestep)
     {
         for (int i = start; i < start + total; ++i)
         {
-			m_Bodies.at(i)->set_acceleration(m_Bodies.at(i)->accelerationCalc(&m_Bodies));
+			m_Bodies.at(i)->accelerationCalc(&m_Bodies);
         };
     };
 	

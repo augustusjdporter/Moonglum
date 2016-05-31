@@ -1,5 +1,7 @@
+#ifdef _WIN32
 #define _USE_MATH_DEFINES
 #include <cmath>
+#endif
 
 #include <iostream>
 #include <sstream>
@@ -27,6 +29,10 @@ Body::Body()
 	m_name = "Ghost";
 	m_mass = 0;
 	m_xPosition = m_yPosition = m_xVelocity = m_yVelocity = 0;
+
+	m_acceleration.push_back(0.0);//x
+	m_acceleration.push_back(0.0);//y
+	m_acceleration.push_back(0.0);//z
 };
 
 Body::Body(const Body& bodyToCopy)
@@ -47,6 +53,8 @@ Body::Body(const Body& bodyToCopy)
 	m_isValid = bodyToCopy.isValid();
 
 	m_radius = bodyToCopy.radius();
+
+	m_acceleration = bodyToCopy.acceleration();
 };
 
 Body::~Body()
@@ -95,6 +103,10 @@ Body::Body(string tempName,
 
 	m_logTrajectory = tempLogTrajectory;
 
+	m_acceleration.push_back(0.0);//x
+	m_acceleration.push_back(0.0);//y
+	m_acceleration.push_back(0.0);//z
+
 	//m_relaxation = 0.05*3.0857*pow(10, 12);
 	m_relaxation = 0.0;
 	if (m_name != "Planetesimal")
@@ -106,12 +118,13 @@ const int Body::ID() const
 	return m_ID;
 }
 
-vector<double> Body::accelerationCalc(vector<Body*>* Body_Vector)
+void Body::accelerationCalc(vector<Body*>* Body_Vector)
 {
-	double accX(0), accY(0), accZ(0);
-	vector <double> acceleration;
-	vector <Body*>::iterator it;
-	for (it = Body_Vector->begin(); it != Body_Vector->end(); ++it)
+	m_acceleration.at(0) = 0;
+	m_acceleration.at(1) = 0;
+	m_acceleration.at(2) = 0;
+
+	for (auto it = Body_Vector->begin(); it != Body_Vector->end(); ++it)
 	{
 		if (ID() == (*it)->ID() || (*it)->isValid() == false) continue; //check it is same body, and that other body is valid
 		//F = G*M*m*r_vector/r^3
@@ -166,16 +179,13 @@ vector<double> Body::accelerationCalc(vector<Body*>* Body_Vector)
 		{
 			double magAcc = -G*(*it)->mass()/rCubed; 
 
-			accX = accX + magAcc*rx;
-			accY = accY + magAcc*ry;
-			accZ = accZ + magAcc*rz;
+			m_acceleration.at(0) += magAcc*rx;
+			m_acceleration.at(1) += magAcc*ry;
+			m_acceleration.at(2) += magAcc*rz;
 		}	
 	}
 
-	acceleration.push_back(accX);
-	acceleration.push_back(accY);
-	acceleration.push_back(accZ);
-	return acceleration;
+	return;
 };
 
 const double Body::xPosition() const
@@ -308,9 +318,4 @@ const double Body::relaxation() const
 const vector<double>& Body::acceleration() const
 {
 	return m_acceleration;
-};
-
-void Body::set_acceleration(const vector<double>& new_acceleration)
-{
-	m_acceleration = new_acceleration;
 };
