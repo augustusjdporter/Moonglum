@@ -19,16 +19,16 @@ plotCount = str(sys.argv[2])
 
 
 
-workfile_tr = "Coords/" + simDirectory + "/trajectories/" + simDirectory + "_trajectories.txt"
+workfile_tr = "planetary-simulation/Coords/" + simDirectory + "/trajectories/" + simDirectory + "_trajectories.txt"
 traj_ID = np.loadtxt(workfile_tr, usecols=range(0,1))
 x_traj = np.loadtxt(workfile_tr, usecols=range(1,2))
 y_traj = np.loadtxt(workfile_tr, usecols=range(2,3))
 z_traj = np.loadtxt(workfile_tr, usecols=range(3,4))
 
-is_tracking_file = "Coords/" + simDirectory + "/trajectories/" + simDirectory + "_isTrackingTrajectories.txt"
+is_tracking_file = "planetary-simulation/Coords/" + simDirectory + "/trajectories/" + simDirectory + "_isTrackingTrajectories.txt"
 tracking_list = np.loadtxt(is_tracking_file, usecols=range(0,1))
 
-workfile = "Coords/" + simDirectory + "/Snapshots/It_" + plotCount + ".txt"
+workfile = "planetary-simulation/Coords/" + simDirectory + "/Snapshots/It_" + plotCount + ".txt"
 names = np.loadtxt(workfile, str, usecols=range(0,1))
 x = np.loadtxt(workfile, usecols=range(1,2))
 y = np.loadtxt(workfile, usecols=range(2,3))
@@ -46,7 +46,7 @@ plt.scatter(x[names=="Jupiter"], y[names=="Jupiter"], marker="o", color='orange'
 for i, elem in enumerate(tracking_list):
 	plt.plot(x_traj[traj_ID==elem], y_traj[traj_ID==elem], alpha=0.5)
 	
-name ="Coords/" + simDirectory + "/Plots/PlotIt_" + plotCount.zfill(5) +".pdf"
+name ="planetary-simulation/Coords/" + simDirectory + "/Plots/PlotIt_" + plotCount.zfill(5) +".pdf"
 
 #print name
 plt.savefig(name)

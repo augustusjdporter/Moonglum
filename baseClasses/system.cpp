@@ -5,10 +5,13 @@
 #include <cmath>
 #include <random>
 #include <fstream>
+#include <thread>
 
 #include "system.h"
 
 using namespace std;
+
+unsigned concurentThreadsSupported = std::thread::hardware_concurrency();
 
 System::System()
 {
@@ -53,43 +56,43 @@ void System::addBody(const Body newBody)
 
 
 void System::update(const double& timestep)
-{	
-	//Implement multi threading
-	//Separate the calculating of forces from the updating of velocity and position
-	//If all bodies in one container, would be easier to implement only calculating force of half the bodies.
-	vector <Body*>::iterator it;
-	for (it = m_Bodies.begin(); it != m_Bodies.end(); ++it)
-  	{
-  		if((*it)->name() == "BlackHole") continue; //just for now, black hole does not feel force or move
-		vector<double> acceleration = (*it)->accelerationCalc(&m_Bodies);//calculate acceleration from own system
-		
-		SystemMap::iterator system_it;
-		for(system_it = m_BoundSystems.begin(); system_it != m_BoundSystems.end(); system_it++) 
-		{
-    		vector<double> temp_acceleration = (*it)->accelerationCalc(system_it->second->Bodies());//calculate acceleration from any additional systems
-
-    		acceleration.at(0) = acceleration.at(0) + temp_acceleration.at(0);
-    		acceleration.at(1) = acceleration.at(1) + temp_acceleration.at(1);
-    		acceleration.at(2) = acceleration.at(2) + temp_acceleration.at(2);
-		}
-
-		//cout << (*it)->name() << " velocity: " << (*it)->xVelocity() << " " << (*it)->yVelocity() << " " << (*it)->zVelocity() << endl;
-		(*it)->set_xPosition((*it)->xPosition() + (*it)->xVelocity()*timestep);
-		(*it)->set_yPosition((*it)->yPosition() + (*it)->yVelocity()*timestep);
-		(*it)->set_zPosition((*it)->zPosition() + (*it)->zVelocity()*timestep);
+{		
+	vector<thread> threads;
+	auto acceleration_func = [&](int start, int total, int index)
+    {
+        for (int i = start; i < start + total; ++i)
+        {
+			m_Bodies.at(i)->set_acceleration(m_Bodies.at(i)->accelerationCalc(&m_Bodies));
+        };
+    };
 	
-		(*it)->set_xVelocity((*it)->xVelocity() + acceleration.at(0)*timestep);
-		(*it)->set_yVelocity((*it)->yVelocity() + acceleration.at(1)*timestep);
-		(*it)->set_zVelocity((*it)->zVelocity() + acceleration.at(2)*timestep);
-
-
-		//cout << (*it)->name() << " velocity: " << (*it)->xVelocity() << " " << (*it)->yVelocity() << " " << (*it)->zVelocity() << endl;
-		/*if (pow((*it)->xVelocity(),2) + pow((*it)->yVelocity(),2) + pow((*it)->zVelocity(),2) > pow(c, 2))
-		{
-			cout << "Error! " << (*it)->name() << " travelling faster than light!" << endl;
-			cout << "Vel: " << pow(pow((*it)->xVelocity(),2) + pow((*it)->yVelocity(),2) + pow((*it)->zVelocity(),2), 0.5) << endl;
-		}*/
-	}
+	for (int i = 0; i < concurentThreadsSupported; ++i)
+        threads.push_back(thread(acceleration_func, i * m_Bodies.size()/concurentThreadsSupported, m_Bodies.size()/concurentThreadsSupported, i));
+	
+	for (auto& th : threads) 
+        th.join();
+	
+	threads.clear();
+	
+	auto update_pos_func = [&](int start, int total, int index)
+    {
+		for (int i = start; i < start + total; ++i)
+        {
+			m_Bodies.at(i)->set_xPosition(m_Bodies.at(i)->xPosition() + m_Bodies.at(i)->xVelocity()*timestep);
+			m_Bodies.at(i)->set_yPosition(m_Bodies.at(i)->yPosition() + m_Bodies.at(i)->yVelocity()*timestep);
+			m_Bodies.at(i)->set_zPosition(m_Bodies.at(i)->zPosition() + m_Bodies.at(i)->zVelocity()*timestep);
+		
+			m_Bodies.at(i)->set_xVelocity(m_Bodies.at(i)->xVelocity() + m_Bodies.at(i)->acceleration().at(0)*timestep);
+			m_Bodies.at(i)->set_yVelocity(m_Bodies.at(i)->yVelocity() + m_Bodies.at(i)->acceleration().at(1)*timestep);
+			m_Bodies.at(i)->set_zVelocity(m_Bodies.at(i)->zVelocity() + m_Bodies.at(i)->acceleration().at(2)*timestep);
+        };
+	};
+	
+	for (int i = 0; i < concurentThreadsSupported; ++i)
+        threads.push_back(thread(update_pos_func, i * m_Bodies.size()/concurentThreadsSupported, m_Bodies.size()/concurentThreadsSupported, i));
+	
+	for (auto& th : threads) 
+        th.join();
 	return;
 };
 

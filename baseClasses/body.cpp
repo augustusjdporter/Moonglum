@@ -298,4 +298,14 @@ void Body::addToTrajectory(ofstream* trajectory_file)
 const double Body::relaxation() const
 {
 	return m_relaxation;
-}
+};
+
+const vector<double>& Body::acceleration() const
+{
+	return m_acceleration;
+};
+
+void Body::set_acceleration(const vector<double>& new_acceleration)
+{
+	m_acceleration = new_acceleration;
+};

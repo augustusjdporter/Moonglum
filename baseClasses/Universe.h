@@ -29,6 +29,8 @@ public:
 private:
 	SystemMap m_astrophysicalSystems; //The astrophysical systems which constitute this Universe (simulation)
 	ofstream  m_trajectoriesFile;
+	
+	System	m_allSystems;
 	string m_name;
 };
 

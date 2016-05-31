@@ -90,10 +90,10 @@ class Body
 	
 	//Function to add coordinates to the body's trajectory file
 	void addToTrajectory(ofstream* trajectory_file);
-
 	
-
-
+	const vector<double>& acceleration() const;
+	
+	void set_acceleration(const vector<double>& new_acceleration);
 
 private:
 
@@ -107,6 +107,7 @@ private:
 	bool   		m_isValid;	//false if we do not want to use body in acceleration calcs
 	bool		m_logTrajectory;
 	std::ofstream* 	m_trajectory; //pointer as i was getting weird ass compiler issues if it wasn't...
+	vector<double>  m_acceleration;
 	
 	
 };
