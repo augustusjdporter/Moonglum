@@ -54,6 +54,9 @@ void System::addBody(const Body newBody)
 
 void System::update(const double& timestep)
 {	
+	//Implement multi threading
+	//Separate the calculating of forces from the updating of velocity and position
+	//If all bodies in one container, would be easier to implement only calculating force of half the bodies.
 	vector <Body*>::iterator it;
 	for (it = m_Bodies.begin(); it != m_Bodies.end(); ++it)
   	{
