@@ -1,4 +1,9 @@
+#define _CRT_SECURE_NO_WARNINGS
+#define _USE_MATH_DEFINES
+#include <cmath>
+
 #include "XmlReader.h"
+
 
 using namespace std;
 using namespace rapidxml;
@@ -19,6 +24,7 @@ const string XmlReader::simulationType() const
 int XmlReader::parseConfig(char* configFile, int* timestep, int* numberOfSteps, int* samplingRate, double* normalisation, Universe* simulation_universe)
 {
 	int result;
+
 	FILE *file = fopen(configFile, "r");
 	if (file == NULL) 
 	{

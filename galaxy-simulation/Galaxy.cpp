@@ -1,3 +1,6 @@
+#define _USE_MATH_DEFINES
+#include <cmath>
+
 #include "Galaxy.h"
 #include "Gas.h"
 #include "Star.h"
