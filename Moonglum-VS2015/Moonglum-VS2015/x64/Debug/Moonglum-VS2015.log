@@ -1,0 +1,69 @@
+﻿  XmlReader.cpp
+c:\_projects\moonglum\utilities\xmlreader.cpp(81): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+c:\_projects\moonglum\utilities\xmlreader.cpp(147): warning C4800: 'double': forcing value to bool 'true' or 'false' (performance warning)
+c:\_projects\moonglum\utilities\xmlreader.cpp(175): warning C4800: 'double': forcing value to bool 'true' or 'false' (performance warning)
+  Utilities.cpp
+c:\_projects\moonglum\utilities\utilities.cpp(52): warning C4244: 'return': conversion from 'double' to 'int', possible loss of data
+  ProtoplanetaryCloud.cpp
+  main.cpp
+  Star.cpp
+  Gas.cpp
+  Galaxy.cpp
+  DarkMatterHalo.cpp
+  BlackHole.cpp
+  Universe.cpp
+  system.cpp
+c:\_projects\moonglum\baseclasses\system.cpp(69): warning C4018: '<': signed/unsigned mismatch
+c:\_projects\moonglum\baseclasses\system.cpp(91): warning C4018: '<': signed/unsigned mismatch
+d:\applications\microsoft visual studio 14.0\vc\include\type_traits(1399): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+  d:\applications\microsoft visual studio 14.0\vc\include\type_traits(1467): note: see reference to function template instantiation 'void std::_Invoker_functor::_Call<_Ty,unsigned __int64,unsigned __int64,int>(_Callable &&,unsigned __int64 &&,unsigned __int64 &&,int &&)' being compiled
+          with
+          [
+              _Ty=System::update::<lambda_3593d8089a6bd909dce8422e8d0cc445>,
+              _Callable=System::update::<lambda_3593d8089a6bd909dce8422e8d0cc445>
+          ]
+  d:\applications\microsoft visual studio 14.0\vc\include\thr\xthread(240): note: see reference to function template instantiation 'void std::invoke<System::update::<lambda_3593d8089a6bd909dce8422e8d0cc445>,unsigned __int64,unsigned __int64,int>(_Callable &&,unsigned __int64 &&,unsigned __int64 &&,int &&)' being compiled
+          with
+          [
+              _Callable=System::update::<lambda_3593d8089a6bd909dce8422e8d0cc445>
+          ]
+  d:\applications\microsoft visual studio 14.0\vc\include\thr\xthread(249): note: see reference to function template instantiation 'void std::_LaunchPad<_Target>::_Execute<0,1,2,3>(std::tuple<System::update::<lambda_3593d8089a6bd909dce8422e8d0cc445>,unsigned __int64,unsigned __int64,int> &,std::integer_sequence<size_t,0,1,2,3>)' being compiled
+          with
+          [
+              _Target=std::unique_ptr<std::tuple<System::update::<lambda_3593d8089a6bd909dce8422e8d0cc445>,unsigned __int64,unsigned __int64,int>,std::default_delete<std::tuple<System::update::<lambda_3593d8089a6bd909dce8422e8d0cc445>,unsigned __int64,unsigned __int64,int>>>
+          ]
+  d:\applications\microsoft visual studio 14.0\vc\include\thr\xthread(247): note: see reference to function template instantiation 'void std::_LaunchPad<_Target>::_Execute<0,1,2,3>(std::tuple<System::update::<lambda_3593d8089a6bd909dce8422e8d0cc445>,unsigned __int64,unsigned __int64,int> &,std::integer_sequence<size_t,0,1,2,3>)' being compiled
+          with
+          [
+              _Target=std::unique_ptr<std::tuple<System::update::<lambda_3593d8089a6bd909dce8422e8d0cc445>,unsigned __int64,unsigned __int64,int>,std::default_delete<std::tuple<System::update::<lambda_3593d8089a6bd909dce8422e8d0cc445>,unsigned __int64,unsigned __int64,int>>>
+          ]
+  d:\applications\microsoft visual studio 14.0\vc\include\thr\xthread(244): note: while compiling class template member function 'void std::_LaunchPad<_Target>::_Run(std::_LaunchPad<_Target> *) noexcept'
+          with
+          [
+              _Target=std::unique_ptr<std::tuple<System::update::<lambda_3593d8089a6bd909dce8422e8d0cc445>,unsigned __int64,unsigned __int64,int>,std::default_delete<std::tuple<System::update::<lambda_3593d8089a6bd909dce8422e8d0cc445>,unsigned __int64,unsigned __int64,int>>>
+          ]
+  d:\applications\microsoft visual studio 14.0\vc\include\thr\xthread(232): note: see reference to function template instantiation 'void std::_LaunchPad<_Target>::_Run(std::_LaunchPad<_Target> *) noexcept' being compiled
+          with
+          [
+              _Target=std::unique_ptr<std::tuple<System::update::<lambda_3593d8089a6bd909dce8422e8d0cc445>,unsigned __int64,unsigned __int64,int>,std::default_delete<std::tuple<System::update::<lambda_3593d8089a6bd909dce8422e8d0cc445>,unsigned __int64,unsigned __int64,int>>>
+          ]
+  d:\applications\microsoft visual studio 14.0\vc\include\thr\xthread(259): note: see reference to class template instantiation 'std::_LaunchPad<_Target>' being compiled
+          with
+          [
+              _Target=std::unique_ptr<std::tuple<System::update::<lambda_3593d8089a6bd909dce8422e8d0cc445>,unsigned __int64,unsigned __int64,int>,std::default_delete<std::tuple<System::update::<lambda_3593d8089a6bd909dce8422e8d0cc445>,unsigned __int64,unsigned __int64,int>>>
+          ]
+  d:\applications\microsoft visual studio 14.0\vc\include\thread(50): note: see reference to function template instantiation 'void std::_Launch<std::unique_ptr<std::tuple<System::update::<lambda_3593d8089a6bd909dce8422e8d0cc445>,unsigned __int64,unsigned __int64,int>,std::default_delete<_Ty>>>(_Thrd_t *,_Target &&)' being compiled
+          with
+          [
+              _Ty=std::tuple<System::update::<lambda_3593d8089a6bd909dce8422e8d0cc445>,unsigned __int64,unsigned __int64,int>,
+              _Target=std::unique_ptr<std::tuple<System::update::<lambda_3593d8089a6bd909dce8422e8d0cc445>,unsigned __int64,unsigned __int64,int>,std::default_delete<std::tuple<System::update::<lambda_3593d8089a6bd909dce8422e8d0cc445>,unsigned __int64,unsigned __int64,int>>>
+          ]
+  c:\_projects\moonglum\baseclasses\system.cpp(92): note: see reference to function template instantiation 'std::thread::thread<System::update::<lambda_3593d8089a6bd909dce8422e8d0cc445>&,unsigned __int64,unsigned __int64,int&,void>(_Fn,unsigned __int64 &&,unsigned __int64 &&,int &)' being compiled
+          with
+          [
+              _Fn=System::update::<lambda_3593d8089a6bd909dce8422e8d0cc445> &
+          ]
+  body.cpp
+  Generating Code...
+  Moonglum-VS2015.vcxproj -> C:\_projects\Moonglum\Moonglum-VS2015\x64\Debug\Moonglum-VS2015.exe
+  Moonglum-VS2015.vcxproj -> C:\_projects\Moonglum\Moonglum-VS2015\x64\Debug\Moonglum-VS2015.pdb (Partial PDB)
