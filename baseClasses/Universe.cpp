@@ -28,6 +28,8 @@ Universe::~Universe()
 
 void Universe::bindSystems()
 {
+	//possibly put handles to all the bodies into one big "System", and do all calculations from this.
+	//Printing could stay the same as long as the pointers are to the right bodies.
 	for (SystemMap::iterator iterator1 = m_astrophysicalSystems.begin(); iterator1 != m_astrophysicalSystems.end(); iterator1++)
 	{
 		for (SystemMap::iterator iterator2 = m_astrophysicalSystems.begin(); iterator2 != m_astrophysicalSystems.end(); iterator2++)
@@ -43,6 +45,7 @@ void Universe::bindSystems()
 
 void Universe::updateUniverse(double timestep)
 {
+	//Make this only update the one big system
 	for (SystemMap::iterator iterator = m_astrophysicalSystems.begin(); iterator != m_astrophysicalSystems.end(); iterator++)
 	{
 		iterator->second->update(timestep);
