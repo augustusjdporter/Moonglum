@@ -1,3 +1,7 @@
+#define _CRT_SECURE_NO_WARNINGS
+#define _USE_MATH_DEFINES
+#include <cmath>
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
@@ -11,7 +15,11 @@
 
 #include <sys/types.h>
 #include <sys/stat.h>
+
+#ifdef __linux__ 
 #include <unistd.h>
+#endif
+#include <time.h>
 
 #include "baseClasses/body.h"
 #include "baseClasses/system.h"
@@ -29,6 +37,15 @@
 #include "galaxy-simulation/BlackHole.h"
 #include "galaxy-simulation/DarkMatterHalo.h"
 #include "galaxy-simulation/Star.h"
+
+#ifdef _WIN32
+#include <Windows.h>
+
+void mkdir(const char* directory, const int code)
+{
+	CreateDirectory(directory, NULL);
+};
+#endif
 
 using namespace std;
 
@@ -50,6 +67,8 @@ int main(int argc, char* argv[])
 	
 	const time_t ctt = time(0);
 	cout << asctime(localtime(&ctt)) << endl;//output time 
+
+	
 	time_t beginninguni, enduni;
 
 	//Start by checking there are enough command line arguments

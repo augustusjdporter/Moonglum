@@ -33,7 +33,7 @@ ProtoplanetaryCloud::ProtoplanetaryCloud(const string& name,
   	std::normal_distribution<double> distributionx(xCenter, xScaleHeight);
   	std::normal_distribution<double> distributiony(yCenter, yScaleHeight);
   	std::normal_distribution<double> distributionz(zCenter, zScaleHeight);
-  	std::normal_distribution<double> distribution_velocity(velocity, velocityDispersion);
+  	//std::normal_distribution<double> distribution_velocity(velocity, velocityDispersion);
 
 	for (int i = 0; i < numberOfBodies; i++)
 	{
@@ -46,7 +46,7 @@ ProtoplanetaryCloud::ProtoplanetaryCloud(const string& name,
 		double velocity_Direction_y = pow(pow(xPos-xCenter,2) + pow(yPos-yCenter,2),-0.5)*(xPos-xCenter);
 
 		//Magnitude of velocity (constant) ms^-1
-		double velocity_magnitude = distribution_velocity(generator);
+		//double velocity_magnitude = distribution_velocity(generator);
 		double newVel = pow(G*solar_Mass/pow(pow(xPos-xCenter, 2) + pow(yPos-yCenter, 2), 0.5), 0.5);
 		double xVel = velocity_Direction_x * newVel;
 		double yVel = velocity_Direction_y * newVel;

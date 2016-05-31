@@ -1,3 +1,6 @@
+#define _USE_MATH_DEFINES
+#include <cmath>
+
 #include <iostream>
 #include <sstream>
 #include <string>
@@ -7,7 +10,9 @@
 
 #include <sys/types.h>
 #include <sys/stat.h>
+#ifdef __linux__ 
 #include <unistd.h>
+#endif
 
 #include "body.h"
 

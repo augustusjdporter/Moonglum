@@ -21,3 +21,9 @@ galaxyConfig.png
 main.o
 Moonglum-manual-picture.pdf
 Moonglum-manual-picture-2.pdf
+Moonglum-VS2015/Debug
+Moonglum-VS2015/Release
+Moonglum-VS2015/Moonglum-VS2015.VC.db
+Moonglum-VS2015/Moonglum-VS2015/Debug
+Moonglum-VS2015/Moonglum-VS2015/Release
+Moonglum-VS2015/Moonglum-VS2015/Moonglum-VS2015.vcxproj.*
