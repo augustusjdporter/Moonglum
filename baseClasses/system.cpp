@@ -59,7 +59,7 @@ void System::update(const double& timestep)
   	{
   		if((*it)->name() == "BlackHole") continue; //just for now, black hole does not feel force or move
 		vector<double> acceleration = (*it)->accelerationCalc(&m_Bodies);//calculate acceleration from own system
-
+		
 		SystemMap::iterator system_it;
 		for(system_it = m_BoundSystems.begin(); system_it != m_BoundSystems.end(); system_it++) 
 		{

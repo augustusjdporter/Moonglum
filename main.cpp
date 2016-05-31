@@ -47,7 +47,7 @@ int main(int argc, char* argv[])
 	cout << endl;
 	cout << "Github: https://github.com/augustusjdporter/Moonglum" << endl;
 	cout << endl;
-
+	
 	const time_t ctt = time(0);
 	cout << asctime(localtime(&ctt)) << endl;//output time 
 	time_t beginninguni, enduni;
@@ -77,7 +77,7 @@ int main(int argc, char* argv[])
 	double normalisation;
 	
 	Universe simulation_universe(simulationName);
-
+	
 	XmlReader configReader;
 	int errorHandle = configReader.parseConfig(argv[2], &timestep, &numberOfSteps, &samplingRate, &normalisation, &simulation_universe);
 	if (errorHandle == -1)

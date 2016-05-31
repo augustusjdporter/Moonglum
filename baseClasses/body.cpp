@@ -104,7 +104,6 @@ const int Body::ID() const
 vector<double> Body::accelerationCalc(vector<Body*>* Body_Vector)
 {
 	double accX(0), accY(0), accZ(0);
-
 	vector <double> acceleration;
 	vector <Body*>::iterator it;
 	for (it = Body_Vector->begin(); it != Body_Vector->end(); ++it)

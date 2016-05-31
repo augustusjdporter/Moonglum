@@ -1,0 +1,47 @@
+{
+	"version": "0.2.0",
+	"configurations": [
+		{
+			"name": "C++ Launch (GDB)",
+			"type": "cppdbg",
+			"request": "launch",
+			"launchOptionType": "Local",
+			"miDebuggerPath": "/usr/bin/gdb",
+			"targetArchitecture": "x64",
+			"program": "${workspaceRoot}/Moonglum",
+			"args": ["debugtest", "${workspaceRoot}/planetary-simulation/Configs/colliding-systems.xml"],
+			"stopAtEntry": false,
+			"cwd": "${workspaceRoot}",
+			"environment": []
+		},
+		{
+			"name": "C++ Attach (GDB)",
+			"type": "cppdbg",
+			"request": "launch",
+			"launchOptionType": "Local",
+			"miDebuggerPath": "/usr/bin/gdb",
+			"targetArchitecture": "x64",
+			"program": "${workspaceRoot}/Moonglum",
+			"args": [],
+			"stopAtEntry": false,
+			"cwd": "${workspaceRoot}",
+			"environment": [],
+			"processId": "enter program's process ID"
+		},
+		{
+    		"name": "Python",
+			"type": "python",
+			"request": "launch",
+			"stopOnEntry": true,
+			"program": "${workspaceRoot}/planetary-simulation/plot-planetary-simulation.py",
+			"args": ["collidingSystems", "2"],
+			"pythonPath": "/usr/bin/ipython",
+			"cwd": "/home/augustus/Moonglum",
+			"debugOptions": [
+				"WaitOnAbnormalExit",
+				"WaitOnNormalExit",
+				"RedirectOutput"
+			]
+		}
+	]
+}
