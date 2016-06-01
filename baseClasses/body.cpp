@@ -30,9 +30,9 @@ Body::Body()
 	m_mass = 0;
 	m_xPosition = m_yPosition = m_xVelocity = m_yVelocity = 0;
 
-	m_acceleration.push_back(0.0);//x
-	m_acceleration.push_back(0.0);//y
-	m_acceleration.push_back(0.0);//z
+	m_xAcceleration = 0;
+	m_yAcceleration = 0;
+	m_zAcceleration = 0;
 };
 
 Body::Body(const Body& bodyToCopy)
@@ -54,7 +54,9 @@ Body::Body(const Body& bodyToCopy)
 
 	m_radius = bodyToCopy.radius();
 
-	m_acceleration = bodyToCopy.acceleration();
+	m_xAcceleration = 0;
+	m_yAcceleration = 0;
+	m_zAcceleration = 0;
 };
 
 Body::~Body()
@@ -103,9 +105,9 @@ Body::Body(string tempName,
 
 	m_logTrajectory = tempLogTrajectory;
 
-	m_acceleration.push_back(0.0);//x
-	m_acceleration.push_back(0.0);//y
-	m_acceleration.push_back(0.0);//z
+	m_xAcceleration = 0;
+	m_yAcceleration = 0;
+	m_zAcceleration = 0;
 
 	//m_relaxation = 0.05*3.0857*pow(10, 12);
 	m_relaxation = 0.0;
@@ -113,29 +115,29 @@ Body::Body(string tempName,
 	cout << m_name << " created" << m_ID << endl;
 };
 
-const int Body::ID() const
+const int& Body::ID() const
 {
 	return m_ID;
 }
 
 void Body::accelerationCalc(vector<Body*>* Body_Vector)
 {
-	m_acceleration.at(0) = 0;
-	m_acceleration.at(1) = 0;
-	m_acceleration.at(2) = 0;
+	m_xAcceleration = 0;
+	m_yAcceleration = 0;
+	m_zAcceleration = 0;
 
 	for (auto it = Body_Vector->begin(); it != Body_Vector->end(); ++it)
 	{
 		if (ID() == (*it)->ID() || (*it)->isValid() == false) continue; //check it is same body, and that other body is valid
 		//F = G*M*m*r_vector/r^3
 		//a = G*M*r_vector/r^3
-		double rx = xPosition() - (*it)->xPosition();
-		double ry = yPosition() - (*it)->yPosition();
-		double rz = zPosition() - (*it)->zPosition();
+		double rx = m_xPosition - (*it)->xPosition();
+		double ry = m_yPosition - (*it)->yPosition();
+		double rz = m_zPosition - (*it)->zPosition();
 		double rCubed = pow(rx*rx + ry*ry + rz*rz + relaxation(), 1.5);
 
 		//when bodies touch, they stick. Conserve linear momentum
-		if(rCubed <= pow(radius() + (*it)->radius(), 3))
+		/*if(rCubed <= pow(radius() + (*it)->radius(), 3))
 		{
 			if((*it)->name() == "Sun" || (*it)->name() == "Star" || (*it)->name() == "Jupiter" || (*it)->name() == "Earth") continue;
 			//combine them
@@ -176,54 +178,54 @@ void Body::accelerationCalc(vector<Body*>* Body_Vector)
 			Body_Vector->erase(it);
 		}
 		else	//if bodies aren't touching, calculate acceleration
-		{
+		{*/
 			double magAcc = -G*(*it)->mass()/rCubed; 
 
-			m_acceleration.at(0) += magAcc*rx;
-			m_acceleration.at(1) += magAcc*ry;
-			m_acceleration.at(2) += magAcc*rz;
-		}	
+			m_xAcceleration += magAcc*rx;
+			m_yAcceleration += magAcc*ry;
+			m_zAcceleration += magAcc*rz;
+		//}	
 	}
 
 	return;
 };
 
-const double Body::xPosition() const
+const double& Body::xPosition() const
 {
 	return m_xPosition;
 };
 
-const double Body::yPosition() const
+const double& Body::yPosition() const
 {
 	return m_yPosition;
 };
 
-const double Body::zPosition() const
+const double& Body::zPosition() const
 {
 	return m_zPosition;
 };
 
-const double Body::xVelocity() const
+const double& Body::xVelocity() const
 {
 	return m_xVelocity;
 };
 
-const double Body::yVelocity() const
+const double& Body::yVelocity() const
 {
 	return m_yVelocity;
 };
 
-const double Body::zVelocity() const
+const double& Body::zVelocity() const
 {
 	return m_zVelocity;
 };
 
-const string Body::name() const
+const string& Body::name() const
 {
 	return m_name;
 };
 
-const double Body::mass() const
+const double& Body::mass() const
 {
 	return m_mass;
 };
@@ -276,12 +278,12 @@ void Body::set_Radius(const double& new_Radius)
 	return;
 };
 
-const double Body::radius() const
+const double& Body::radius() const
 {
 	return m_radius;
 };
 
-const bool Body::isValid() const
+const bool& Body::isValid() const
 {
 	return m_isValid;
 };
@@ -297,7 +299,7 @@ const double Body::density() const
 	return m_mass / ((4/3)*M_PI*pow(m_radius, 3));
 };
 
-const bool Body::isTrackingTrajectory() const
+const bool& Body::isTrackingTrajectory() const
 {
 	return m_logTrajectory;
 };
@@ -310,12 +312,19 @@ void Body::addToTrajectory(ofstream* trajectory_file)
 	}
 };
 
-const double Body::relaxation() const
+const double& Body::relaxation() const
 {
 	return m_relaxation;
 };
 
-const vector<double>& Body::acceleration() const
+void Body::update_position_and_velocity(const double& timestep)
 {
-	return m_acceleration;
+	m_xPosition += m_xVelocity*timestep;
+	m_yPosition += m_yVelocity*timestep;
+	m_zPosition += m_zVelocity*timestep;
+
+	m_xVelocity += m_xAcceleration*timestep;
+	m_yVelocity += m_yAcceleration*timestep;
+	m_zVelocity += m_zAcceleration*timestep;
+	return;
 };

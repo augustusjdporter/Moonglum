@@ -18,7 +18,7 @@ public:
 
 	~BlackHole();
 
-	const double radius() const;
+	const double& radius() const;
 
 private:
 	BlackHole();

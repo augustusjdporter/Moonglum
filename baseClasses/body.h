@@ -41,33 +41,33 @@ class Body
 	void accelerationCalc(vector<Body*>* Body_Vector);
 
 	//Access functions
-	const double xPosition() const;
+	const double& xPosition() const;
 
-	const double yPosition() const;
+	const double& yPosition() const;
 
-	const double zPosition() const;
+	const double& zPosition() const;
 
-	const double xVelocity() const;
+	const double& xVelocity() const;
 
-	const double yVelocity() const;
+	const double& yVelocity() const;
 
-	const double zVelocity() const;
+	const double& zVelocity() const;
 
-	const string name() const;
+	const string& name() const;
 
-	const double mass() const;
+	const double& mass() const;
 
-	virtual const double radius() const;
+	virtual const double& radius() const;
 
-	const bool isValid() const;
+	const bool& isValid() const;
 
 	const double density() const;
 
-	const bool isTrackingTrajectory() const;
+	const bool& isTrackingTrajectory() const;
 
-	const double relaxation() const;
+	const double& relaxation() const;
 
-	const int ID() const;
+	const int& ID() const;
 
 	//Setting functions
 	void set_xPosition(const double& new_xPosition);
@@ -91,7 +91,10 @@ class Body
 	//Function to add coordinates to the body's trajectory file
 	void addToTrajectory(ofstream* trajectory_file);
 	
-	const vector<double>& acceleration() const;
+	void update_position_and_velocity(const double& timestep);
+
+protected:
+	double 		m_radius;
 	
 private:
 
@@ -100,14 +103,11 @@ private:
 	double 		m_mass;
 	double 		m_xPosition, m_yPosition, m_zPosition;
 	double 		m_xVelocity, m_yVelocity, m_zVelocity;
-	double 		m_radius;
+	double 		m_xAcceleration, m_yAcceleration, m_zAcceleration;
 	double		m_relaxation;
 	bool   		m_isValid;	//false if we do not want to use body in acceleration calcs
 	bool		m_logTrajectory;
-	std::ofstream* 	m_trajectory; //pointer as i was getting weird ass compiler issues if it wasn't...
-	vector<double>  m_acceleration;
-	
-	
+	std::ofstream* 	m_trajectory; //pointer as i was getting weird ass compiler issues if it wasn't...	
 };
 
 #endif

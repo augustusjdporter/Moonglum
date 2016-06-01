@@ -58,7 +58,7 @@ void System::addBody(const Body newBody)
 void System::update(const double& timestep)
 {		
 	vector<thread> threads;
-	auto acceleration_func = [&](int start, int total, int index)
+	auto acceleration_func = [&](int start, int total)
     {
         for (int i = start; i < start + total; ++i)
         {
@@ -67,29 +67,33 @@ void System::update(const double& timestep)
     };
 	
 	for (int i = 0; i < concurentThreadsSupported; ++i)
-        threads.push_back(thread(acceleration_func, i * m_Bodies.size()/concurentThreadsSupported, m_Bodies.size()/concurentThreadsSupported, i));
+	{
+		if (i != concurentThreadsSupported-1)
+        	threads.push_back(thread(acceleration_func, i * m_Bodies.size()/concurentThreadsSupported, m_Bodies.size()/concurentThreadsSupported));
+		else	//Chuck any of the remainder into the last thread (wont make a difference in performance, will usually be a max of 3 bodies)
+			threads.push_back(thread(acceleration_func, i * m_Bodies.size()/concurentThreadsSupported, m_Bodies.size()/concurentThreadsSupported + m_Bodies.size()%concurentThreadsSupported));
+	}
 	
 	for (auto& th : threads) 
         th.join();
 	
 	threads.clear();
 	
-	auto update_pos_func = [&](int start, int total, int index)
+	auto update_pos_func = [&](int start, int total)
     {
 		for (int i = start; i < start + total; ++i)
-        {
-			m_Bodies.at(i)->set_xPosition(m_Bodies.at(i)->xPosition() + m_Bodies.at(i)->xVelocity()*timestep);
-			m_Bodies.at(i)->set_yPosition(m_Bodies.at(i)->yPosition() + m_Bodies.at(i)->yVelocity()*timestep);
-			m_Bodies.at(i)->set_zPosition(m_Bodies.at(i)->zPosition() + m_Bodies.at(i)->zVelocity()*timestep);
-		
-			m_Bodies.at(i)->set_xVelocity(m_Bodies.at(i)->xVelocity() + m_Bodies.at(i)->acceleration().at(0)*timestep);
-			m_Bodies.at(i)->set_yVelocity(m_Bodies.at(i)->yVelocity() + m_Bodies.at(i)->acceleration().at(1)*timestep);
-			m_Bodies.at(i)->set_zVelocity(m_Bodies.at(i)->zVelocity() + m_Bodies.at(i)->acceleration().at(2)*timestep);
+        {		
+			m_Bodies.at(i)->update_position_and_velocity(timestep);
         };
 	};
 	
 	for (int i = 0; i < concurentThreadsSupported; ++i)
-        threads.push_back(thread(update_pos_func, i * m_Bodies.size()/concurentThreadsSupported, m_Bodies.size()/concurentThreadsSupported, i));
+	{
+		if (i != concurentThreadsSupported-1)
+        	threads.push_back(thread(update_pos_func, i * m_Bodies.size()/concurentThreadsSupported, m_Bodies.size()/concurentThreadsSupported));
+		else	//Chuck any of the remainder into the last thread (wont make a difference in performance, will usually be a max of 3 bodies)
+			threads.push_back(thread(update_pos_func, i * m_Bodies.size()/concurentThreadsSupported, m_Bodies.size()/concurentThreadsSupported + m_Bodies.size()%concurentThreadsSupported));
+	};
 	
 	for (auto& th : threads) 
         th.join();

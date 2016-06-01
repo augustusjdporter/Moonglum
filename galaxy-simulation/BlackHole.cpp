@@ -28,7 +28,10 @@ BlackHole::BlackHole(double tempMass,
 							0, 
 							tempLogTrajectory)
 {
+	const double G(6.67384*pow(10,-11));
+	const double c(3*pow(10, 8));
 
+	m_radius = 2*G*mass()/pow(c, 2);
 };
 
 BlackHole::~BlackHole()
@@ -36,10 +39,8 @@ BlackHole::~BlackHole()
 	cout << name() << " destructor called." << endl;
 };
 
-const double BlackHole::radius() const
+const double& BlackHole::radius() const
 {
-	const double G(6.67384*pow(10,-11));
-	const double c(3*pow(10, 8));
-
-	return 2*G*mass()/pow(c, 2);
+	
+	return m_radius;
 }
