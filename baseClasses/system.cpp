@@ -33,7 +33,7 @@ System::~System()
 
 	while (!m_Bodies.empty())
 	{
-		if (delete m_Bodies.back() != NULL)
+		if (m_Bodies.back() != NULL)
 		{
 			delete m_Bodies.back();
 			m_Bodies.pop_back();
