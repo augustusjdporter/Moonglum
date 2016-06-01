@@ -33,6 +33,9 @@ Body::Body()
 	m_xAcceleration = 0;
 	m_yAcceleration = 0;
 	m_zAcceleration = 0;
+	
+	m_radius = 0;
+	m_relaxation = 0;
 };
 
 Body::Body(const Body& bodyToCopy)
@@ -53,6 +56,8 @@ Body::Body(const Body& bodyToCopy)
 	m_isValid = bodyToCopy.isValid();
 
 	m_radius = bodyToCopy.radius();
+	
+	m_relaxation = bodyToCopy.relaxation();
 
 	m_xAcceleration = 0;
 	m_yAcceleration = 0;
@@ -110,7 +115,7 @@ Body::Body(string tempName,
 	m_zAcceleration = 0;
 
 	//m_relaxation = 0.05*3.0857*pow(10, 12);
-	m_relaxation = 0.0;
+	m_relaxation = m_radius;
 	if (m_name != "Planetesimal")
 	cout << m_name << " created" << m_ID << endl;
 };
@@ -128,7 +133,7 @@ void Body::accelerationCalc(vector<Body*>* Body_Vector)
 
 	for (auto it = Body_Vector->begin(); it != Body_Vector->end(); ++it)
 	{
-		if (ID() == (*it)->ID() || (*it)->isValid() == false) continue; //check it is same body, and that other body is valid
+		//if (ID() == (*it)->ID() || (*it)->isValid() == false) continue; //check it is same body, and that other body is valid. Don't need this if relaxation is non-zero, as the nominator for acceleration calc will be zero at last step
 		//F = G*M*m*r_vector/r^3
 		//a = G*M*r_vector/r^3
 		double rx = m_xPosition - (*it)->xPosition();
@@ -319,9 +324,9 @@ const double& Body::relaxation() const
 
 void Body::update_position_and_velocity(const double& timestep)
 {
-	m_xPosition += m_xVelocity*timestep;
-	m_yPosition += m_yVelocity*timestep;
-	m_zPosition += m_zVelocity*timestep;
+	m_xPosition += m_xVelocity*timestep + 0.5*m_xAcceleration*timestep*timestep;//s = vt + 1/2at^2
+	m_yPosition += m_yVelocity*timestep + 0.5*m_xAcceleration*timestep*timestep;
+	m_zPosition += m_zVelocity*timestep + 0.5*m_xAcceleration*timestep*timestep;
 
 	m_xVelocity += m_xAcceleration*timestep;
 	m_yVelocity += m_yAcceleration*timestep;
