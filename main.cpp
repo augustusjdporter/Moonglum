@@ -179,7 +179,7 @@ int main(int argc, char* argv[])
     		command = command + convertIntToString.str();
     		cout << command << endl;
     		cout << endl;
-			if(stepCount!=1)
+			
     		int result = system(command.c_str()); //Call python plotting on command line. result is currently unused
     		cout << endl;
 

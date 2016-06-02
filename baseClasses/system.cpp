@@ -85,10 +85,10 @@ void System::update_on_cpu(const double& timestep)
 
 	for (int i = 0; i < concurentThreadsSupported; ++i)
 	{
-	if (i != concurentThreadsSupported-1)
-	threads.push_back(thread(acceleration_func, i * m_Bodies.size()/concurentThreadsSupported, m_Bodies.size()/concurentThreadsSupported));
-	else	//Chuck any of the remainder into the last thread (wont make a difference in performance, will usually be a max of 3 bodies)
-	threads.push_back(thread(acceleration_func, i * m_Bodies.size()/concurentThreadsSupported, m_Bodies.size()/concurentThreadsSupported + m_Bodies.size()%concurentThreadsSupported));
+		if (i != concurentThreadsSupported-1)
+			threads.push_back(thread(acceleration_func, i * m_Bodies.size()/concurentThreadsSupported, m_Bodies.size()/concurentThreadsSupported));
+		else	//Chuck any of the remainder into the last thread (wont make a difference in performance, will usually be a max of 3 bodies)
+			threads.push_back(thread(acceleration_func, i * m_Bodies.size()/concurentThreadsSupported, m_Bodies.size()/concurentThreadsSupported + m_Bodies.size()%concurentThreadsSupported-1));
 	}
 
 	for (auto& th : threads)
@@ -109,7 +109,7 @@ void System::update_on_cpu(const double& timestep)
 		if (i != concurentThreadsSupported - 1)
 			threads.push_back(thread(update_pos_func, i * m_Bodies.size() / concurentThreadsSupported, m_Bodies.size() / concurentThreadsSupported));
 		else	//Chuck any of the remainder into the last thread (wont make a difference in performance, will usually be a max of 3 bodies)
-			threads.push_back(thread(update_pos_func, i * m_Bodies.size() / concurentThreadsSupported, m_Bodies.size() / concurentThreadsSupported + m_Bodies.size() % concurentThreadsSupported));
+			threads.push_back(thread(update_pos_func, i * m_Bodies.size() / concurentThreadsSupported, m_Bodies.size() / concurentThreadsSupported + m_Bodies.size() % concurentThreadsSupported-1));
 	};
 
 	for (auto& th : threads)
