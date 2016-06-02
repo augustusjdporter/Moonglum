@@ -5,6 +5,7 @@ using namespace std;
 Universe::Universe(string simName)
 {
 	m_name = simName;
+	run_on_gpu = true;
 };
 
 void Universe::addSystem(System* systemToAdd)
@@ -59,7 +60,13 @@ void Universe::updateUniverse(double timestep)
 	{
 		iterator->second->update(timestep);
 	}*/
-	m_allSystems.update(timestep);
+
+#ifdef GPU_COMPUTE
+	m_allSystems.update_on_gpu(timestep);
+#else
+	m_allSystems.update_on_cpu(timestep);
+#endif
+
 	return;
 };
 

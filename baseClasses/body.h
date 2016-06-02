@@ -87,12 +87,14 @@ class Body
 	void set_Radius(const double& new_Radius);
 
 	void set_isValid(const bool& new_isValid);
+
+	void set_acceleration(const double& x, const double& y, const double& z);
 	
 	//Function to add coordinates to the body's trajectory file
 	void addToTrajectory(ofstream* trajectory_file);
 	
 	void update_position_and_velocity(const double& timestep);
-
+	double 		m_xAcceleration, m_yAcceleration, m_zAcceleration;
 protected:
 	double 		m_radius;
 	
@@ -103,7 +105,7 @@ private:
 	double 		m_mass;
 	double 		m_xPosition, m_yPosition, m_zPosition;
 	double 		m_xVelocity, m_yVelocity, m_zVelocity;
-	double 		m_xAcceleration, m_yAcceleration, m_zAcceleration;
+	
 	double		m_relaxation;
 	bool   		m_isValid;	//false if we do not want to use body in acceleration calcs
 	bool		m_logTrajectory;

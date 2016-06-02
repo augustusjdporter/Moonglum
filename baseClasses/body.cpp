@@ -297,7 +297,14 @@ void Body::set_isValid(const bool& new_isValid)
 {
 	m_isValid = new_isValid;
 	return;
-};
+}
+void Body::set_acceleration(const double & x, const double & y, const double & z)
+{
+	m_xAcceleration = x;
+	m_yAcceleration = y;
+	m_zAcceleration = z;
+}
+;
 
 const double Body::density() const
 {

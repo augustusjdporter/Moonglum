@@ -9,9 +9,19 @@
 
 #include "system.h"
 
-using namespace std;
+#ifdef GPU_COMPUTE
+#include "C:\_projects\Moonglum\Moonglum-VS2015\Moonglum-VS2015\OpenCLFunctions.h"
+
+vex::Context ctx(
+	vex::Filter::Type(CL_DEVICE_TYPE_GPU) &&
+	vex::Filter::DoublePrecision &&
+	vex::Filter::Count(1)
+);
+#endif
 
 unsigned concurentThreadsSupported = std::thread::hardware_concurrency();
+
+using namespace std;
 
 System::System()
 {
@@ -61,50 +71,101 @@ void System::addBody(const Body newBody)
 };
 
 
-void System::update(const double& timestep)
-{		
+void System::update_on_cpu(const double& timestep)
+{	
+	cout << "calculating acc on cpu" << endl;
 	vector<thread> threads;
 	auto acceleration_func = [&](int start, int total)
-    {
-        for (int i = start; i < start + total; ++i)
-        {
+	{
+		for (int i = start; i < start + total; ++i)
+		{
 			m_Bodies.at(i)->accelerationCalc(&m_Bodies);
-        };
-    };
-	
+		};
+	};
+
 	for (int i = 0; i < concurentThreadsSupported; ++i)
 	{
-		if (i != concurentThreadsSupported-1)
-        	threads.push_back(thread(acceleration_func, i * m_Bodies.size()/concurentThreadsSupported, m_Bodies.size()/concurentThreadsSupported));
-		else	//Chuck any of the remainder into the last thread (wont make a difference in performance, will usually be a max of 3 bodies)
-			threads.push_back(thread(acceleration_func, i * m_Bodies.size()/concurentThreadsSupported, m_Bodies.size()/concurentThreadsSupported + m_Bodies.size()%concurentThreadsSupported));
+	if (i != concurentThreadsSupported-1)
+	threads.push_back(thread(acceleration_func, i * m_Bodies.size()/concurentThreadsSupported, m_Bodies.size()/concurentThreadsSupported));
+	else	//Chuck any of the remainder into the last thread (wont make a difference in performance, will usually be a max of 3 bodies)
+	threads.push_back(thread(acceleration_func, i * m_Bodies.size()/concurentThreadsSupported, m_Bodies.size()/concurentThreadsSupported + m_Bodies.size()%concurentThreadsSupported));
 	}
-	
-	for (auto& th : threads) 
-        th.join();
-	
+
+	for (auto& th : threads)
+	th.join();
+
 	threads.clear();
 	
 	auto update_pos_func = [&](int start, int total)
-    {
+	{
 		for (int i = start; i < start + total; ++i)
-        {		
+		{
 			m_Bodies.at(i)->update_position_and_velocity(timestep);
-        };
+		};
 	};
-	
+
 	for (int i = 0; i < concurentThreadsSupported; ++i)
 	{
-		if (i != concurentThreadsSupported-1)
-        	threads.push_back(thread(update_pos_func, i * m_Bodies.size()/concurentThreadsSupported, m_Bodies.size()/concurentThreadsSupported));
+		if (i != concurentThreadsSupported - 1)
+			threads.push_back(thread(update_pos_func, i * m_Bodies.size() / concurentThreadsSupported, m_Bodies.size() / concurentThreadsSupported));
 		else	//Chuck any of the remainder into the last thread (wont make a difference in performance, will usually be a max of 3 bodies)
-			threads.push_back(thread(update_pos_func, i * m_Bodies.size()/concurentThreadsSupported, m_Bodies.size()/concurentThreadsSupported + m_Bodies.size()%concurentThreadsSupported));
+			threads.push_back(thread(update_pos_func, i * m_Bodies.size() / concurentThreadsSupported, m_Bodies.size() / concurentThreadsSupported + m_Bodies.size() % concurentThreadsSupported));
 	};
-	
-	for (auto& th : threads) 
-        th.join();
+
+	for (auto& th : threads)
+		th.join();
 	return;
 };
+
+#ifdef GPU_COMPUTE
+void System::update_on_gpu(const double& timestep)
+{	
+	cout << "calculating acc on gpu" << endl;
+	size_t n = m_Bodies.size();
+	vex::vector<double> m(ctx, n);
+	vex::vector<cl_double3> q(ctx, n), acc(ctx, n);
+
+	for (int i = 0; i < n; i++)
+	{
+		cl_double3 j;
+		j.x = m_Bodies.at(i)->xPosition();
+		j.y = m_Bodies.at(i)->yPosition();
+		j.z = m_Bodies.at(i)->zPosition();
+		q[i] = j;
+
+		m[i] = m_Bodies.at(i)->mass();
+	}
+
+	acc = calculate_acceleration(n, vex::element_index(), vex::raw_pointer(m), vex::raw_pointer(q));
+
+	for (int i = 0; i < n; i++)
+	{
+		cl_double3 temp_acceleration = acc[i];
+		m_Bodies.at(i)->set_acceleration(temp_acceleration.x, temp_acceleration.y, temp_acceleration.z);
+	}
+
+	vector<thread> threads;
+	auto update_pos_func = [&](int start, int total)
+	{
+		for (int i = start; i < start + total; ++i)
+		{
+			m_Bodies.at(i)->update_position_and_velocity(timestep);
+		};
+	};
+
+	for (int i = 0; i < concurentThreadsSupported; ++i)
+	{
+		if (i != concurentThreadsSupported - 1)
+			threads.push_back(thread(update_pos_func, i * m_Bodies.size() / concurentThreadsSupported, m_Bodies.size() / concurentThreadsSupported));
+		else	//Chuck any of the remainder into the last thread (wont make a difference in performance, will usually be a max of 3 bodies)
+			threads.push_back(thread(update_pos_func, i * m_Bodies.size() / concurentThreadsSupported, m_Bodies.size() / concurentThreadsSupported + m_Bodies.size() % concurentThreadsSupported));
+	};
+
+	for (auto& th : threads)
+		th.join();
+	return;
+};
+#endif
 
 void System::printCoordinates(ofstream* coordinate_file, ofstream* trajectory_file, const double& normalisation)
 {

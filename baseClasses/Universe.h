@@ -32,6 +32,8 @@ private:
 	
 	System	m_allSystems;
 	string m_name;
+
+	bool run_on_gpu;
 };
 
 

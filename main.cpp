@@ -1,6 +1,5 @@
 
 #ifdef _WIN32
-#define _CRT_SECURE_NO_WARNINGS
 #define _USE_MATH_DEFINES
 #include <cmath>
 #endif
@@ -180,6 +179,7 @@ int main(int argc, char* argv[])
     		command = command + convertIntToString.str();
     		cout << command << endl;
     		cout << endl;
+			if(stepCount!=1)
     		int result = system(command.c_str()); //Call python plotting on command line. result is currently unused
     		cout << endl;
 

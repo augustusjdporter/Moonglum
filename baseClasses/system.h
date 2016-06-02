@@ -40,7 +40,12 @@ public:
 	void addBoundSystem(System* newSystem);
 
 	//Calculate gravitational acceleration of the bodies in the system.
-	void update(const double& timestep);
+
+#ifdef GPU_COMPUTE
+	void update_on_gpu(const double& timestep);
+#endif
+
+	void update_on_cpu(const double& timestep);
 
 	//Print the coordinates of the bodies in the system to file.
 	void printCoordinates(ofstream* coordinate_file, ofstream* trajectory_file, const double& normalisation);
