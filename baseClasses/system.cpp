@@ -10,7 +10,7 @@
 #include "system.h"
 
 #ifdef GPU_COMPUTE
-#include "C:\_projects\Moonglum\Moonglum-VS2015\Moonglum-VS2015\OpenCLFunctions.h"
+#include "..\Utilities\OpenCLFunctions.h"
 
 vex::Context ctx(
 	vex::Filter::Type(CL_DEVICE_TYPE_GPU) &&
