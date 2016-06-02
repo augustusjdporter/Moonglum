@@ -14,6 +14,7 @@
 #include <cmath>
 #include <utility>
 #include <string.h>
+#include <thread>
 
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -177,10 +178,18 @@ int main(int argc, char* argv[])
     		convertIntToString << stepCount;
 	
     		command = command + convertIntToString.str();
-    		cout << command << endl;
+    		
     		cout << endl;
-			
-    		int result = system(command.c_str()); //Call python plotting on command line. result is currently unused
+
+			//Call python plotting on command line. result is currently unused
+			auto run_python_command = [&]()
+			{
+				cout << command << endl;
+				int result = system(command.c_str());
+			};
+
+			std::thread(run_python_command).detach();
+    		
     		cout << endl;
 
 			refresh = 0;

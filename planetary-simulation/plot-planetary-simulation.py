@@ -39,16 +39,17 @@ plot_lim = 15
 plt.ylim([-15, 15])
 plt.xlim([-15, 15])
 plt.scatter(x, y, alpha=0.75, marker=".", s=0.1)
-plt.scatter(x[names=="Sun"], y[names=="Sun"], marker="o", color='yellow')
-plt.scatter(x[names=="Star"], y[names=="Star"], marker="o", color='yellow')
-plt.scatter(x[names=="Earth"], y[names=="Earth"], marker="o", color='green')
+plt.scatter(x[names=="Sun"], y[names=="Sun"], color='yellow', s=100)
+plt.scatter(x[names=="Star"], y[names=="Star"], color='yellow', s=100)
+plt.scatter(x[names=="Earth"], y[names=="Earth"], color='green', s=100)
 plt.scatter(x[names=="Jupiter"], y[names=="Jupiter"], marker="o", color='orange')
 for i, elem in enumerate(tracking_list):
 	plt.plot(x_traj[traj_ID==elem], y_traj[traj_ID==elem], alpha=0.5)
 	
 name ="planetary-simulation/Coords/" + simDirectory + "/Plots/PlotIt_" + plotCount.zfill(5) +".pdf"
 
-#print name
+
 plt.savefig(name)
 plt.show()
 plt.close()
+print ("Plot ", name, " finished")
