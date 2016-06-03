@@ -146,7 +146,7 @@
     <ClInclude Include="..\..\planetary-simulation\ProtoplanetaryCloud.h" />
     <ClInclude Include="..\..\Utilities\Utilities.h" />
     <ClInclude Include="..\..\Utilities\XmlReader.h" />
-    <ClInclude Include="OpenCLFunctions.h" />
+    <ClInclude Include="..\..\Utilities\OpenCLFunctions.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
