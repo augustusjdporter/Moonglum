@@ -38,7 +38,7 @@ z = np.loadtxt(workfile, usecols=range(3,4))
 plot_lim = 15
 plt.ylim([-15, 15])
 plt.xlim([-15, 15])
-plt.scatter(x, y, alpha=0.75, marker=".", s=0.1)
+plt.scatter(x, y, alpha=0.75, marker=".", color='purple', s=0.1)
 plt.scatter(x[names=="Sun"], y[names=="Sun"], color='yellow', s=100)
 plt.scatter(x[names=="Star"], y[names=="Star"], color='yellow', s=100)
 plt.scatter(x[names=="Earth"], y[names=="Earth"], color='green', s=100)
@@ -48,8 +48,11 @@ for i, elem in enumerate(tracking_list):
 	
 name ="planetary-simulation/Coords/" + simDirectory + "/Plots/PlotIt_" + plotCount.zfill(5) +".pdf"
 
+ax = plt.subplot()
+ax.set_axis_bgcolor('red')
+ax.set_axis_bgcolor((0, 0, 0))
 
 plt.savefig(name)
 plt.show()
 plt.close()
-print ("Plot ", name, " finished")
+print ("Plot ", name, " finished!")

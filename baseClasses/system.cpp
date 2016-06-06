@@ -45,7 +45,7 @@ System::~System()
 	{
 		if (m_Bodies.back() != NULL)
 		{
-			delete m_Bodies.back();
+			delete m_Bodies.back();//Should really make it so these are shared pointers - automatically deleted! No seg faults! C++11 FTW. 
 			m_Bodies.back() = NULL;
 			m_Bodies.pop_back();
 		}
