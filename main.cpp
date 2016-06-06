@@ -154,7 +154,7 @@ int main(int argc, char* argv[])
   	while (stepCount <= numberOfSteps)
   	{
   		beginninguni = time(0);
-
+		int start_s = clock();
 		simulation_universe.updateUniverse(timestep);
 
 		stringstream combiner;
@@ -197,7 +197,9 @@ int main(int argc, char* argv[])
 		}
 
 		enduni = time(0);
+		int stop_s = clock();
 		cout << "Time taken for step " << stepCount << " (seconds): " << enduni - beginninguni << endl;
+		cout << "ms: " << (stop_s - start_s) / double(CLOCKS_PER_SEC) * 1000 << endl;
 
 		refresh++;
 		stepCount++;
