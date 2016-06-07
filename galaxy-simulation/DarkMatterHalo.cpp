@@ -47,6 +47,6 @@ DarkMatterHalo::DarkMatterHalo(const int& numberOfBodies,
 
 		string name = "DarkMatter";
 
-		addBody(new Body(name, mass/numberOfBodies, xPos, yPos, zPos, 0, 0, 0, 0, false));
+		addBody(shared_ptr<Body>(new Body(name, mass/numberOfBodies, xPos, yPos, zPos, 0, 0, 0, 0, false)));
 	}
 };

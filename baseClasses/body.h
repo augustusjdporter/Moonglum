@@ -10,6 +10,7 @@
 #include <vector>
 #include <cmath>
 #include <random>
+#include <memory>
 #include "Constants.h"
 
 using namespace std;
@@ -38,7 +39,7 @@ class Body
 
 //Functions to calculate the gravitational acceleration due to other bodies.
 
-	void accelerationCalc(vector<Body*>* Body_Vector);
+	void accelerationCalc(vector<shared_ptr<Body>>* Body_Vector);
 
 	//Access functions
 	const double& xPosition() const;

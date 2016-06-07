@@ -148,7 +148,7 @@ int XmlReader::parsePlanetaryConfig()
 		bool logStarTrajectory = bool(atof(star_node->first_attribute("logTrajectory")->value()));
 
 		System* solarSystem = new System(starName +" System");
-		solarSystem->addBody(new Body(starName, 
+		solarSystem->addBody(shared_ptr<Body>(new Body(starName,
 									  starMass, 
 									  starXPos, 
 									  starYPos, 
@@ -157,7 +157,7 @@ int XmlReader::parsePlanetaryConfig()
 									  starYVel, 
 									  starZVel, 
 									  starRadius, 
-									  logStarTrajectory));
+									  logStarTrajectory)));
 
 	    for(xml_node<> * planet_node = star_node->first_node("Planet"); planet_node; planet_node = planet_node->next_sibling("Planet"))
 	    {
@@ -176,7 +176,7 @@ int XmlReader::parsePlanetaryConfig()
 			bool logPlanetTrajectory = bool(atof(planet_node->first_attribute("logTrajectory")->value()));
 	    	//v=wr
 	    	//requires further development if the star is moving
-	    	solarSystem->addBody(new Body(planetName, 
+	    	solarSystem->addBody(shared_ptr<Body>(new Body(planetName,
 									 	  planetMass, 
 									 	  planetXPos, 
 									 	  planetYPos, //place it at same x and y as star. This can be looked into
@@ -185,7 +185,7 @@ int XmlReader::parsePlanetaryConfig()
 									 	  planetYVel, 
 									 	  planetZVel, 
 									 	  planetRadius, 
-									 	  logPlanetTrajectory));
+									 	  logPlanetTrajectory)));
 	    }
 
 	    //systems->push_back(*solarSystem);

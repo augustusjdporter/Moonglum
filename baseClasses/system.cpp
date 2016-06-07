@@ -41,34 +41,24 @@ System::~System()
 		it->second = NULL;
 	}
 
-	while (!m_Bodies.empty())
+	/*for (shared_ptr<Body> bodyPtr : m_Bodies)
 	{
-		if (m_Bodies.back() != NULL)
-		{
-			delete m_Bodies.back();//Should really make it so these are shared pointers - automatically deleted! No seg faults! C++11 FTW. 
-			m_Bodies.back() = NULL;
-			m_Bodies.pop_back();
-		}
-		else
-		{
-			m_Bodies.pop_back();
-		};
-	};
+		bodyPtr.reset();
+	}*/
 
 	m_BoundSystems.clear();
 	m_name = "";
 };
 
-void System::addBody(Body* newBody)
+void System::addBody(shared_ptr<Body> newBody)
 {
 	m_Bodies.push_back(newBody);
 };
 
-void System::addBody(const Body newBody)
+/*void System::addBody(const Body newBody)
 {
-	Body* newBodyToAdd = new Body(newBody);
-	m_Bodies.push_back(newBodyToAdd);
-};
+	m_Bodies.push_back(shared_ptr<Body>(new Body(newBody)));
+};*/
 
 
 void System::update_on_cpu(const double& timestep)
@@ -192,7 +182,7 @@ const string& System::name() const
 	return m_name;
 };
 
-vector<Body*>* System::Bodies()
+vector<shared_ptr<Body>>* System::Bodies()
 {
 	return &m_Bodies;
 };

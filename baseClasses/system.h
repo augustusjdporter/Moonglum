@@ -31,10 +31,8 @@ public:
 
 	~System();
 
-	//Add a body to the system (either object or pointer to object (can whittle down to one function))
-	void addBody(const Body newBody);
-
-	void addBody(Body* newBody);
+	//Add a body to the system
+	void addBody(shared_ptr<Body> newBody);
 
 	//Add another astrophysical system from which to feel gravitational influence.
 	void addBoundSystem(System* newSystem);
@@ -51,13 +49,13 @@ public:
 	void printCoordinates(ofstream* coordinate_file, ofstream* trajectory_file, const double& normalisation);
 
 	//Access functions
-	vector<Body*>* Bodies();
+	vector<shared_ptr<Body>>* Bodies();
 
 	const string& name() const;
 
 private:
 
-	vector<Body*> m_Bodies;
+	vector<shared_ptr<Body>> m_Bodies;
 	SystemMap m_BoundSystems;	//map of other systems, used to enable gravitational interactions between two systems
 	string m_name;
 };

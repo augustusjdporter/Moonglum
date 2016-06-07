@@ -70,7 +70,7 @@ Galaxy::Galaxy(const int& numberOfStars,
 		double yVel = velocity_Direction_y * velocity_magnitude;
 		double zVel = 0;
 
-		addBody(new Star(massStars/numberOfStars, xPos + xCenter, yPos + yCenter, zPos + zCenter, xVel, yVel, zVel, solar_radius, false));
+		addBody(shared_ptr<Body>(new Star(massStars/numberOfStars, xPos + xCenter, yPos + yCenter, zPos + zCenter, xVel, yVel, zVel, solar_radius, false)));
 	}
 
 	for (int i = 0; i < numberOfGas; i++)
@@ -92,8 +92,8 @@ Galaxy::Galaxy(const int& numberOfStars,
 		double yVel = velocity_Direction_y * velocity_magnitude;
 		double zVel = 0;
 
-		addBody(new Gas(massGas/numberOfGas, xPos + xCenter, yPos + yCenter, zPos + zCenter, xVel, yVel, zVel, 10*solar_radius, false));
+		addBody(shared_ptr<Body>(new Gas(massGas/numberOfGas, xPos + xCenter, yPos + yCenter, zPos + zCenter, xVel, yVel, zVel, 10*solar_radius, false)));
 	}
 
-	addBody(new BlackHole(massBlackHole, xCenter, yCenter, zCenter, 0, 0, 0, true));
+	addBody(shared_ptr<Body>(new BlackHole(massBlackHole, xCenter, yCenter, zCenter, 0, 0, 0, true)));
 };

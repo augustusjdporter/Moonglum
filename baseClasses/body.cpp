@@ -59,6 +59,8 @@ Body::Body(const Body& bodyToCopy)
 	
 	m_relaxation = bodyToCopy.relaxation();
 
+	m_logTrajectory = bodyToCopy.isTrackingTrajectory();
+
 	m_xAcceleration = 0;
 	m_yAcceleration = 0;
 	m_zAcceleration = 0;
@@ -66,7 +68,8 @@ Body::Body(const Body& bodyToCopy)
 
 Body::~Body()
 {
-	cout << "Destroying " << m_name << endl;
+	if (m_name != "Planetesimal")
+	cout << "Destroying " << m_name << " " << m_ID << endl;
 	if (m_trajectory != NULL)
 	{
 		if(m_trajectory->is_open() == true)
@@ -117,7 +120,7 @@ Body::Body(string tempName,
 	//m_relaxation = 0.05*3.0857*pow(10, 12);
 	m_relaxation = m_radius;
 	if (m_name != "Planetesimal")
-	cout << m_name << " created" << m_ID << endl;
+	cout << m_name << " created " << m_ID << endl;
 };
 
 const int& Body::ID() const
@@ -125,7 +128,7 @@ const int& Body::ID() const
 	return m_ID;
 }
 
-void Body::accelerationCalc(vector<Body*>* Body_Vector)
+void Body::accelerationCalc(vector<shared_ptr<Body>>* Body_Vector)
 {
 	m_xAcceleration = 0;
 	m_yAcceleration = 0;

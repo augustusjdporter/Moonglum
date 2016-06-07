@@ -188,7 +188,7 @@ int main(int argc, char* argv[])
 				int result = system(command.c_str());
 			};
 
-			std::thread(run_python_command).detach();
+			//std::thread(run_python_command).detach();
     		
     		cout << endl;
 
