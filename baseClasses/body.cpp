@@ -121,6 +121,37 @@ Body::Body(string tempName,
 	m_relaxation = m_radius;
 	if (m_name != "Planetesimal")
 	cout << m_name << " created " << m_ID << endl;
+}
+Body::Body(int tempID, string tempName, double tempMass, double tempRadius, double tempRelaxation, double tempxPosition, double tempyPosition, double tempzPosition, double tempxVelocity, double tempyVelocity, double tempzVelocity, bool tempLogTrajectory)
+{
+	m_ID = tempID;
+	m_trajectory = NULL;
+
+	m_name = tempName;
+	m_mass = tempMass;
+
+	m_xPosition = tempxPosition;
+	m_yPosition = tempyPosition;
+	m_zPosition = tempzPosition;
+
+	m_xVelocity = tempxVelocity;
+	m_yVelocity = tempyVelocity;
+	m_zVelocity = tempzVelocity;
+
+	m_isValid = tempLogTrajectory;
+
+	m_radius = tempRadius;
+
+	m_logTrajectory = tempLogTrajectory;
+
+	m_xAcceleration = 0;
+	m_yAcceleration = 0;
+	m_zAcceleration = 0;
+
+	//m_relaxation = 0.05*3.0857*pow(10, 12);
+	m_relaxation = tempRelaxation;
+	if (m_name != "Planetesimal")
+		cout << m_name << " created " << m_ID << endl;
 };
 
 const int& Body::ID() const

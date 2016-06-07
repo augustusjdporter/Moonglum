@@ -75,7 +75,7 @@ int main(int argc, char* argv[])
 	time_t beginninguni, enduni;
 
 	//Start by checking there are enough command line arguments
-	if(argc < 3)
+	if(argc < 3 && argc != 1)
 	{
 		cout << "Not enough command line arguments. Command line should read:" << endl;
 		cout << "./Moonglum [simulation name] [path to config file]" << endl;
@@ -93,31 +93,57 @@ int main(int argc, char* argv[])
 	string simulationName(argv[1]);
 
 	//Define parameters to be filled by the config reader	
-	int timestep;
-	int numberOfSteps;
-	int samplingRate;
-	double normalisation;
+	int timestep(0);
+	int numberOfSteps(0);
+	int samplingRate(0);
+	double normalisation(0);
 	
 	Universe simulation_universe(simulationName);
 	
-	XmlReader configReader;
-	int errorHandle = configReader.parseConfig(argv[2], &timestep, &numberOfSteps, &samplingRate, &normalisation, &simulation_universe);
-	if (errorHandle == -1)
+	string path;
+	int stepCount(1);
+	int plotNumber(0);
+	string simulationType;
+	if (argc == 3)
 	{
-		cout << "Unable to open config file \"" << string(argv[2]) << "\". Check the path is correct." << endl;
-		cout << endl;
-		return 0;
+		XmlReader configReader;
+		int errorHandle = configReader.parseConfig(argv[2], &timestep, &numberOfSteps, &samplingRate, &normalisation, &simulation_universe);
+		if (errorHandle == -1)
+		{
+			cout << "Unable to open config file \"" << string(argv[2]) << "\". Check the path is correct." << endl;
+			cout << endl;
+			return 0;
+		}
+		else if (errorHandle == -2)
+		{
+			cout << "Simulation config is not defined as \"galaxy\" or \"planetary\"." << endl;
+			cout << endl;
+			return 0;
+		}
+		else
+		{
+			cout << "Config parsed successfully!" << endl;
+		}
+
+		simulationType = configReader.simulationType();
+		path = configReader.simulationType() + "-simulation/Coords/" + simulationName + "/";
+
+		//make the files - one with IDs of bodies which are tracking trajectories, one with the trajectory coordinates
+		simulation_universe.makeTrajectoryFiles(path + "trajectories/", simulationName + "_isTrackingTrajectories.txt", simulationName + "_trajectories.txt");
 	}
-	else if (errorHandle == -2)
+	else if (argc == 1)
 	{
-		cout << "Simulation config is not defined as \"galaxy\" or \"planetary\"." << endl;
-		cout << endl;
-		return 0;
-	}
-	else
-	{
-		cout << "Config parsed successfully!" << endl;
-	}
+		path = path = "planetary-simulation/Coords/" + simulationName + "/";
+		if (!simulation_universe.loadFromSaveFile("planetary-simulation/Coords/" + simulationName + "/saveFile.txt", plotNumber, stepCount, samplingRate, normalisation))
+		{
+			cout << "No saveFile in simulation " << simulationName << " exists! Cannot resume simulation." << endl;
+			return 0;
+		}
+		simulationType = "planetary";
+
+		cout << "How many more timesteps? ";
+		cin >> numberOfSteps;
+	};
 
 	//Make directory structure
 	{
@@ -129,8 +155,6 @@ int main(int argc, char* argv[])
 		mkdir(planetary_directory.c_str(), 0700);
 		mkdir((planetary_directory + "/Coords").c_str(), 0700);
 	}
-
-	string path = configReader.simulationType() + "-simulation/Coords/" + simulationName + "/";
 
 	mkdir((path).c_str(), 0700);
 
@@ -144,13 +168,8 @@ int main(int argc, char* argv[])
 
 	//gravitationally bind the systems in the universe
 	simulation_universe.bindSystems();
-	//make the files - one with IDs of bodies which are tracking trajectories, one with the trajectory coordinates
-	simulation_universe.makeTrajectoryFiles(path + "trajectories/", simulationName + "_isTrackingTrajectories.txt", simulationName + "_trajectories.txt");
 	
-
-	int stepCount = 1;
 	int refresh = samplingRate; //when refresh = samplingRate, we take a snapshot
-	int plotNumber(0);
 
   	while (stepCount <= numberOfSteps)
   	{
@@ -171,7 +190,7 @@ int main(int argc, char* argv[])
 		{
 			
 			
-			std::string command = "ipython " + configReader.simulationType() + "-simulation/plot-" + configReader.simulationType() + "-simulation.py ";
+			std::string command = "ipython " + simulationType + "-simulation/plot-" + simulationType + "-simulation.py ";
     		command += simulationName;
     		command += " ";
 
@@ -195,7 +214,7 @@ int main(int argc, char* argv[])
 				int result = system(command.c_str());
 			};
 
-			simulation_universe.saveState(path, plotNumber, stepCount);
+			simulation_universe.saveState(path, plotNumber, stepCount, timestep, samplingRate, normalisation);
 			simulation_universe.printCoordinatesToFile(path, file_name, normalisation);
 			std::thread(run_python_command).detach();
     		

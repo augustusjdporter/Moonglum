@@ -102,13 +102,16 @@ void Universe::makeTrajectoryFiles(const string& path, const string& isTrackingF
 
 	m_trajectoriesFile.open(path + trajectoriesFilename);
 }
-void Universe::saveState(const string & path, const int & plotNumber, const int & coordNumber)
+void Universe::saveState(const string & path, const int & plotNumber, const int & coordNumber, const double& timestep, const int& samplingRate, const double& normalisation)
 {
 	ofstream saveFile;
 	saveFile.open(path + "/saveFile.txt");
 
 	saveFile << "CoordinateSnapshotNumber:\t" << coordNumber << endl;
 	saveFile << "PlotNumber:\t" << plotNumber << endl;
+	saveFile << "Timestep:\t" << timestep << endl;
+	saveFile << "samplingRate:\t" << samplingRate << endl;
+	saveFile << "normalisation\t" << normalisation << endl;
 	for (auto bodyIter : *m_allSystems.Bodies())
 	{
 		if (bodyIter->isValid())
@@ -118,4 +121,48 @@ void Universe::saveState(const string & path, const int & plotNumber, const int 
 	saveFile.close();
 	return;
 
+}
+bool Universe::loadFromSaveFile(const string & filePath, int& plotNumber, int& coordNumber, int& samplingRate, double& normalisation)
+{
+	bool result;
+	ifstream saveFile;
+	saveFile.open(filePath);
+
+	if (saveFile.is_open())
+	{
+		string dummy;
+		saveFile >> dummy >> coordNumber;
+		saveFile >> dummy >> plotNumber;
+		saveFile >> dummy >> samplingRate;
+		saveFile >> dummy >> normalisation;
+
+		int ID;
+		string name;
+		double mass;
+		double radius;
+		double relaxation;
+		double xPosition;
+		double yPosition;
+		double zPosition;
+		double xVelocity;
+		double yVelocity;
+		double zVelocity;
+		bool istracking;
+
+		m_astrophysicalSystems.insert(make_pair("defaultSystem", new System()));
+
+		while (saveFile >> ID >> name >> mass >> radius >> relaxation >> xPosition >> yPosition >> zPosition >> xVelocity >> yVelocity >> zVelocity >> istracking)
+		{
+			shared_ptr<Body> bodyPtr(new Body(ID, name, mass, radius, relaxation, xPosition, yPosition, zPosition, xVelocity, yVelocity, zVelocity, istracking));
+			m_astrophysicalSystems.begin()->second->addBody(bodyPtr);
+		};
+
+		result = true;
+	}
+	else
+	{
+		result = false;
+	};
+
+	return result;
 };

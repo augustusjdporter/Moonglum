@@ -35,6 +35,19 @@ class Body
 		 double tempRadius,
 		 bool	tempLogTrajectory);
 
+	Body(int tempID,
+		string tempName,
+		double tempMass,
+		double tempRadius,
+		double tempRelaxation,
+		double tempxPosition,
+		double tempyPosition,
+		double tempzPosition,
+		double tempxVelocity,
+		double tempyVelocity,
+		double tempzVelocity,
+		bool	tempLogTrajectory);
+
 	Body(const Body& bodyToCopy); //copy constructor
 
 //Functions to calculate the gravitational acceleration due to other bodies.
