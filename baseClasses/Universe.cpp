@@ -101,4 +101,21 @@ void Universe::makeTrajectoryFiles(const string& path, const string& isTrackingF
 	isTrackingTrajectoryFile.close();
 
 	m_trajectoriesFile.open(path + trajectoriesFilename);
+}
+void Universe::saveState(const string & path, const int & plotNumber, const int & coordNumber)
+{
+	ofstream saveFile;
+	saveFile.open(path + "/saveFile.txt");
+
+	saveFile << "CoordinateSnapshotNumber:\t" << coordNumber << endl;
+	saveFile << "PlotNumber:\t" << plotNumber << endl;
+	for (auto bodyIter : *m_allSystems.Bodies())
+	{
+		if (bodyIter->isValid())
+			saveFile << bodyIter->ID() << "\t" << bodyIter->name() << "\t" << bodyIter->mass() << "\t" << bodyIter->radius() << "\t" << bodyIter->relaxation() << "\t" << bodyIter->xPosition() << "\t" << bodyIter->yPosition() << "\t" << bodyIter->zPosition() << "\t" << bodyIter->xVelocity() << "\t" << bodyIter->yVelocity() << "\t" << bodyIter->zVelocity() << "\t" << bodyIter->isTrackingTrajectory() << endl;
+	};
+
+	saveFile.close();
+	return;
+
 };

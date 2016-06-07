@@ -150,6 +150,7 @@ int main(int argc, char* argv[])
 
 	int stepCount = 1;
 	int refresh = samplingRate; //when refresh = samplingRate, we take a snapshot
+	int plotNumber(0);
 
   	while (stepCount <= numberOfSteps)
   	{
@@ -177,7 +178,13 @@ int main(int argc, char* argv[])
     		ostringstream convertIntToString;
     		convertIntToString << stepCount;
 	
-    		command = command + convertIntToString.str();
+    		command = command + convertIntToString.str() + " ";
+
+			convertIntToString.str(std::string());
+
+			convertIntToString << plotNumber;
+
+			command = command + convertIntToString.str();
     		
     		cout << endl;
 
@@ -188,12 +195,14 @@ int main(int argc, char* argv[])
 				int result = system(command.c_str());
 			};
 
+			simulation_universe.saveState(path, plotNumber, stepCount);
 			simulation_universe.printCoordinatesToFile(path, file_name, normalisation);
 			std::thread(run_python_command).detach();
     		
     		cout << endl;
 
 			refresh = 0;
+			plotNumber++;
 
 		}
 

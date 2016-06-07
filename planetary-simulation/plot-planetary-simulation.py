@@ -15,7 +15,8 @@ import pylab as p
 import scipy
 
 simDirectory = str(sys.argv[1])
-plotCount = str(sys.argv[2])
+coordCount = str(sys.argv[2])
+plotCount = str(sys.argv[3])
 
 
 
@@ -28,7 +29,6 @@ z_traj = np.loadtxt(workfile_tr, usecols=range(3,4))
 is_tracking_file = "planetary-simulation/Coords/" + simDirectory + "/trajectories/" + simDirectory + "_isTrackingTrajectories.txt"
 tracking_list = np.loadtxt(is_tracking_file, usecols=range(0,1))
 
-workfile = "planetary-simulation/Coords/" + simDirectory + "/Snapshots/It_" + plotCount + ".txt"
 names = np.loadtxt(workfile, str, usecols=range(0,1))
 x = np.loadtxt(workfile, usecols=range(1,2))
 y = np.loadtxt(workfile, usecols=range(2,3))

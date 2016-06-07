@@ -26,6 +26,8 @@ public:
 
 	void makeTrajectoryFiles(const string& path, const string& isTrackingFilename, const string& trajectoriesFilename);
 
+	void saveState(const string& path, const int& plotNumber, const int& coordNumber);
+
 private:
 	SystemMap m_astrophysicalSystems; //The astrophysical systems which constitute this Universe (simulation)
 	ofstream  m_trajectoriesFile;
