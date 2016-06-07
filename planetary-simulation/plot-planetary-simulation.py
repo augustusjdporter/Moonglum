@@ -4,7 +4,7 @@ import sys
 
 import matplotlib
 # Force matplotlib to not use any Xwindows backend.
-matplotlib.use('Agg')
+#matplotlib.use('Agg')
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -46,13 +46,13 @@ plt.scatter(x[names=="Jupiter"], y[names=="Jupiter"], marker="o", color='orange'
 for i, elem in enumerate(tracking_list):
 	plt.plot(x_traj[traj_ID==elem], y_traj[traj_ID==elem], alpha=0.5)
 	
-name ="planetary-simulation/Coords/" + simDirectory + "/Plots/PlotIt_" + plotCount.zfill(5) +".pdf"
+name ="planetary-simulation/Coords/" + simDirectory + "/Plots/PlotIt_" + plotCount.zfill(5) +".png"
 
 ax = plt.subplot()
-ax.set_axis_bgcolor('red')
+ax.set_axis_bgcolor('black')
 ax.set_axis_bgcolor((0, 0, 0))
 
 plt.savefig(name)
-plt.show()
+#plt.show()
 plt.close()
 print ("Plot ", name, " finished!")

@@ -164,7 +164,7 @@ int main(int argc, char* argv[])
 		combiner >> file_name;
 
 
-		simulation_universe.printCoordinatesToFile(path, file_name, normalisation);
+		//simulation_universe.printCoordinatesToFile(path, file_name, normalisation);
 
 		if(refresh == samplingRate)
 		{
@@ -188,7 +188,8 @@ int main(int argc, char* argv[])
 				int result = system(command.c_str());
 			};
 
-			//std::thread(run_python_command).detach();
+			simulation_universe.printCoordinatesToFile(path, file_name, normalisation);
+			std::thread(run_python_command).detach();
     		
     		cout << endl;
 
