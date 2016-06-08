@@ -147,6 +147,8 @@ Body::Body(int tempID, string tempName, double tempMass, double tempRadius, doub
 	m_xAcceleration = 0;
 	m_yAcceleration = 0;
 	m_zAcceleration = 0;
+	
+	m_isValid = true;
 
 	//m_relaxation = 0.05*3.0857*pow(10, 12);
 	m_relaxation = tempRelaxation;
