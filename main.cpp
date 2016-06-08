@@ -75,20 +75,26 @@ int main(int argc, char* argv[])
 	time_t beginninguni, enduni;
 
 	//Start by checking there are enough command line arguments
-	if(argc < 3 && argc != 2)
+	if(argc < 2)
 	{
-		cout << "Not enough command line arguments. Command line should read:" << endl;
-		cout << "./Moonglum [simulation name] [path to config file]" << endl;
+		cout << "Too few command line arguments. Command line should read:" << endl;
+		cout << "\t./Moonglum [simulation name] [path to config file]" << endl;
+		cout << "when starting a new simulation; or:" << endl;
+		cout << "\t./Moonglum [simulation name]" << endl;
+		cout << "when resuminga simulation from the last save state." << endl
 		cout << endl;
 		return 0;
 	}
 	else if(argc > 3)
 	{
 		cout << "Too many command line arguments. Command line should read:" << endl;
-		cout << "./Moonglum [simulation name] [path to config file]" << endl;
+		cout << "\t./Moonglum [simulation name] [path to config file]" << endl;
+		cout << "when starting a new simulation; or:" << endl;
+		cout << "\t./Moonglum [simulation name]" << endl;
+		cout << "when resuminga simulation from the last save state." << endl
 		cout << endl;
 		return 0;
-	}
+	};
 
 	string simulationName(argv[1]);
 
@@ -104,7 +110,7 @@ int main(int argc, char* argv[])
 	int stepCount(1);
 	int plotNumber(0);
 	string simulationType;
-	if (argc == 3)
+	if (argc == 3) //starting new simulation
 	{
 		XmlReader configReader;
 		int errorHandle = configReader.parseConfig(argv[2], &timestep, &numberOfSteps, &samplingRate, &normalisation, &simulation_universe);
@@ -131,7 +137,7 @@ int main(int argc, char* argv[])
 		//make the files - one with IDs of bodies which are tracking trajectories, one with the trajectory coordinates
 		simulation_universe.makeTrajectoryFiles(path + "trajectories/", simulationName + "_isTrackingTrajectories.txt", simulationName + "_trajectories.txt");
 	}
-	else if (argc == 2)
+	else if (argc == 2) //loading simulation from save state
 	{
 		path = path = "planetary-simulation/Coords/" + simulationName + "/";
 		if (!simulation_universe.loadFromSaveFile("planetary-simulation/Coords/" + simulationName + "/saveFile.txt", plotNumber, stepCount, timestep, samplingRate, normalisation))
