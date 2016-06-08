@@ -75,7 +75,7 @@ int main(int argc, char* argv[])
 	time_t beginninguni, enduni;
 
 	//Start by checking there are enough command line arguments
-	if(argc < 3 && argc != 1)
+	if(argc < 3 && argc != 2)
 	{
 		cout << "Not enough command line arguments. Command line should read:" << endl;
 		cout << "./Moonglum [simulation name] [path to config file]" << endl;
@@ -131,10 +131,10 @@ int main(int argc, char* argv[])
 		//make the files - one with IDs of bodies which are tracking trajectories, one with the trajectory coordinates
 		simulation_universe.makeTrajectoryFiles(path + "trajectories/", simulationName + "_isTrackingTrajectories.txt", simulationName + "_trajectories.txt");
 	}
-	else if (argc == 1)
+	else if (argc == 2)
 	{
 		path = path = "planetary-simulation/Coords/" + simulationName + "/";
-		if (!simulation_universe.loadFromSaveFile("planetary-simulation/Coords/" + simulationName + "/saveFile.txt", plotNumber, stepCount, samplingRate, normalisation))
+		if (!simulation_universe.loadFromSaveFile("planetary-simulation/Coords/" + simulationName + "/saveFile.txt", plotNumber, stepCount, timestep, samplingRate, normalisation))
 		{
 			cout << "No saveFile in simulation " << simulationName << " exists! Cannot resume simulation." << endl;
 			return 0;
@@ -143,6 +143,7 @@ int main(int argc, char* argv[])
 
 		cout << "How many more timesteps? ";
 		cin >> numberOfSteps;
+		numberOfSteps = stepCount + numberOfSteps; //Need to take account of the steps which have already happened, then add our new steps on top.
 	};
 
 	//Make directory structure

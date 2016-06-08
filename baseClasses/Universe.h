@@ -28,7 +28,7 @@ public:
 
 	void saveState(const string & path, const int & plotNumber, const int & coordNumber, const double& timestep, const int& samplingRate, const double& normalisation);
 
-	bool loadFromSaveFile(const string& filePath, int& plotNumber, int& coordNumber, int& samplingRate, double& normalisation);
+	bool loadFromSaveFile(const string& filePath, int& plotNumber, int& coordNumber, int& timestep, int& samplingRate, double& normalisation);
 
 private:
 	SystemMap m_astrophysicalSystems; //The astrophysical systems which constitute this Universe (simulation)

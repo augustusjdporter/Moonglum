@@ -114,15 +114,15 @@ void Universe::saveState(const string & path, const int & plotNumber, const int 
 	saveFile << "normalisation\t" << normalisation << endl;
 	for (auto bodyIter : *m_allSystems.Bodies())
 	{
-		if (bodyIter->isValid())
-			saveFile << bodyIter->ID() << "\t" << bodyIter->name() << "\t" << bodyIter->mass() << "\t" << bodyIter->radius() << "\t" << bodyIter->relaxation() << "\t" << bodyIter->xPosition() << "\t" << bodyIter->yPosition() << "\t" << bodyIter->zPosition() << "\t" << bodyIter->xVelocity() << "\t" << bodyIter->yVelocity() << "\t" << bodyIter->zVelocity() << "\t" << bodyIter->isTrackingTrajectory() << endl;
+		//if (bodyIter->isValid())
+		saveFile << bodyIter->ID() << "\t" << bodyIter->name() << "\t" << bodyIter->mass() << "\t" << bodyIter->radius() << "\t" << bodyIter->relaxation() << "\t" << bodyIter->xPosition() << "\t" << bodyIter->yPosition() << "\t" << bodyIter->zPosition() << "\t" << bodyIter->xVelocity() << "\t" << bodyIter->yVelocity() << "\t" << bodyIter->zVelocity() << "\t" << bodyIter->isTrackingTrajectory() << endl;
 	};
 
 	saveFile.close();
 	return;
 
 }
-bool Universe::loadFromSaveFile(const string & filePath, int& plotNumber, int& coordNumber, int& samplingRate, double& normalisation)
+bool Universe::loadFromSaveFile(const string & filePath, int& plotNumber, int& coordNumber, int& timestep, int& samplingRate, double& normalisation)
 {
 	bool result;
 	ifstream saveFile;
@@ -133,6 +133,7 @@ bool Universe::loadFromSaveFile(const string & filePath, int& plotNumber, int& c
 		string dummy;
 		saveFile >> dummy >> coordNumber;
 		saveFile >> dummy >> plotNumber;
+		saveFile >> dummy >> timestep;
 		saveFile >> dummy >> samplingRate;
 		saveFile >> dummy >> normalisation;
 
