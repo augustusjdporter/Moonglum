@@ -81,7 +81,7 @@ int main(int argc, char* argv[])
 		cout << "\t./Moonglum [simulation name] [path to config file]" << endl;
 		cout << "when starting a new simulation; or:" << endl;
 		cout << "\t./Moonglum [simulation name]" << endl;
-		cout << "when resuminga simulation from the last save state." << endl
+		cout << "when resuming a simulation from the last save state." << endl;
 		cout << endl;
 		return 0;
 	}
@@ -91,7 +91,7 @@ int main(int argc, char* argv[])
 		cout << "\t./Moonglum [simulation name] [path to config file]" << endl;
 		cout << "when starting a new simulation; or:" << endl;
 		cout << "\t./Moonglum [simulation name]" << endl;
-		cout << "when resuminga simulation from the last save state." << endl
+		cout << "when resuming a simulation from the last save state." << endl;
 		cout << endl;
 		return 0;
 	};
