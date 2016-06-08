@@ -30,4 +30,16 @@ Moonglum-VS2015/Moonglum-VS2015/Moonglum-VS2015.vcxproj.*
 Moonglum-VS2015/.vs
 Moonglum-VS2015/x64
 Moonglum-VS2015/Moonglum-VS2015/x64
+Moonglum-VS2012/Debug
+Moonglum-VS2012/Release
+Moonglum-VS2012/Moonglum-VS2012.VC.db
+Moonglum-VS2012/Moonglum-VS2012/Debug
+Moonglum-VS2012/Moonglum-VS2012/Release
+Moonglum-VS2012/Moonglum-VS2012/Moonglum-VS2012.vcxproj.*
+Moonglum-VS2012/.vs
+Moonglum-VS2012/x64
+Moonglum-VS2012/Moonglum-VS2012/x64
+*.opensdf
+*.sdf
+*.suo
 *.opendb
