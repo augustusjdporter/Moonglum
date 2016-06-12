@@ -67,11 +67,18 @@ ax.scatter(x[names=="Star"], y[names=="Star"], z[names=="Star"], marker="o", col
 ax.scatter(x[names=="Earth"], y[names=="Earth"], z[names=="Earth"], marker="o", color='green')
 ax.scatter(x[names=="Jupiter"], y[names=="Jupiter"], z[names=="Jupiter"], marker="o", color='orange')
 
-for i, elem in enumerate(tracking_list):
-	ax.plot(x_traj[traj_ID==elem], y_traj[traj_ID==elem], z_traj[traj_ID==elem], alpha=0.5)
+if not tracking_list.any():
+	print ("empty")
+else:
+	for i, elem in enumerate(tracking_list):
+		ax.plot(x_traj[traj_ID==elem], y_traj[traj_ID==elem], z_traj[traj_ID==elem], alpha=0.5)
 	
 name ="Coords/" + simDirectory + "/PlotIt3d_" + plotCount.zfill(5) +".pdf"
-
+ax.view_init(60, 60)
 #print name
 pyplot.show()
+
+for angle in range(0, 360):
+    ax.view_init(30, angle)
+    pyplot.draw()
 #Axes3D.close()

@@ -135,7 +135,6 @@ int main(int argc, char* argv[])
 		path = configReader.simulationType() + "-simulation/Coords/" + simulationName + "/";
 
 		//make the files - one with IDs of bodies which are tracking trajectories, one with the trajectory coordinates
-		simulation_universe.makeTrajectoryFiles(path + "trajectories/", simulationName + "_isTrackingTrajectories.txt", simulationName + "_trajectories.txt");
 	}
 	else if (argc == 2) //loading simulation from save state
 	{
@@ -170,6 +169,11 @@ int main(int argc, char* argv[])
 	mkdir((path + "Plots/").c_str(), 0700);
 
 	mkdir((path + "trajectories/").c_str(), 0700);
+
+	if (argc == 3)
+	{
+		simulation_universe.makeTrajectoryFiles(path + "trajectories/", simulationName + "_isTrackingTrajectories.txt", simulationName + "_trajectories.txt");
+	}
 	
 	int j(0), k(0), count(0);
 
