@@ -376,3 +376,8 @@ void Body::update_position_and_velocity(const double& timestep)
 	m_zVelocity += m_zAcceleration*timestep;
 	return;
 };
+
+const bool Body::isInQuadrant(const Quadrant& quad) const
+{
+	return quad.isPointInQuadrant(m_xPosition, m_yPosition);
+}

@@ -5,6 +5,7 @@
 #include "body.h"
 #include "system.h"
 #include "Constants.h"
+#include "..\baseClasses\barnesHut\Quadrant.h"
 
 typedef std::map<string, System*> SystemMap;
 
