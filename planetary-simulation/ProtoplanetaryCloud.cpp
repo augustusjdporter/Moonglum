@@ -54,6 +54,7 @@ ProtoplanetaryCloud::ProtoplanetaryCloud(const string& name,
 
 		string name = "Planetesimal";
 
-		addBody(shared_ptr<Body>(new Body(name, mass/numberOfBodies, xPos, yPos, zPos, xVel, yVel, zVel, 0.2*jupiter_radius, false)));
+		//addBody(shared_ptr<Body>(new Body(name, mass/numberOfBodies, xPos, yPos, zPos, xVel, yVel, zVel, 0.2*jupiter_radius, false)));
+		addBody(shared_ptr<Body>(new Body(name, mass / numberOfBodies, xPos, yPos, 0, xVel, yVel, 0, 0.2*jupiter_radius, false)));
 	}
 };

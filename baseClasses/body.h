@@ -13,6 +13,7 @@
 #include <memory>
 #include "Constants.h"
 #include "barnesHut\Quadrant.h"
+#include "barnesHut\Quadrant3D.h"
 
 using namespace std;
 
@@ -58,6 +59,8 @@ class Body
 	void addToAccelerationDueToOneBody(const Body& otherBody);
 
 	const double twoDimensionalDistanceToOtherBody(const Body& otherBody);
+
+	const double threeDimensionalDistanceToOtherBody(const Body& otherBody);
 
 	//Access functions
 	const double& xPosition() const;
@@ -115,6 +118,8 @@ class Body
 	void update_position_and_velocity(const double& timestep);
 
 	const bool isInQuadrant(const Quadrant& quad) const;
+
+	const bool isInQuadrant(const Quadrant3D& quad) const;
 	
 protected:
 	double 		m_radius;

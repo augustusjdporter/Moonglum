@@ -66,7 +66,7 @@ void Universe::updateUniverse(double timestep)
 #else
 	m_allSystems.update_on_cpu(timestep);
 #endif*/
-	m_allSystems.update_barnes_hut(timestep);
+	m_allSystems.update_barnes_hut3D(timestep);
 	//m_allSystems.update_on_cpu(timestep);
 	return;
 };

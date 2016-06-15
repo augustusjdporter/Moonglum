@@ -124,7 +124,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\baseClasses\barnesHut\BarnesHutTree.cpp" />
+    <ClCompile Include="..\..\baseClasses\barnesHut\BarnesHutTree3D.cpp" />
     <ClCompile Include="..\..\baseClasses\barnesHut\Quadrant.cpp" />
+    <ClCompile Include="..\..\baseClasses\barnesHut\Quadrant3D.cpp" />
     <ClCompile Include="..\..\baseClasses\body.cpp" />
     <ClCompile Include="..\..\baseClasses\system.cpp" />
     <ClCompile Include="..\..\baseClasses\Universe.cpp" />
@@ -140,7 +142,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\baseClasses\barnesHut\BarnesHutTree.h" />
+    <ClInclude Include="..\..\baseClasses\barnesHut\BarnesHutTree3D.h" />
     <ClInclude Include="..\..\baseClasses\barnesHut\Quadrant.h" />
+    <ClInclude Include="..\..\baseClasses\barnesHut\Quadrant3D.h" />
     <ClInclude Include="..\..\baseClasses\body.h" />
     <ClInclude Include="..\..\baseClasses\Constants.h" />
     <ClInclude Include="..\..\baseClasses\system.h" />

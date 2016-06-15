@@ -74,7 +74,7 @@ else:
 		ax.plot(x_traj[traj_ID==elem], y_traj[traj_ID==elem], z_traj[traj_ID==elem], alpha=0.5)
 	
 name ="Coords/" + simDirectory + "/PlotIt3d_" + plotCount.zfill(5) +".pdf"
-ax.view_init(60, 60)
+ax.view_init(0, 0)
 #print name
 pyplot.show()
 

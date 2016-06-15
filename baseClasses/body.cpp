@@ -169,6 +169,15 @@ const double Body::twoDimensionalDistanceToOtherBody(const Body& otherBody)
 	return pow(pow(rx, 2) + pow(ry, 2), 0.5);
 }
 
+const double Body::threeDimensionalDistanceToOtherBody(const Body& otherBody)
+{
+	double rx = m_xPosition - otherBody.xPosition();
+	double ry = m_yPosition - otherBody.yPosition();
+	double rz = m_zPosition - otherBody.zPosition();
+
+	return pow(pow(rx, 2) + pow(ry, 2) + pow(rz, 2), 0.5);
+}
+
 void Body::addToAccelerationDueToOneBody(const Body& otherBody)
 {
 	double rx = m_xPosition - otherBody.xPosition();
@@ -404,4 +413,9 @@ void Body::update_position_and_velocity(const double& timestep)
 const bool Body::isInQuadrant(const Quadrant& quad) const
 {
 	return quad.isPointInQuadrant(m_xPosition, m_yPosition);
+}
+
+const bool Body::isInQuadrant(const Quadrant3D& quad) const
+{
+	return quad.isPointInQuadrant(m_xPosition, m_yPosition, m_zPosition);
 }

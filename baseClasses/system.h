@@ -14,6 +14,8 @@
 #include "Constants.h"
 #include "body.h"
 #include "barnesHut/BarnesHutTree.h"
+#include "barnesHut/BarnesHutTree3D.h"
+
 class System;
 
 typedef std::map<string, System*> SystemMap;
@@ -47,6 +49,8 @@ public:
 	void update_on_cpu(const double& timestep);
 
 	void update_barnes_hut(const double& timestep);
+
+	void update_barnes_hut3D(const double& timestep);
 
 	//Print the coordinates of the bodies in the system to file.
 	void printCoordinates(ofstream* coordinate_file, ofstream* trajectory_file, const double& normalisation);

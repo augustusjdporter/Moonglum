@@ -90,7 +90,7 @@ void BarnesHutTree::insertBody(const Body& body)
 			m_SE->insertBody(body);
 		};
 	}
-	//If the node is external and contains another body, create BHTrees
+	//If the node is external and contains one other body, create BHTrees
 	//where the bodies should go, update the node, and end 
 	//(do not do anything recursively)
 	else if (isExternal() == true)
