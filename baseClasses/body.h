@@ -55,6 +55,10 @@ class Body
 
 	void accelerationCalc(vector<shared_ptr<Body>>* Body_Vector);
 
+	void addToAccelerationDueToOneBody(const Body& otherBody);
+
+	const double twoDimensionalDistanceToOtherBody(const Body& otherBody);
+
 	//Access functions
 	const double& xPosition() const;
 

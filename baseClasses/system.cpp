@@ -105,6 +105,43 @@ void System::update_on_cpu(const double& timestep)
 	for (auto& th : threads)
 		th.join();
 	return;
+}
+
+void System::update_barnes_hut(const double & timestep)
+{
+	//cout << "updating using BH tree" << endl;
+	//Construct the B-H tree
+	BarnesHutTree bhtree(Quadrant(-30*AU, -30*AU, 60*AU));
+	for (auto body : m_Bodies)
+	{
+		bhtree.insertBody(*body);
+	}
+
+	for (auto body : m_Bodies)
+	{
+		body->set_acceleration(0, 0, 0);
+		bhtree.updateForceOnBody(body);
+	};
+
+	auto update_pos_func = [&](int start, int total)
+	{
+		for (int i = start; i < start + total; ++i)
+		{
+			m_Bodies.at(i)->update_position_and_velocity(timestep);
+		};
+	};
+
+	vector<thread> threads;
+	for (int i = 0; i < concurentThreadsSupported; ++i)
+	{
+		if (i != concurentThreadsSupported - 1)
+			threads.push_back(thread(update_pos_func, i * m_Bodies.size() / concurentThreadsSupported, m_Bodies.size() / concurentThreadsSupported));
+		else	//Chuck any of the remainder into the last thread (wont make a difference in performance, will usually be a max of 3 bodies)
+			threads.push_back(thread(update_pos_func, i * m_Bodies.size() / concurentThreadsSupported, m_Bodies.size() / concurentThreadsSupported + m_Bodies.size() % concurentThreadsSupported - 1));
+	};
+
+	for (auto& th : threads)
+		th.join();
 };
 
 #ifdef GPU_COMPUTE

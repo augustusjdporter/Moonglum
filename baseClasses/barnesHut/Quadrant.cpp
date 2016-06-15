@@ -3,13 +3,13 @@
 //Default should never be used
 Quadrant::Quadrant()
 {
-	cout << "default constructor" << endl;
+	//cout << "default constructor" << endl;
 }
 
 Quadrant::Quadrant(const double & xMin, const double & yMin, const double & sideLength)
 	: m_xMin(xMin), m_yMin(yMin), m_sideLength(sideLength)
 {
-	std::cout << "Quadrant constructor." << endl;
+	//std::cout << "Quadrant constructor." << endl;
 }
 
 Quadrant::~Quadrant()

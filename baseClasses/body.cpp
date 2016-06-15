@@ -68,8 +68,8 @@ Body::Body(const Body& bodyToCopy)
 
 Body::~Body()
 {
-	if (m_name != "Planetesimal")
-	cout << "Destroying " << m_name << " " << m_ID << endl;
+	/*if (m_name != "Planetesimal")
+	cout << "Destroying " << m_name << " " << m_ID << endl;*/
 	if (m_trajectory != NULL)
 	{
 		if(m_trajectory->is_open() == true)
@@ -160,6 +160,30 @@ const int& Body::ID() const
 {
 	return m_ID;
 }
+
+const double Body::twoDimensionalDistanceToOtherBody(const Body& otherBody)
+{
+	double rx = m_xPosition - otherBody.xPosition();
+	double ry = m_yPosition - otherBody.yPosition();
+
+	return pow(pow(rx, 2) + pow(ry, 2), 0.5);
+}
+
+void Body::addToAccelerationDueToOneBody(const Body& otherBody)
+{
+	double rx = m_xPosition - otherBody.xPosition();
+	double ry = m_yPosition - otherBody.yPosition();
+	double rz = m_zPosition - otherBody.zPosition();
+	double rCubed = pow(rx*rx + ry*ry + rz*rz + relaxation(), 1.5);
+
+	double magAcc = -G*otherBody.mass() / rCubed;
+
+	m_xAcceleration += magAcc*rx;
+	m_yAcceleration += magAcc*ry;
+	m_zAcceleration += magAcc*rz;
+
+	return;
+};
 
 void Body::accelerationCalc(vector<shared_ptr<Body>>* Body_Vector)
 {

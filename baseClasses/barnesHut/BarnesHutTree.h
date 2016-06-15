@@ -15,16 +15,18 @@ public:
 
 	~BarnesHutTree();
 
-	void insertBody(const shared_ptr<Body> body);
+	void insertBody(const Body& body);
 
-	const bool hasChildren();
+	const bool isExternal();
+
+	void updateForceOnBody(const shared_ptr<Body>& body);
 
 private:
-	vector<shared_ptr<Body>>				m_bodiesInTree; //Bodies in the tree
+	Body				m_bodyInTree; //Body in the tree. either single body or aggregate
 	Quadrant					m_Quadrant; //Square region of the tree
-	unique_ptr<BarnesHutTree>	m_NW;
-	unique_ptr<BarnesHutTree>	m_NE;
-	unique_ptr<BarnesHutTree>	m_SW;
-	unique_ptr<BarnesHutTree>	m_SE;
+	BarnesHutTree*	m_NW;
+	BarnesHutTree*	m_NE;
+	BarnesHutTree*	m_SW;
+	BarnesHutTree*	m_SE;
 
 };
