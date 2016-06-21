@@ -219,15 +219,15 @@ int main(int argc, char* argv[])
     		cout << endl;
 
 			//Call python plotting on command line. result is currently unused
-			auto run_python_command = [&]()
+			auto run_python_command = [](const string command)
 			{
-				cout << command << endl;
+ 				cout << command << endl;
 				int result = system(command.c_str());
 			};
 
 			simulation_universe.saveState(path, plotNumber, stepCount, timestep, samplingRate, normalisation);
 			simulation_universe.printCoordinatesToFile(path, file_name, normalisation);
-			std::thread(run_python_command).detach();
+			std::thread(run_python_command, command).detach();
     		
     		cout << endl;
 
