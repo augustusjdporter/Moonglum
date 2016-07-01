@@ -12,8 +12,8 @@
 #include <random>
 #include <memory>
 #include "Constants.h"
-#include "barnesHut\Quadrant.h"
-#include "barnesHut\Quadrant3D.h"
+#include "barnesHut/Quadrant.h"
+#include "barnesHut/Quadrant3D.h"
 
 using namespace std;
 

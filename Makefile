@@ -1,7 +1,7 @@
 all: Moonglum
 
-Moonglum: main.o planetary-simulation/ProtoplanetaryCloud.o galaxy-simulation/BlackHole.o galaxy-simulation/Gas.o galaxy-simulation/Star.o galaxy-simulation/Galaxy.o galaxy-simulation/DarkMatterHalo.o baseClasses/body.o baseClasses/system.o Utilities/Utilities.o Utilities/XmlReader.o baseClasses/Universe.o
-	g++  -std=c++14 -m64 -O3 main.o baseClasses/body.o baseClasses/system.o Utilities/Utilities.o baseClasses/Universe.o planetary-simulation/ProtoplanetaryCloud.o galaxy-simulation/BlackHole.o galaxy-simulation/Gas.o galaxy-simulation/Star.o galaxy-simulation/Galaxy.o galaxy-simulation/DarkMatterHalo.o Utilities/XmlReader.o -lpthread -o Moonglum
+Moonglum: main.o planetary-simulation/ProtoplanetaryCloud.o galaxy-simulation/BlackHole.o galaxy-simulation/Gas.o galaxy-simulation/Star.o galaxy-simulation/Galaxy.o galaxy-simulation/DarkMatterHalo.o baseClasses/body.o baseClasses/system.o Utilities/Utilities.o Utilities/XmlReader.o baseClasses/Universe.o baseClasses/barnesHut/BarnesHutTree.o baseClasses/barnesHut/BarnesHutTree3D.o baseClasses/barnesHut/Quadrant.o baseClasses/barnesHut/Quadrant3D.o
+	g++  -std=c++14 -m64 -O3 main.o baseClasses/body.o baseClasses/system.o Utilities/Utilities.o baseClasses/Universe.o planetary-simulation/ProtoplanetaryCloud.o galaxy-simulation/BlackHole.o galaxy-simulation/Gas.o galaxy-simulation/Star.o galaxy-simulation/Galaxy.o galaxy-simulation/DarkMatterHalo.o Utilities/XmlReader.o baseClasses/barnesHut/BarnesHutTree.o baseClasses/barnesHut/BarnesHutTree3D.o baseClasses/barnesHut/Quadrant.o baseClasses/barnesHut/Quadrant3D.o -lpthread -o Moonglum
 
 main.o: main.cpp
 	g++  -std=c++14 -m64 -O3 -c main.cpp -o main.o
@@ -20,6 +20,18 @@ Utilities/Utilities.o: Utilities/Utilities.cpp
 
 baseClasses/Universe.o: baseClasses/Universe.cpp
 	g++  -std=c++14 -m64 -O3 -c baseClasses/Universe.cpp -o baseClasses/Universe.o
+	
+baseClasses/barnesHut/BarnesHutTree.o: baseClasses/barnesHut/BarnesHutTree.cpp
+	g++  -std=c++14 -m64 -O3 -c baseClasses/barnesHut/BarnesHutTree.cpp -o baseClasses/barnesHut/BarnesHutTree.o
+	
+baseClasses/barnesHut/BarnesHutTree3D.o: baseClasses/barnesHut/BarnesHutTree3D.cpp
+	g++  -std=c++14 -m64 -O3 -c baseClasses/barnesHut/BarnesHutTree3D.cpp -o baseClasses/barnesHut/BarnesHutTree3D.o
+	
+baseClasses/barnesHut/Quadrant.o: baseClasses/barnesHut/Quadrant.cpp
+	g++  -std=c++14 -m64 -O3 -c baseClasses/barnesHut/Quadrant.cpp -o baseClasses/barnesHut/Quadrant.o
+	
+baseClasses/barnesHut/Quadrant3D.o: baseClasses/barnesHut/Quadrant3D.cpp
+	g++  -std=c++14 -m64 -O3 -c baseClasses/barnesHut/Quadrant3D.cpp -o baseClasses/barnesHut/Quadrant3D.o
 
 galaxy-simulation/BlackHole.o: galaxy-simulation/BlackHole.cpp
 	g++  -std=c++14 -m64 -O3 -c galaxy-simulation/BlackHole.cpp -o galaxy-simulation/BlackHole.o
@@ -40,4 +52,4 @@ Utilities/XmlReader.o: Utilities/XmlReader.cpp
 	g++  -std=c++14 -m64 -O3 -c Utilities/XmlReader.cpp -o Utilities/XmlReader.o
 
 clean:
-	rm *.o baseClasses/*.o planetary-simulation/*.o galaxy-simulation/*.o Utilities/*.o Moonglum
+	rm *.o baseClasses/barnesHut/*.o baseClasses/*.o planetary-simulation/*.o galaxy-simulation/*.o Utilities/*.o Moonglum
