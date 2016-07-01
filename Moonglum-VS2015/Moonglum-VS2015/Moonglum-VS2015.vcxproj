@@ -110,7 +110,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>$(BOOST_DIR);$(AMDAPPSDKROOT)\include;$(VEXCL_DIR);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_MBCS;_CRT_SECURE_NO_WARNINGS;NOMINMAX</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_MBCS;_CRT_SECURE_NO_WARNINGS;NOMINMAX;GPU_COMPUTE</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -119,7 +119,7 @@
       <AdditionalDependencies>OpenCL.lib</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>copy ..\x64\Release\$(TargetName).exe ..\..</Command>
+      <Command>echo copy ..\x64\Release\$(TargetName).exe ..\..</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>

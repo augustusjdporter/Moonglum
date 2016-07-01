@@ -18,7 +18,7 @@ import pylab as p
 
 import scipy
 
-simDirectory = "LongRun"
+simDirectory = "bh3DThetaEqualHalfFromBeginning"
 
 
 workfile_tr = "Coords/" + simDirectory + "/trajectories/" + simDirectory + "_trajectories.txt"
@@ -32,7 +32,7 @@ tracking_list = np.loadtxt(is_tracking_file, usecols=range(0,1))
 
 
 #i = 1
-for num in range  (30,1000):
+for num in range  (0,1000):
 	#workfile = "Coords/" + simDirectory + "/Snapshots/It_" + `i` + ".txt"
 #	
 
@@ -52,8 +52,8 @@ for num in range  (30,1000):
 	plt.scatter(x[names=="Star"], y[names=="Star"], color='yellow')
 	plt.scatter(x[names=="Earth"], y[names=="Earth"], color='green')
 	plt.scatter(x[names=="Jupiter"], y[names=="Jupiter"], marker="o", color='orange')
-#	for i, elem in enumerate(tracking_list):
-#		plt.plot(x_traj[traj_ID==elem], y_traj[traj_ID==elem], alpha=0.5)
+	for i, elem in enumerate(tracking_list):
+		plt.plot(x_traj[traj_ID==elem], y_traj[traj_ID==elem], alpha=0.5)
 		
 	name ="Coords/" + simDirectory + "/Plots/PlotIt_" + str(num).zfill(5) +".png"
 

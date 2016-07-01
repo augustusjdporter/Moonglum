@@ -82,7 +82,7 @@ void BarnesHutTree3D::insertBody(const Body& body)
 		m_bodyInTree.set_xPosition((m_bodyInTree.xPosition()*m_bodyInTree.mass() + body.xPosition()*body.mass()) / newMass);
 		m_bodyInTree.set_yPosition((m_bodyInTree.yPosition()*m_bodyInTree.mass() + body.yPosition()*body.mass()) / newMass);
 		m_bodyInTree.set_zPosition((m_bodyInTree.zPosition()*m_bodyInTree.mass() + body.zPosition()*body.mass()) / newMass);
-		m_bodyInTree.set_mass(m_bodyInTree.mass() + body.mass());
+		m_bodyInTree.set_mass(newMass);
 		if (body.isInQuadrant(m_Quadrant.NWQuad()))
 		{
 			if (!m_NW)

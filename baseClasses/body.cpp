@@ -404,9 +404,11 @@ void Body::update_position_and_velocity(const double& timestep)
 	m_yPosition += m_yVelocity*timestep + 0.5*m_xAcceleration*timestep*timestep;
 	m_zPosition += m_zVelocity*timestep + 0.5*m_xAcceleration*timestep*timestep;
 
+	//cout << "vel1: " << m_xVelocity << " " << m_yVelocity << " " << m_zVelocity << endl;
 	m_xVelocity += m_xAcceleration*timestep;
 	m_yVelocity += m_yAcceleration*timestep;
 	m_zVelocity += m_zAcceleration*timestep;
+	//cout << "vel2: " << m_xVelocity << " " << m_yVelocity << " " << m_zVelocity << endl;
 	return;
 };
 

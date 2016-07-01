@@ -146,27 +146,31 @@ void System::update_barnes_hut(const double & timestep)
 
 void System::update_barnes_hut3D(const double & timestep)
 {
-	//cout << "updating using BH tree" << endl;
+	cout << "updating using BH tree" << endl;
 	vector<thread> threads;
+	Quadrant3D topQuad(-30 * AU, -30 * AU, -30 * AU, 61 * AU);
 	//Construct the B-H tree
-	BarnesHutTree3D bhtree(Quadrant3D(-30 * AU, -30 * AU, -30 * AU, 60 * AU));
+	BarnesHutTree3D bhtree(topQuad);
 	for (auto body : m_Bodies)
-	{
+	{if (body->isInQuadrant(topQuad))
 		bhtree.insertBody(*body);
 	}
 
-	//for (auto body : m_Bodies)
-	//{
-		//body->set_acceleration(0, 0, 0);
-		//bhtree.updateForceOnBody(body);
-	//};
+	/*for (auto body : m_Bodies)
+	{
+		body->set_acceleration(0, 0, 0);
+		bhtree.updateForceOnBody(body);
+	};*/
 
 	auto update_force_func = [&](int start, int total)
 	{
 		for (int i = start; i < start + total; ++i)
 		{
-			m_Bodies.at(i)->set_acceleration(0, 0, 0);
-			bhtree.updateForceOnBody(m_Bodies.at(i));
+			if (m_Bodies.at(i)->isInQuadrant(topQuad))
+			{
+				m_Bodies.at(i)->set_acceleration(0, 0, 0);
+				bhtree.updateForceOnBody(m_Bodies.at(i));
+			}
 		};
 	};
 
@@ -182,15 +186,22 @@ void System::update_barnes_hut3D(const double & timestep)
 		th.join();
 	
 	threads.clear();
-
+	
 	auto update_pos_func = [&](int start, int total)
 	{
 		for (int i = start; i < start + total; ++i)
 		{
+			if (m_Bodies.at(i)->isInQuadrant(topQuad))
 			m_Bodies.at(i)->update_position_and_velocity(timestep);
 		};
 	};
 
+	/*for (auto body : m_Bodies)
+	{
+		body->set_acceleration(0, 0, 0);
+		bhtree.updateForceOnBody(body);
+		//body->printAcc();
+	}*/
 	
 	for (int i = 0; i < concurentThreadsSupported; ++i)
 	{
@@ -202,6 +213,11 @@ void System::update_barnes_hut3D(const double & timestep)
 
 	for (auto& th : threads)
 		th.join();
+
+	/*for (auto body : m_Bodies)
+	{
+		body->update_position_and_velocity(timestep);
+	}*/
 };
 
 #ifdef GPU_COMPUTE

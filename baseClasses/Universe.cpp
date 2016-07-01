@@ -61,12 +61,22 @@ void Universe::updateUniverse(double timestep)
 		iterator->second->update(timestep);
 	}*/
 
-/*#ifdef GPU_COMPUTE
-	//m_allSystems.update_on_gpu(timestep);
+#ifdef GPU_COMPUTE
+	//if (run_on_gpu)
+	//{
+		m_allSystems.update_on_gpu(timestep);
+	//	run_on_gpu = false;
+	//}
+	//else
+	//{
+	//	m_allSystems.update_barnes_hut3D(timestep);
+	//	run_on_gpu = true;
+	//};
 #else
-	m_allSystems.update_on_cpu(timestep);
-#endif*/
+	//m_allSystems.update_on_cpu(timestep);
 	m_allSystems.update_barnes_hut3D(timestep);
+#endif
+	
 	//m_allSystems.update_on_cpu(timestep);
 	return;
 };

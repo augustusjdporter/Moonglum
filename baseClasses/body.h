@@ -120,6 +120,8 @@ class Body
 	const bool isInQuadrant(const Quadrant& quad) const;
 
 	const bool isInQuadrant(const Quadrant3D& quad) const;
+
+	void printAcc() const { cout << m_xAcceleration << " " << m_yAcceleration << " " << m_zAcceleration << endl; }
 	
 protected:
 	double 		m_radius;
