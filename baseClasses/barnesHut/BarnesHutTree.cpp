@@ -10,7 +10,10 @@ BarnesHutTree::BarnesHutTree() : m_Quadrant(0.0, 0.0, 0.0)
 
 BarnesHutTree::BarnesHutTree(const Quadrant quadrant) : m_Quadrant(quadrant)
 {
-
+	m_NW = NULL;
+	m_SW = NULL;
+	m_NE = NULL;
+	m_SE = NULL;
 }
 
 BarnesHutTree::~BarnesHutTree()

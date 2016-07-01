@@ -146,14 +146,15 @@ void System::update_barnes_hut(const double & timestep)
 
 void System::update_barnes_hut3D(const double & timestep)
 {
-	cout << "updating using BH tree" << endl;
+	cout << "updating using 3DBH tree" << endl;
 	vector<thread> threads;
 	Quadrant3D topQuad(-30 * AU, -30 * AU, -30 * AU, 61 * AU);
 	//Construct the B-H tree
 	BarnesHutTree3D bhtree(topQuad);
 	for (auto body : m_Bodies)
-	{if (body->isInQuadrant(topQuad))
-		bhtree.insertBody(*body);
+	{
+		if (body->isInQuadrant(topQuad))
+			bhtree.insertBody(*body);
 	}
 
 	/*for (auto body : m_Bodies)
@@ -161,7 +162,6 @@ void System::update_barnes_hut3D(const double & timestep)
 		body->set_acceleration(0, 0, 0);
 		bhtree.updateForceOnBody(body);
 	};*/
-
 	auto update_force_func = [&](int start, int total)
 	{
 		for (int i = start; i < start + total; ++i)
@@ -218,6 +218,8 @@ void System::update_barnes_hut3D(const double & timestep)
 	{
 		body->update_position_and_velocity(timestep);
 	}*/
+	
+	return;
 };
 
 #ifdef GPU_COMPUTE

@@ -36,6 +36,8 @@ Body::Body()
 	
 	m_radius = 0;
 	m_relaxation = 0;
+	
+	m_trajectory = NULL;
 };
 
 Body::Body(const Body& bodyToCopy)
@@ -64,6 +66,8 @@ Body::Body(const Body& bodyToCopy)
 	m_xAcceleration = 0;
 	m_yAcceleration = 0;
 	m_zAcceleration = 0;
+	
+	m_trajectory = NULL;
 };
 
 Body::~Body()
@@ -116,6 +120,8 @@ Body::Body(string tempName,
 	m_xAcceleration = 0;
 	m_yAcceleration = 0;
 	m_zAcceleration = 0;
+	
+	m_trajectory = NULL;
 
 	//m_relaxation = 0.05*3.0857*pow(10, 12);
 	m_relaxation = m_radius;
@@ -149,6 +155,8 @@ Body::Body(int tempID, string tempName, double tempMass, double tempRadius, doub
 	m_zAcceleration = 0;
 	
 	m_isValid = true;
+	
+	m_trajectory = NULL;
 
 	//m_relaxation = 0.05*3.0857*pow(10, 12);
 	m_relaxation = tempRelaxation;

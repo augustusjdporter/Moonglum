@@ -15,7 +15,15 @@ BarnesHutTree3D::BarnesHutTree3D() : m_Quadrant(0.0, 0.0, 0.0, 0.0)
 
 BarnesHutTree3D::BarnesHutTree3D(const Quadrant3D quadrant) : m_Quadrant(quadrant)
 {
+	m_NW = NULL;
+	m_SW = NULL;
+	m_NE = NULL;
+	m_SE = NULL;
 
+	m_topNW = NULL;
+	m_topSW = NULL;
+	m_topNE = NULL;
+	m_topSE = NULL;
 }
 
 BarnesHutTree3D::~BarnesHutTree3D()
@@ -65,6 +73,7 @@ BarnesHutTree3D::~BarnesHutTree3D()
 
 void BarnesHutTree3D::insertBody(const Body& body)
 {
+	
 	//If there's not a body there already, put the body there.
 	if (m_bodyInTree.mass() == 0)
 	{

@@ -9,7 +9,7 @@
 			"miDebuggerPath": "/usr/bin/gdb",
 			"targetArchitecture": "x64",
 			"program": "${workspaceRoot}/Moonglum",
-			"args": ["debugtest", "${workspaceRoot}/planetary-simulation/Configs/colliding-systems.xml"],
+			"args": ["ubuntuTestBH", "${workspaceRoot}/planetary-simulation/Configs/beerJournal.xml"],
 			"stopAtEntry": false,
 			"cwd": "${workspaceRoot}",
 			"environment": []
