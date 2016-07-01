@@ -429,3 +429,18 @@ const bool Body::isInQuadrant(const Quadrant3D& quad) const
 {
 	return quad.isPointInQuadrant(m_xPosition, m_yPosition, m_zPosition);
 }
+
+const double& Body::xAcceleration() const
+{
+	return m_xAcceleration;
+};
+
+const double& Body::yAcceleration() const
+{
+	return m_yAcceleration;
+};
+
+const double& Body::zAcceleration() const
+{
+	return m_zAcceleration;
+};

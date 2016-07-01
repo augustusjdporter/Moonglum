@@ -276,7 +276,7 @@ void System::printCoordinates(ofstream* coordinate_file, ofstream* trajectory_fi
 {
 	for (int i=0; i < m_Bodies.size(); i++)
 	{
-		*coordinate_file << m_Bodies.at(i)->name() << "\t" << m_Bodies.at(i)->xPosition()/normalisation << "\t" << m_Bodies.at(i)->yPosition()/normalisation << "\t" << m_Bodies.at(i)->zPosition()/normalisation << endl;//prints shape data with overloaded <<
+		*coordinate_file << m_Bodies.at(i)->name() << "\t" << m_Bodies.at(i)->xPosition()/normalisation << "\t" << m_Bodies.at(i)->yPosition()/normalisation << "\t" << m_Bodies.at(i)->zPosition()/normalisation << "\t" << m_Bodies.at(i)->xAcceleration() << "\t" << m_Bodies.at(i)->yAcceleration() << "\t" << m_Bodies.at(i)->zAcceleration() << endl;//prints shape data with overloaded <<
 		if(m_Bodies.at(i)->isTrackingTrajectory() == true)
 		{
 			m_Bodies.at(i)->addToTrajectory(trajectory_file);

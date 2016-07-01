@@ -248,7 +248,7 @@ void BarnesHutTree3D::updateForceOnBody(const shared_ptr<Body>& body) const
 	{
 		body->addToAccelerationDueToOneBody(m_bodyInTree);
 	}
-	else if (m_Quadrant.sideLength() / body->threeDimensionalDistanceToOtherBody(m_bodyInTree) < 2)
+	else if (m_Quadrant.sideLength() / body->threeDimensionalDistanceToOtherBody(m_bodyInTree) < 0.5)
 	{
 		body->addToAccelerationDueToOneBody(m_bodyInTree);
 	}

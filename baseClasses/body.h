@@ -75,6 +75,10 @@ class Body
 
 	const double& zVelocity() const;
 
+	const double& xAcceleration() const;
+	const double& yAcceleration() const;
+	const double& zAcceleration() const;
+
 	const string& name() const;
 
 	const double& mass() const;
