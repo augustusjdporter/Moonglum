@@ -43,3 +43,4 @@ Moonglum-VS2012/Moonglum-VS2012/x64
 *.sdf
 *.suo
 *.opendb
+*.o
