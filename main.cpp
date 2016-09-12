@@ -52,6 +52,8 @@ void mkdir(const char* directory, const int code)
 
 using namespace std;
 
+
+
 int main(int argc, char* argv[])
 {
 
@@ -182,11 +184,13 @@ int main(int argc, char* argv[])
 	
 	int refresh = samplingRate; //when refresh = samplingRate, we take a snapshot
 
+	SimSolver simSolver = SimSolver::barnesHutCPU;
+
   	while (stepCount <= numberOfSteps)
   	{
   		beginninguni = time(0);
 		int start_s = clock();
-		simulation_universe.updateUniverse(timestep);
+		simulation_universe.updateUniverse(timestep, simSolver);
 
 		stringstream combiner;
 		combiner << "Snapshots/It_" << stepCount << ".txt";

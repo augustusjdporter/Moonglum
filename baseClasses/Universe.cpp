@@ -53,7 +53,7 @@ void Universe::bindSystems()
 	return;
 };
 
-void Universe::updateUniverse(double timestep)
+void Universe::updateUniverse(double timestep, SimSolver simSolver)
 {
 	//Make this only update the one big system
 	/*for (SystemMap::iterator iterator = m_astrophysicalSystems.begin(); iterator != m_astrophysicalSystems.end(); iterator++)
@@ -61,23 +61,20 @@ void Universe::updateUniverse(double timestep)
 		iterator->second->update(timestep);
 	}*/
 
+	if (simSolver == SimSolver::barnesHutCPU)
+	{
+		m_allSystems.update_barnes_hut3D(timestep);
+	}
+	else if (simSolver == SimSolver::bruteForceCPU)
+	{
+		m_allSystems.update_on_cpu(timestep);
+	}
+	else if (simSolver == SimSolver::bruteForceGPU)
+	{
 #ifdef GPU_COMPUTE
-	//if (run_on_gpu)
-	//{
 		m_allSystems.update_on_gpu(timestep);
-	//	run_on_gpu = false;
-	//}
-	//else
-	//{
-	//	m_allSystems.update_barnes_hut3D(timestep);
-	//	run_on_gpu = true;
-	//};
-#else
-	//m_allSystems.update_on_cpu(timestep);
-	m_allSystems.update_barnes_hut3D(timestep);
 #endif
-	
-	//m_allSystems.update_on_cpu(timestep);
+	}
 	return;
 };
 

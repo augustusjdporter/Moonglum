@@ -23,6 +23,13 @@ typedef std::map<int, Body*> BodyMap; //Convert the vector of bodies to map of b
 
 using namespace std;
 
+enum SimSolver
+{
+	bruteForceCPU,
+	bruteForceGPU,
+	barnesHutCPU
+};
+
 class System
 {
 public:

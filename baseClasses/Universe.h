@@ -21,7 +21,7 @@ public:
 
 	void bindSystems();
 
-	void updateUniverse(double timestep);
+	void updateUniverse(double timestep, SimSolver simSolver);
 
 	void printCoordinatesToFile(const string& path, const string& filename, const double& normalisation);
 
