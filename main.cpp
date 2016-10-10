@@ -74,7 +74,7 @@ int main(int argc, char* argv[])
 	cout << asctime(localtime(&ctt)) << endl;//output time 
 
 	
-	time_t beginninguni, enduni;
+/*	time_t beginninguni, enduni;
 
 	//Start by checking there are enough command line arguments
 	if(argc < 2)
@@ -181,6 +181,7 @@ int main(int argc, char* argv[])
 
 	//gravitationally bind the systems in the universe
 	simulation_universe.bindSystems();
+	simulation_universe.
 	
 	int refresh = samplingRate; //when refresh = samplingRate, we take a snapshot
 
@@ -248,7 +249,40 @@ int main(int argc, char* argv[])
 		refresh++;
 		stepCount++;
 	}
+*/
+	string simulationName("dummyName");
+	int timestep(3600);
+	int numberOfSteps(10000);
+	int samplingRate(100);
+	double normalisation(2*7.48*pow(10,10));
 
-	cout << "Simulation is finished! Thank you for using Moonglum!" << endl;
+	Universe simulation_universe(simulationName);
+	System system1;
+	shared_ptr<Body> body1(new Body("sun1",1.989*pow(10,30), -7.48*pow(10,10), 0, 0, 0, 0, 0, 0, false));
+	shared_ptr<Body> body2(new Body("sun2",1.989*pow(10,30), 7.48*pow(10,10), 0, 0, 0, 0, 0, 0, false));
+	shared_ptr<Body> body3(new Body("sun2",1.989*pow(10,30), 7.48*pow(10,10), 0, 0, 0, 0, 0, 0, false));
+	system1.addBody(body1);
+	system1.addBody(body2);
+	//system1.addBody(body3);
+	simulation_universe.addSystem(&system1);
+	simulation_universe.bindSystems();
+
+	const SimSolver simSolver = SimSolver::bruteForceCPU;
+	simulation_universe.printCoordinatesToFile("","test.txt", normalisation);
+	int count(samplingRate);
+	for (int i = 0; i < 1; i++)
+	{
+		simulation_universe.updateUniverse(timestep, simSolver);
+		if (count == samplingRate)
+		{
+			simulation_universe.printCoordinatesToFile("","test.txt", normalisation);
+			count = 0;
+		}
+		else
+		{
+			count++;
+		}
+	}
+	cout << "Simulation is finished! Thank you for using Moonglum!!" << endl;
 	return 0;
 };

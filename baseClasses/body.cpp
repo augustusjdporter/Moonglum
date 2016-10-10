@@ -72,8 +72,8 @@ Body::Body(const Body& bodyToCopy)
 
 Body::~Body()
 {
-	/*if (m_name != "Planetesimal")
-	cout << "Destroying " << m_name << " " << m_ID << endl;*/
+	/*if (m_name != "Planetesimal")*/
+	cout << "Destroying " << m_name << " " << m_ID << endl;
 	if (m_trajectory != NULL)
 	{
 		if(m_trajectory->is_open() == true)

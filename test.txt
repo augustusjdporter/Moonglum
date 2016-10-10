@@ -1,0 +1,2 @@
+sun1	nan	nan	nan	nan	nan	nan
+sun2	nan	nan	nan	nan	nan	nan

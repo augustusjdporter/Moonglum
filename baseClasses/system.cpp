@@ -62,8 +62,8 @@ void System::addBody(shared_ptr<Body> newBody)
 
 
 void System::update_on_cpu(const double& timestep)
-{	
-	cout << "calculating acc on cpu" << endl;
+{	/*
+	//cout << "calculating acc on cpu" << endl;
 	vector<thread> threads;
 	auto acceleration_func = [&](int start, int total)
 	{
@@ -104,6 +104,17 @@ void System::update_on_cpu(const double& timestep)
 
 	for (auto& th : threads)
 		th.join();
+	*/
+
+	for (int i = 0; i < m_Bodies.size(); ++i)
+	{
+		m_Bodies.at(i)->accelerationCalc(&m_Bodies);
+	};
+
+	for (int i = 0; i < m_Bodies.size(); ++i)
+	{
+		m_Bodies.at(i)->update_position_and_velocity(timestep);;
+	};
 	return;
 }
 
