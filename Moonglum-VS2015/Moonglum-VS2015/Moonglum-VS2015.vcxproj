@@ -159,6 +159,9 @@
     <ClInclude Include="..\..\Utilities\Utilities.h" />
     <ClInclude Include="..\..\Utilities\XmlReader.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\planetary-simulation\plot-planetary-simulation.py" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
