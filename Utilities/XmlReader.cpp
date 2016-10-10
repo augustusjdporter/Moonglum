@@ -26,7 +26,8 @@ int XmlReader::parseConfig(char* configFile, int* timestep, int* numberOfSteps, 
 {
 	int result;
 
-	FILE *file = fopen(configFile, "r");
+	FILE *file;
+	fopen_s(&file, configFile, "r");
 	if (file == NULL) 
 	{
         result = -1;

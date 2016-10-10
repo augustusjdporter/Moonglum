@@ -71,10 +71,10 @@ int main(int argc, char* argv[])
 	cout << endl;
 	
 	const time_t ctt = time(0);
-	cout << asctime(localtime(&ctt)) << endl;//output time 
+//	cout << asctime(localtime(&ctt)) << endl;//output time 
 
 	
-/*	time_t beginninguni, enduni;
+	time_t beginninguni, enduni;
 
 	//Start by checking there are enough command line arguments
 	if(argc < 2)
@@ -112,7 +112,7 @@ int main(int argc, char* argv[])
 	int stepCount(1);
 	int plotNumber(0);
 	string simulationType;
-	if (argc == 3) //starting new simulation
+	/*if (argc == 3) //starting new simulation
 	{
 		XmlReader configReader;
 		int errorHandle = configReader.parseConfig(argv[2], &timestep, &numberOfSteps, &samplingRate, &normalisation, &simulation_universe);
@@ -132,6 +132,7 @@ int main(int argc, char* argv[])
 		{
 			cout << "Config parsed successfully!" << endl;
 		}
+		
 
 		simulationType = configReader.simulationType();
 		path = configReader.simulationType() + "-simulation/Coords/" + simulationName + "/";
@@ -152,6 +153,10 @@ int main(int argc, char* argv[])
 		cin >> numberOfSteps;
 		numberOfSteps = stepCount + numberOfSteps; //Need to take account of the steps which have already happened, then add our new steps on top.
 	};
+	*/
+
+	simulationType = "planetary";
+	path = simulationType + "-simulation/Coords/" + simulationName + "/";
 
 	//Make directory structure
 	{
@@ -172,25 +177,63 @@ int main(int argc, char* argv[])
 
 	mkdir((path + "trajectories/").c_str(), 0700);
 
+	
+	
+	int j(0), k(0), count(0);
+	//@@@@@@@@@
+	System system1;
+
+	double eccentricity(0);
+	const double totalMass(solar_mass);
+	const double semiMajorAxis(AU);
+	double massFraction;
+
+	massFraction = 0.5;
+	const double massSecondary = massFraction*totalMass;
+	const double massPrimary = totalMass - massSecondary;
+
+	const double primaryInitialXPosition(massSecondary*semiMajorAxis / totalMass);
+	//m1r1 = m2r2
+	//r1 +r2 = a
+	//m1(a - r2) = m2r2
+	//m1a = m1r2 + m2r2
+	//r2 = m1a/(m1 + m2)
+	const double secondaryInitialXPosition(massPrimary*semiMajorAxis / totalMass);
+
+	//v_a = ((GM_s/a)(1-e)/(1+e))^0.5
+
+	const double primaryInitialYVel(pow(G*massSecondary /(2*semiMajorAxis) * (1 - eccentricity) / (1 + eccentricity), 0.5));
+	const double secondaryInitialYVel(pow(G*massPrimary /(2*semiMajorAxis) * (1 - eccentricity) / (1 + eccentricity), 0.5));
+
+	shared_ptr<Body> body1(new Body("sun1", massPrimary, primaryInitialXPosition, 0, 0, 0, primaryInitialYVel, 0, 0, true));
+	shared_ptr<Body> body2(new Body("sun2", massSecondary, -secondaryInitialXPosition, 0, 0, 0, -secondaryInitialYVel, 0, 0, true));
+
+	system1.addBody(body1);
+	system1.addBody(body2);
+
+	simulation_universe.addSystem(&system1);
+	numberOfSteps = 10000;
+	samplingRate = 1000;
+	normalisation = AU;
+	timestep = 3600;
+	//@@@@@@@
+
 	if (argc == 3)
 	{
 		simulation_universe.makeTrajectoryFiles(path + "trajectories/", simulationName + "_isTrackingTrajectories.txt", simulationName + "_trajectories.txt");
 	}
-	
-	int j(0), k(0), count(0);
 
 	//gravitationally bind the systems in the universe
 	simulation_universe.bindSystems();
-	simulation_universe.
 	
 	int refresh = samplingRate; //when refresh = samplingRate, we take a snapshot
 
-	SimSolver simSolver = SimSolver::barnesHutCPU;
+	SimSolver simSolver = SimSolver::bruteForceCPU;
 
   	while (stepCount <= numberOfSteps)
   	{
-  		beginninguni = time(0);
-		int start_s = clock();
+  		//beginninguni = time(0);
+		//int start_s = clock();
 		simulation_universe.updateUniverse(timestep, simSolver);
 
 		stringstream combiner;
@@ -200,7 +243,7 @@ int main(int argc, char* argv[])
 		combiner >> file_name;
 
 
-		//simulation_universe.printCoordinatesToFile(path, file_name, normalisation);
+		simulation_universe.printCoordinatesToFile(path, file_name, normalisation);
 
 		if(refresh == samplingRate)
 		{
@@ -221,7 +264,7 @@ int main(int argc, char* argv[])
 
 			command = command + convertIntToString.str();
     		
-    		cout << endl;
+    		//cout << endl;
 
 			//Call python plotting on command line. result is currently unused
 			auto run_python_command = [](const string command)
@@ -231,57 +274,23 @@ int main(int argc, char* argv[])
 			};
 
 			simulation_universe.saveState(path, plotNumber, stepCount, timestep, samplingRate, normalisation);
-			simulation_universe.printCoordinatesToFile(path, file_name, normalisation);
-			std::thread(run_python_command, command).detach();
+			
+			std::thread(run_python_command, command).join();
     		
-    		cout << endl;
+    		//cout << endl;
 
 			refresh = 0;
 			plotNumber++;
 
 		}
 
-		enduni = time(0);
-		int stop_s = clock();
+		//enduni = time(0);
+		//int stop_s = clock();
 		//cout << "Time taken for step " << stepCount << " (seconds): " << enduni - beginninguni << endl;
-		cout << "ms: " << (stop_s - start_s) / double(CLOCKS_PER_SEC) * 1000 << endl;
+		//cout << "ms: " << (stop_s - start_s) / double(CLOCKS_PER_SEC) * 1000 << endl;
 
 		refresh++;
 		stepCount++;
-	}
-*/
-	string simulationName("dummyName");
-	int timestep(3600);
-	int numberOfSteps(10000);
-	int samplingRate(100);
-	double normalisation(2*7.48*pow(10,10));
-
-	Universe simulation_universe(simulationName);
-	System system1;
-	shared_ptr<Body> body1(new Body("sun1",1.989*pow(10,30), -7.48*pow(10,10), 0, 0, 0, 0, 0, 0, false));
-	shared_ptr<Body> body2(new Body("sun2",1.989*pow(10,30), 7.48*pow(10,10), 0, 0, 0, 0, 0, 0, false));
-	shared_ptr<Body> body3(new Body("sun2",1.989*pow(10,30), 7.48*pow(10,10), 0, 0, 0, 0, 0, 0, false));
-	system1.addBody(body1);
-	system1.addBody(body2);
-	//system1.addBody(body3);
-	simulation_universe.addSystem(&system1);
-	simulation_universe.bindSystems();
-
-	const SimSolver simSolver = SimSolver::bruteForceCPU;
-	simulation_universe.printCoordinatesToFile("","test.txt", normalisation);
-	int count(samplingRate);
-	for (int i = 0; i < 1; i++)
-	{
-		simulation_universe.updateUniverse(timestep, simSolver);
-		if (count == samplingRate)
-		{
-			simulation_universe.printCoordinatesToFile("","test.txt", normalisation);
-			count = 0;
-		}
-		else
-		{
-			count++;
-		}
 	}
 	cout << "Simulation is finished! Thank you for using Moonglum!!" << endl;
 	return 0;

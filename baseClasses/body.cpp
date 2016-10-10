@@ -217,7 +217,8 @@ void Body::accelerationCalc(vector<shared_ptr<Body>>* Body_Vector)
 		double ry = m_yPosition - (*it)->yPosition();
 		double rz = m_zPosition - (*it)->zPosition();
 		double rCubed = pow(rx*rx + ry*ry + rz*rz + relaxation(), 1.5);
-
+		if (rCubed == 0)
+			continue;
 		//when bodies touch, they stick. Conserve linear momentum
 		/*if(rCubed <= pow(radius() + (*it)->radius(), 3))
 		{
