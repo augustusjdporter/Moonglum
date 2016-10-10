@@ -183,12 +183,12 @@ int main(int argc, char* argv[])
 	//@@@@@@@@@
 	System system1;
 
-	double eccentricity(0);
+	double eccentricity(0.6);
 	const double totalMass(solar_mass);
 	const double semiMajorAxis(AU);
 	double massFraction;
 
-	massFraction = 0.5;
+	massFraction = 0.1;
 	const double massSecondary = massFraction*totalMass;
 	const double massPrimary = totalMass - massSecondary;
 
@@ -202,8 +202,8 @@ int main(int argc, char* argv[])
 
 	//v_a = ((GM_s/a)(1-e)/(1+e))^0.5
 
-	const double primaryInitialYVel(pow(G*massSecondary /(2*semiMajorAxis) * (1 - eccentricity) / (1 + eccentricity), 0.5));
-	const double secondaryInitialYVel(pow(G*massPrimary /(2*semiMajorAxis) * (1 - eccentricity) / (1 + eccentricity), 0.5));
+	const double primaryInitialYVel(pow(G*((massSecondary / massPrimary)*massSecondary*massPrimary/(massPrimary+massSecondary)) /semiMajorAxis * (1 - eccentricity) / (1 + eccentricity), 0.5));
+	const double secondaryInitialYVel(pow(G*((massPrimary / massSecondary)*massSecondary*massPrimary / (massPrimary + massSecondary)) /semiMajorAxis * (1 - eccentricity) / (1 + eccentricity), 0.5));
 
 	shared_ptr<Body> body1(new Body("sun1", massPrimary, primaryInitialXPosition, 0, 0, 0, primaryInitialYVel, 0, 0, true));
 	shared_ptr<Body> body2(new Body("sun2", massSecondary, -secondaryInitialXPosition, 0, 0, 0, -secondaryInitialYVel, 0, 0, true));
@@ -212,10 +212,10 @@ int main(int argc, char* argv[])
 	system1.addBody(body2);
 
 	simulation_universe.addSystem(&system1);
-	numberOfSteps = 10000;
-	samplingRate = 1000;
+	numberOfSteps = 20000;
+	samplingRate = 2000;
 	normalisation = AU;
-	timestep = 3600;
+	timestep = 1800;
 	//@@@@@@@
 
 	if (argc == 3)
@@ -275,7 +275,7 @@ int main(int argc, char* argv[])
 
 			simulation_universe.saveState(path, plotNumber, stepCount, timestep, samplingRate, normalisation);
 			
-			std::thread(run_python_command, command).join();
+			std::thread(run_python_command, command).detach();
     		
     		//cout << endl;
 
