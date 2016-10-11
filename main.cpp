@@ -183,12 +183,12 @@ int main(int argc, char* argv[])
 	//@@@@@@@@@
 	System system1;
 
-	double eccentricity(0.6);
+	double eccentricity(0.1);
 	const double totalMass(solar_mass);
 	const double semiMajorAxis(AU);
 	double massFraction;
 
-	massFraction = 0.1;
+	massFraction = 0.5;
 	const double massSecondary = massFraction*totalMass;
 	const double massPrimary = totalMass - massSecondary;
 
@@ -205,17 +205,55 @@ int main(int argc, char* argv[])
 	const double primaryInitialYVel(pow(G*((massSecondary / massPrimary)*massSecondary*massPrimary/(massPrimary+massSecondary)) /semiMajorAxis * (1 - eccentricity) / (1 + eccentricity), 0.5));
 	const double secondaryInitialYVel(pow(G*((massPrimary / massSecondary)*massSecondary*massPrimary / (massPrimary + massSecondary)) /semiMajorAxis * (1 - eccentricity) / (1 + eccentricity), 0.5));
 
-	shared_ptr<Body> body1(new Body("sun1", massPrimary, primaryInitialXPosition, 0, 0, 0, primaryInitialYVel, 0, 0, true));
-	shared_ptr<Body> body2(new Body("sun2", massSecondary, -secondaryInitialXPosition, 0, 0, 0, -secondaryInitialYVel, 0, 0, true));
+	{
+		shared_ptr<Body> body1(new Body("sun1", massPrimary, primaryInitialXPosition, 0, 0, 0, primaryInitialYVel, 0, 0, true));
+		shared_ptr<Body> body2(new Body("sun2", massSecondary, -secondaryInitialXPosition, 0, 0, 0, -secondaryInitialYVel, 0, 0, true));
 
-	system1.addBody(body1);
-	system1.addBody(body2);
+		system1.addBody(body1);
+		system1.addBody(body2);
 
+		//loop over a
+		double a(1.5);
+		while (a <= 10)
+		{
+			double i(0);
+			//while (i <= M_PI)
+			{
+				double ascendingNode(0);
+				while (ascendingNode < 2 * M_PI)
+				{
+					//double trueAnomaly(0);
+					//while (trueAnomaly < 2 * M_PI)
+					{
+						//P^2 = R^3 in solar units
+						
+						double xPos(a*AU*cos(ascendingNode));
+						double yPos(a*AU*sin(ascendingNode));
+						double zPos(0);
+						double xVel(-pow(G*totalMass/(a*semiMajorAxis), 0.5)*cos(i)*sin(ascendingNode));
+						double yVel(pow(G*totalMass / (a*semiMajorAxis), 0.5)*cos(i)*cos(ascendingNode));
+						double zVel(pow(G*totalMass / (a*semiMajorAxis), 0.5)*sin(i));
+						shared_ptr<Body> tempBody(new Body("testParticle", 0, xPos, yPos, zPos, xVel, yVel, zVel, 0, true));
+						system1.addBody(tempBody);
+					//	trueAnomaly = trueAnomaly + M_PI / 2;
+					}
+					ascendingNode = ascendingNode + M_PI / 2;
+				}
+				//i = i + M_PI / 20;
+			}
+			a = a + 0.5;
+		}
+		//loop over true anomaly
+	}
+	//P(/years)^2 = (a/AU)^3
+	double orbitalPeriod(secondsInYear);
 	simulation_universe.addSystem(&system1);
-	numberOfSteps = 20000;
-	samplingRate = 2000;
+	
+	
 	normalisation = AU;
-	timestep = 1800;
+	timestep = 8*3600;
+	samplingRate = 0.05*orbitalPeriod / timestep;
+	numberOfSteps = pow(10,4)*orbitalPeriod/timestep;
 	//@@@@@@@
 
 	if (argc == 3)
@@ -242,13 +280,13 @@ int main(int argc, char* argv[])
 		string file_name;
 		combiner >> file_name;
 
-
-		simulation_universe.printCoordinatesToFile(path, file_name, normalisation);
+		
 
 		if(refresh == samplingRate)
 		{
 			
-			
+			simulation_universe.printCoordinatesToFile(path, file_name, normalisation);
+
 			std::string command = "ipython " + simulationType + "-simulation/plot-" + simulationType + "-simulation.py ";
     		command += simulationName;
     		command += " ";
@@ -275,7 +313,7 @@ int main(int argc, char* argv[])
 
 			simulation_universe.saveState(path, plotNumber, stepCount, timestep, samplingRate, normalisation);
 			
-			std::thread(run_python_command, command).detach();
+				std::thread(run_python_command, command).detach();
     		
     		//cout << endl;
 

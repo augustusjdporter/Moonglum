@@ -208,68 +208,85 @@ void Body::accelerationCalc(vector<shared_ptr<Body>>* Body_Vector)
 	m_yAcceleration = 0;
 	m_zAcceleration = 0;
 
-	for (auto it = Body_Vector->begin(); it != Body_Vector->end(); ++it)
+	//for (auto it = Body_Vector->begin(); it != Body_Vector->end(); ++it)
+	//{
+	//	//if (ID() == (*it)->ID() || (*it)->isValid() == false) continue; //check it is same body, and that other body is valid. Don't need this if relaxation is non-zero, as the nominator for acceleration calc will be zero at last step
+	//	//F = G*M*m*r_vector/r^3
+	//	//a = G*M*r_vector/r^3
+	//	double rx = m_xPosition - (*it)->xPosition();
+	//	double ry = m_yPosition - (*it)->yPosition();
+	//	double rz = m_zPosition - (*it)->zPosition();
+	//	double rCubed = pow(rx*rx + ry*ry + rz*rz + relaxation(), 1.5);
+	//	if (rCubed == 0)
+	//		continue;
+	//	//when bodies touch, they stick. Conserve linear momentum
+	//	/*if(rCubed <= pow(radius() + (*it)->radius(), 3))
+	//	{
+	//		if((*it)->name() == "Sun" || (*it)->name() == "Star" || (*it)->name() == "Jupiter" || (*it)->name() == "Earth") continue;
+	//		//combine them
+	//		(*it)->set_isValid(false);
+	//		double new_mass = mass() + (*it)->mass();
+
+	//		//place "this" body in the center of mass (COM = (m1x1 +m2x2)/(m1+m2))
+	//		double xCOM = (mass()*xPosition() + (*it)->mass()*(*it)->xPosition()) / new_mass;
+	//		double yCOM = (mass()*yPosition() + (*it)->mass()*(*it)->yPosition()) / new_mass;
+	//		double zCOM = (mass()*zPosition() + (*it)->mass()*(*it)->zPosition()) / new_mass;
+
+	//		//conserve momentum. NewVel = Mom/new mass
+	//		double new_xVelocity = (mass()*xVelocity() + (*it)->mass()*(*it)->xVelocity()) / new_mass;
+	//		double new_yVelocity = (mass()*yVelocity() + (*it)->mass()*(*it)->yVelocity()) / new_mass;
+	//		double new_zVelocity = (mass()*zVelocity() + (*it)->mass()*(*it)->zVelocity()) / new_mass;
+
+	//		//Set new velocity, position, and mass to "this" body
+	//		set_xVelocity(new_xVelocity);
+	//		set_yVelocity(new_yVelocity);
+	//		set_zVelocity(new_zVelocity);
+
+	//		set_xPosition(xCOM);
+	//		set_yPosition(yCOM);
+	//		set_zPosition(zCOM);
+
+	//		set_mass(new_mass);
+
+	//		//What to do about the radius? Keep average density? New density = p1m1 + p2m2/m1+m2
+	//		double new_density = (density()*mass() + (*it)->density()*(*it)->mass()) / new_mass;
+
+	//		//r = (3/4 m/(p pi))^1/3
+	//		set_Radius(pow(3/4 * new_mass/(M_PI * new_density), 1/3));
+
+	//		//remove the body from the vector
+	//		cout << (*it)->name() << " deleted an entry" << endl;
+	//		--it;
+	//		
+	//		Body_Vector->erase(it);
+	//	}
+	//	else	//if bodies aren't touching, calculate acceleration
+	//	{*/
+	//		double magAcc = -G*(*it)->mass()/rCubed; 
+
+	//		m_xAcceleration += magAcc*rx;
+	//		m_yAcceleration += magAcc*ry;
+	//		m_zAcceleration += magAcc*rz;
+	//	//}	
+	//}
+	//@@@@@@@@@@@@
+	for (int i = 0; i < 2; i++)
 	{
 		//if (ID() == (*it)->ID() || (*it)->isValid() == false) continue; //check it is same body, and that other body is valid. Don't need this if relaxation is non-zero, as the nominator for acceleration calc will be zero at last step
 		//F = G*M*m*r_vector/r^3
 		//a = G*M*r_vector/r^3
-		double rx = m_xPosition - (*it)->xPosition();
-		double ry = m_yPosition - (*it)->yPosition();
-		double rz = m_zPosition - (*it)->zPosition();
+		double rx = m_xPosition - Body_Vector->at(i)->xPosition();
+		double ry = m_yPosition - Body_Vector->at(i)->yPosition();
+		double rz = m_zPosition - Body_Vector->at(i)->zPosition();
 		double rCubed = pow(rx*rx + ry*ry + rz*rz + relaxation(), 1.5);
 		if (rCubed == 0)
 			continue;
-		//when bodies touch, they stick. Conserve linear momentum
-		/*if(rCubed <= pow(radius() + (*it)->radius(), 3))
-		{
-			if((*it)->name() == "Sun" || (*it)->name() == "Star" || (*it)->name() == "Jupiter" || (*it)->name() == "Earth") continue;
-			//combine them
-			(*it)->set_isValid(false);
-			double new_mass = mass() + (*it)->mass();
+		double magAcc = -G*Body_Vector->at(i)->mass() / rCubed;
 
-			//place "this" body in the center of mass (COM = (m1x1 +m2x2)/(m1+m2))
-			double xCOM = (mass()*xPosition() + (*it)->mass()*(*it)->xPosition()) / new_mass;
-			double yCOM = (mass()*yPosition() + (*it)->mass()*(*it)->yPosition()) / new_mass;
-			double zCOM = (mass()*zPosition() + (*it)->mass()*(*it)->zPosition()) / new_mass;
-
-			//conserve momentum. NewVel = Mom/new mass
-			double new_xVelocity = (mass()*xVelocity() + (*it)->mass()*(*it)->xVelocity()) / new_mass;
-			double new_yVelocity = (mass()*yVelocity() + (*it)->mass()*(*it)->yVelocity()) / new_mass;
-			double new_zVelocity = (mass()*zVelocity() + (*it)->mass()*(*it)->zVelocity()) / new_mass;
-
-			//Set new velocity, position, and mass to "this" body
-			set_xVelocity(new_xVelocity);
-			set_yVelocity(new_yVelocity);
-			set_zVelocity(new_zVelocity);
-
-			set_xPosition(xCOM);
-			set_yPosition(yCOM);
-			set_zPosition(zCOM);
-
-			set_mass(new_mass);
-
-			//What to do about the radius? Keep average density? New density = p1m1 + p2m2/m1+m2
-			double new_density = (density()*mass() + (*it)->density()*(*it)->mass()) / new_mass;
-
-			//r = (3/4 m/(p pi))^1/3
-			set_Radius(pow(3/4 * new_mass/(M_PI * new_density), 1/3));
-
-			//remove the body from the vector
-			cout << (*it)->name() << " deleted an entry" << endl;
-			--it;
-			
-			Body_Vector->erase(it);
-		}
-		else	//if bodies aren't touching, calculate acceleration
-		{*/
-			double magAcc = -G*(*it)->mass()/rCubed; 
-
-			m_xAcceleration += magAcc*rx;
-			m_yAcceleration += magAcc*ry;
-			m_zAcceleration += magAcc*rz;
-		//}	
+		m_xAcceleration += magAcc*rx;
+		m_yAcceleration += magAcc*ry;
+		m_zAcceleration += magAcc*rz;
 	}
-
 	return;
 };
 

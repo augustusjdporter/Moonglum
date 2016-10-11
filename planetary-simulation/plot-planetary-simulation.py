@@ -36,7 +36,7 @@ y = np.loadtxt(workfile, usecols=range(2,3))
 z = np.loadtxt(workfile, usecols=range(3,4))
 
 	
-plot_lim = 1.5
+plot_lim = 10
 plt.ylim([-plot_lim, plot_lim])
 plt.xlim([-plot_lim, plot_lim])
 plt.scatter(x, y, alpha=0.75, marker=".", color='purple', s=0.1)
